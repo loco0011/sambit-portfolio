@@ -158,12 +158,12 @@ export default function Dashboard({ go, onUnread }) {
             <section className="mod span-3">
                 <ModLabel index="A6">Devices</ModLabel>
                 <div className="devbar">
-                    <div style={{ flexGrow: devices.desktop || 1, background: 'var(--ink)' }} />
+                    <div style={{ flexGrow: devices.desktop || 1, background: 'var(--blue)' }} />
                     <div style={{ flexGrow: devices.mobile || 1, background: 'var(--orange)' }} />
                 </div>
                 <div className="devbar-legend">
                     <span>
-                        <i className="swatch" style={{ background: 'var(--ink)' }} />
+                        <i className="swatch" style={{ background: 'var(--blue)' }} />
                         Desk {deviceTotal ? Math.round((devices.desktop / deviceTotal) * 100) : 0}%
                     </span>
                     <span>
