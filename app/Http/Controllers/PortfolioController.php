@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\PortfolioContent;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -10,7 +11,7 @@ class PortfolioController extends Controller
 {
     public function index(): View
     {
-        return view('app', ['portfolio' => config('portfolio')]);
+        return view('app', ['portfolio' => PortfolioContent::get()]);
     }
 
     public function resume(): StreamedResponse
