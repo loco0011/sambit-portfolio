@@ -1,0 +1,330 @@
+<title>Sambit Particle Portrait</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+/* Single dark look that matches the live site's brand, painted explicitly. */
+:root {
+  color-scheme: dark;
+  --ink: #07070a; --ink-2: #0c0c10; --fg: #ededef; --mute: #8b8b95; --dim: #55555e;
+  --line: rgb(255 255 255 / .08); --line-2: rgb(255 255 255 / .14); --acid: #d4ff4f;
+  --ease: cubic-bezier(.16, 1, .3, 1);
+}
+* { box-sizing: border-box; }
+html, body { background: var(--ink); color: var(--fg); }
+body { font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: clip; }
+button { font: inherit; color: inherit; cursor: pointer; }
+a { color: inherit; }
+:focus-visible { outline: 1px solid var(--acid); outline-offset: 3px; border-radius: 6px; }
+.wrap { width: 100%; max-width: 1320px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 48px); }
+
+.hero { position: relative; min-height: min(100svh, 920px); display: flex; flex-direction: column; overflow: hidden; }
+.glow { position: absolute; right: -18%; top: -30%; width: 900px; height: 900px; border-radius: 50%; background: radial-gradient(closest-side, rgb(212 255 79 / .07), transparent); pointer-events: none; }
+
+/* nav */
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 18px; position: relative; z-index: 2; }
+.logo { display: flex; align-items: center; gap: 10px; font-size: 13px; text-decoration: none; }
+.logo i { font: 500 12px 'Geist Mono', monospace; font-style: normal; color: var(--acid); width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 10px; background: var(--ink-2); }
+.logo small { display: block; color: var(--mute); font-size: 12px; }
+.pill-nav { display: flex; gap: 2px; padding: 4px; border: 1px solid var(--line); border-radius: 999px; background: rgb(7 7 10 / .5); }
+.pill-nav a { text-decoration: none; font-size: 13px; color: var(--mute); padding: 6px 14px; border-radius: 999px; transition: color .3s; }
+.pill-nav a:hover { color: var(--fg); }
+.pill-nav a.cur { background: var(--fg); color: var(--ink); }
+.kbd { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--mute); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; background: none; }
+.kbd kbd { font: 10px 'Geist Mono', monospace; border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; }
+@media (max-width: 860px) { .pill-nav { display: none; } }
+
+/* body grid */
+.stage { flex: 1; display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); gap: clamp(20px, 4vw, 56px); align-items: center; position: relative; z-index: 1; padding-block: 12px 8px; }
+@media (max-width: 900px) { .stage { grid-template-columns: 1fr; } .portrait { order: -1; max-width: 420px; justify-self: center; width: 100%; } }
+
+.chip { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; font: 11px/1.35 'Geist Mono', monospace; color: var(--fg); background: rgb(255 255 255 / .02); }
+.ping { position: relative; width: 6px; height: 6px; flex: none; }
+.ping::before, .ping::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: var(--acid); }
+.ping::before { animation: ring 1.8s ease-out infinite; }
+@keyframes ring { from { transform: scale(1); opacity: .8; } to { transform: scale(3.2); opacity: 0; } }
+
+.hello { margin: 26px 0 0; font-size: clamp(15px, 1.3vw, 18px); color: var(--mute); display: flex; align-items: center; gap: 10px; }
+.wave { display: inline-block; transform-origin: 70% 80%; animation: wave 2.4s 1.6s ease-in-out 2; }
+@keyframes wave { 0%, 60%, 100% { transform: rotate(0); } 10%, 30% { transform: rotate(14deg); } 20%, 40% { transform: rotate(-8deg); } }
+h1 { margin: 10px 0 0; font-weight: 500; letter-spacing: -.045em; line-height: .96; font-size: clamp(2.7rem, min(6.4vw, 11vh), 6.2rem); }
+.line { display: block; overflow: hidden; padding-bottom: .08em; margin-bottom: -.08em; }
+.line > span { display: inline-block; animation: rise 1.2s var(--ease) both; }
+.line:nth-child(2) > span { animation-delay: .1s; }
+.line:nth-child(3) > span { animation-delay: .2s; }
+@keyframes rise { from { transform: translateY(110%) rotate(4deg); } }
+.serif { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -.02em; color: var(--acid); padding-right: .06em; }
+.rot { display: inline-grid; vertical-align: bottom; overflow: hidden; height: 1.04em; padding-bottom: .08em; margin-bottom: -.08em; }
+.rot span { grid-area: 1 / 1; transition: transform .8s var(--ease), opacity .8s var(--ease); white-space: nowrap; }
+.rot span.out { transform: translateY(-105%); opacity: 0; }
+.rot span.in { transform: translateY(105%); opacity: 0; }
+.lede { max-width: 33em; margin: 26px 0 0; font-size: clamp(15px, 1.15vw, 17px); line-height: 1.6; color: var(--mute); animation: fadeup 1s .6s var(--ease) both; }
+.lede b { color: var(--fg); font-weight: 500; }
+@keyframes fadeup { from { opacity: 0; transform: translateY(14px); } }
+.ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; animation: fadeup 1s .75s var(--ease) both; }
+.btn-p { position: relative; display: inline-flex; align-items: center; gap: 12px; background: var(--acid); color: var(--ink); border-radius: 999px; padding: 12px 12px 12px 22px; font-size: 14px; font-weight: 500; text-decoration: none; transition: box-shadow .4s; }
+.btn-p:hover { box-shadow: 0 0 44px -6px rgb(212 255 79 / .6); }
+.btn-p span { width: 28px; height: 28px; border-radius: 50%; background: var(--ink); color: var(--acid); display: grid; place-items: center; transition: transform .5s var(--ease); }
+.btn-p:hover span { transform: rotate(-45deg); }
+.btn-s { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line-2); border-radius: 999px; padding: 12px 22px; font-size: 14px; text-decoration: none; transition: border-color .3s; }
+.btn-s:hover { border-color: var(--fg); }
+.btn-s em { font-style: normal; color: var(--mute); }
+
+/* portrait */
+.portrait { position: relative; aspect-ratio: 4 / 5; max-width: 100%; animation: fadein 1.4s .1s both; }
+@keyframes fadein { from { opacity: 0; } }
+.portrait canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y; }
+.frame { position: absolute; inset: 0; pointer-events: none; }
+.frame i { position: absolute; width: 14px; height: 14px; border-color: var(--line-2); border-style: solid; }
+.frame i:nth-child(1) { top: 0; left: 0; border-width: 1px 0 0 1px; }
+.frame i:nth-child(2) { top: 0; right: 0; border-width: 1px 1px 0 0; }
+.frame i:nth-child(3) { bottom: 0; left: 0; border-width: 0 0 1px 1px; }
+.frame i:nth-child(4) { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
+.cap { position: absolute; left: 0; right: 0; bottom: -30px; display: flex; justify-content: space-between; gap: 10px; font: 10.5px 'Geist Mono', monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); }
+.cap b { color: var(--mute); font-weight: 400; }
+.tag { position: absolute; display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 999px; border: 1px solid var(--line-2); background: rgb(12 12 16 / .78); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); font-size: 12px; white-space: nowrap; animation: pop .9s var(--ease) both; }
+.tag small { color: var(--mute); font-size: 12px; }
+.tag.t1 { left: -6%; top: 18%; animation-delay: 1.5s; }
+.tag.t2 { right: -4%; top: 56%; animation-delay: 1.7s; }
+.tag .sq { width: 7px; height: 7px; border-radius: 2px; background: var(--acid); }
+@keyframes pop { from { opacity: 0; transform: translateY(10px) scale(.96); } }
+@media (max-width: 900px) { .tag.t1 { left: 0; } .tag.t2 { right: 0; } }
+
+.tools { position: absolute; right: 10px; top: 10px; display: flex; gap: 6px; z-index: 3; }
+.tbtn { font: 11px 'Geist Mono', monospace; color: var(--mute); background: rgb(12 12 16 / .8); border: 1px solid var(--line-2); border-radius: 999px; padding: 5px 10px; }
+.tbtn:hover { color: var(--acid); border-color: var(--acid); }
+.drop { position: absolute; inset: 0; border: 1px dashed var(--acid); border-radius: 12px; display: none; place-items: center; font: 12px 'Geist Mono', monospace; color: var(--acid); background: rgb(7 7 10 / .6); z-index: 4; }
+.portrait.dragging .drop { display: grid; }
+.hint { position: absolute; left: 50%; bottom: 14%; transform: translateX(-50%); font: 11px 'Geist Mono', monospace; color: var(--mute); background: rgb(12 12 16 / .8); border: 1px solid var(--line); padding: 6px 10px; border-radius: 999px; white-space: nowrap; z-index: 3; }
+
+/* meta strip */
+.meta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; border-top: 1px solid var(--line); padding-block: 20px 26px; margin-top: 48px; animation: fadein 1.2s 1s both; position: relative; z-index: 1; }
+.meta dt { font: 11px 'Geist Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--mute); margin-bottom: 6px; }
+.meta dd { margin: 0; font-size: 13px; font-variant-numeric: tabular-nums; }
+@media (max-width: 720px) { .meta { grid-template-columns: 1fr 1fr; } }
+
+.scroll { position: absolute; left: 50%; bottom: 96px; transform: translateX(-50%); width: 1px; height: 36px; background: linear-gradient(var(--line-2), transparent); overflow: hidden; z-index: 1; }
+.scroll::after { content: ''; position: absolute; left: 0; top: -40%; width: 1px; height: 40%; background: var(--acid); animation: drip 2.2s 2s ease-in-out infinite; }
+@keyframes drip { to { top: 110%; } }
+@media (max-width: 900px) { .scroll { display: none; } }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+</style>
+
+<section class="hero">
+  <div class="glow" aria-hidden="true"></div>
+
+  <header class="wrap nav">
+    <a class="logo" href="#"><i>SM</i><span>Sambit Maity<small>Full-Stack Engineer</small></span></a>
+    <nav class="pill-nav"><a class="cur" href="#">About</a><a href="#">Experience</a><a href="#">Work</a><a href="#">Stack</a><a href="#">Contact</a></nav>
+    <button class="kbd">Quick actions <kbd>⌘K</kbd></button>
+  </header>
+
+  <div class="wrap stage">
+    <div class="copy">
+      <span class="chip" style="animation:fadeup .9s var(--ease) both"><span class="ping"></span>Available for senior full-stack &amp; founding-engineer roles</span>
+      <p class="hello" style="animation:fadeup .9s .05s var(--ease) both"><span aria-hidden="true" style="width:22px;height:1px;background:var(--acid)"></span>Hi, I'm Sambit Maity.</p>
+      <h1 aria-label="I build products end to end.">
+        <span class="line" aria-hidden="true"><span>I build</span></span>
+        <span class="line" aria-hidden="true"><span><span class="rot" id="rot"><span>products</span><span class="in">APIs</span><span class="in">infrastructure</span><span class="in">AI agents</span><span class="in">interfaces</span></span></span></span>
+        <span class="line" aria-hidden="true"><span class="serif">end to end.</span></span>
+      </h1>
+      <p class="lede"><b>Technical Lead at Collabmate.</b> Laravel and Node.js engineer who owns the whole system: architecture, APIs, servers, automation and the interface people use.</p>
+      <div class="ctas">
+        <a class="btn-p" href="#">See selected work <span>→</span></a>
+        <a class="btn-s" href="#">Résumé <em>↓</em></a>
+      </div>
+    </div>
+
+    <div class="portrait" id="portrait">
+      <canvas id="cv" aria-label="Portrait of Sambit drawn in moving dots"></canvas>
+      <div class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <span class="tag t1"><span class="sq"></span>Tech Lead <small>@ Collabmate</small></span>
+      <span class="tag t2">25+ <small>products shipped</small></span>
+      <div class="tools">
+        <button class="tbtn" id="pick">Use my photo</button>
+        <button class="tbtn" id="reset" hidden>Reset</button>
+      </div>
+      <input type="file" id="file" accept="image/*" hidden>
+      <span class="hint" id="hint">Upload or drop a photo to see your portrait</span>
+      <div class="drop">Drop photo</div>
+      <div class="cap"><span><b>S. Maity</b> · 22.57°N 88.36°E</span><span>KOL <b class="clock"></b></span></div>
+    </div>
+  </div>
+
+  <div class="scroll" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <dl class="meta">
+      <div><dt>Currently</dt><dd>Technical Lead @ Collabmate</dd></div>
+      <div><dt>Based in</dt><dd>Kolkata, IN · <span class="clock s"></span></dd></div>
+      <div><dt>Core</dt><dd>Laravel · Node · React · Infra</dd></div>
+      <div><dt>Shipping since</dt><dd>2023 · 25+ projects, 4 teams</dd></div>
+    </dl>
+  </div>
+</section>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Clocks */
+  const clock = () => document.querySelectorAll('.clock').forEach(c => c.textContent = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: c.classList.contains('s') ? '2-digit' : undefined, hour12: false }).format(new Date()));
+  clock(); setInterval(clock, 1000);
+
+  /* Rotating word */
+  const words = [...document.querySelectorAll('#rot span')];
+  let wi = 0;
+  if (!reduce) setInterval(() => {
+    const cur = words[wi], next = words[(wi + 1) % words.length];
+    cur.className = 'out';
+    next.className = 'in'; void next.offsetWidth; next.className = '';
+    setTimeout(() => { cur.className = 'in'; }, 800);
+    wi = (wi + 1) % words.length;
+  }, 2400);
+
+  /* ── Particle portrait ─────────────────────────────── */
+  const box = document.getElementById('portrait'), cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+  const BUCKETS = 10;
+  const NEUTRAL = Array.from({ length: BUCKETS }, (_, i) => `rgba(237,237,239,${0.12 + (i + 1) / BUCKETS * 0.88})`);
+  const LIT = Array.from({ length: BUCKETS }, (_, i) => `rgba(212,255,79,${0.25 + (i + 1) / BUCKETS * 0.75})`);
+  let W = 0, H = 0, pts = [], source = null, t0 = 0;
+  const mouse = { x: -1e4, y: -1e4, tx: -1e4, ty: -1e4 };
+
+  // Default subject: the SM monogram, until a real photo is supplied.
+  function monogram() {
+    const c = document.createElement('canvas'); c.width = 400; c.height = 500;
+    const g = c.getContext('2d');
+    g.fillStyle = '#000'; g.fillRect(0, 0, 400, 500);
+    const grd = g.createRadialGradient(200, 230, 20, 200, 250, 260);
+    grd.addColorStop(0, '#fff'); grd.addColorStop(1, '#777');
+    g.fillStyle = grd;
+    g.font = 'italic 330px "Instrument Serif", Georgia, serif';
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText('SM', 200, 250);
+    return c;
+  }
+
+  function sample(img) {
+    const gap = W < 360 ? 4.2 : W < 480 ? 4.8 : 5.4;
+    const cols = Math.floor(W / gap), rows = Math.floor(H / gap);
+    const off = document.createElement('canvas'); off.width = cols; off.height = rows;
+    const g = off.getContext('2d', { willReadFrequently: true });
+    // object-fit: cover, biased toward the top where faces sit
+    const iw = img.naturalWidth || img.width, ih = img.naturalHeight || img.height;
+    const s = Math.max(cols / iw, rows / ih);
+    g.drawImage(img, (cols - iw * s) / 2, Math.min(0, (rows - ih * s) * 0.3), iw * s, ih * s);
+    const d = g.getImageData(0, 0, cols, rows).data;
+    const lum = new Float32Array(cols * rows);
+    for (let i = 0; i < lum.length; i++) lum[i] = (0.2126 * d[i * 4] + 0.7152 * d[i * 4 + 1] + 0.0722 * d[i * 4 + 2]) / 255;
+    // auto-levels: stretch the 4th–98th percentile so any photo reads well
+    const sorted = Array.from(lum).sort((a, b) => a - b);
+    const lo = sorted[Math.floor(sorted.length * 0.04)], hi = sorted[Math.floor(sorted.length * 0.98)] || 1;
+    const ox = (W - (cols - 1) * gap) / 2, oy = (H - (rows - 1) * gap) / 2;
+    const next = [];
+    for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
+      let v = Math.min(1, Math.max(0, (lum[y * cols + x] - lo) / (hi - lo || 1)));
+      v = Math.pow(v, 1.25);
+      // soft oval vignette so a busy background falls away
+      const nx = (x / cols - 0.5) / 0.5, ny = (y / rows - 0.46) / 0.56;
+      const r = Math.hypot(nx, ny);
+      v *= r < 0.72 ? 1 : Math.max(0, 1 - (r - 0.72) / 0.3);
+      if (v < 0.07) continue;
+      const hx = ox + x * gap, hy = oy + y * gap;
+      next.push({ hx, hy, v, r: 0.35 + v * gap * 0.46, x: 0, y: 0, vx: 0, vy: 0, delay: 0 });
+    }
+    // intro: particles fly in from a loose cloud, top rows first
+    next.forEach(p => {
+      const a = Math.random() * Math.PI * 2, dist = (0.4 + Math.random() * 0.8) * Math.max(W, H);
+      p.x = W / 2 + Math.cos(a) * dist; p.y = H / 2 + Math.sin(a) * dist;
+      p.delay = (p.hy / H) * 700 + Math.random() * 500;
+      if (reduce) { p.x = p.hx; p.y = p.hy; p.delay = 0; }
+    });
+    pts = next; t0 = performance.now();
+  }
+
+  function resize() {
+    const r = cv.getBoundingClientRect();
+    W = r.width; H = r.height;
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (source) sample(source);
+  }
+
+  function draw(now) {
+    ctx.clearRect(0, 0, W, H);
+    mouse.x += (mouse.tx - mouse.x) * 0.15; mouse.y += (mouse.ty - mouse.y) * 0.15;
+    const el = now - t0;
+    const R = Math.max(70, W * 0.2);
+    // a slow diagonal scan band that lights the portrait every few seconds
+    const band = ((now / 5200) % 1.6) - 0.3;
+    const neutral = Array.from({ length: BUCKETS }, () => new Path2D());
+    const lit = Array.from({ length: BUCKETS }, () => new Path2D());
+    for (let i = 0; i < pts.length; i++) {
+      const p = pts[i];
+      if (el > p.delay) {
+        const dx = p.x - mouse.x, dy = p.y - mouse.y, d2 = dx * dx + dy * dy;
+        if (d2 < R * R) {
+          const d = Math.sqrt(d2) || 1, f = (1 - d / R);
+          p.vx += (dx / d) * f * f * 5; p.vy += (dy / d) * f * f * 5;
+        }
+        p.vx += (p.hx - p.x) * 0.055; p.vy += (p.hy - p.y) * 0.055;
+        p.vx *= 0.8; p.vy *= 0.8;
+        p.x += p.vx; p.y += p.vy;
+      }
+      const md = Math.hypot(p.hx - mouse.x, p.hy - mouse.y);
+      const near = md < R ? 1 - md / R : 0;
+      const diag = (p.hx / W + p.hy / H) / 2;
+      const scan = reduce ? 0 : Math.max(0, 1 - Math.abs(diag - band) / 0.05);
+      const heat = Math.max(near, scan * 0.8);
+      const a = Math.min(BUCKETS - 1, Math.floor(p.v * BUCKETS));
+      const rad = p.r * (1 + near * 0.35);
+      const path = heat > 0.15 ? lit[a] : neutral[a];
+      path.moveTo(p.x + rad, p.y); path.arc(p.x, p.y, rad, 0, Math.PI * 2);
+    }
+    for (let b = 0; b < BUCKETS; b++) { ctx.fillStyle = NEUTRAL[b]; ctx.fill(neutral[b]); ctx.fillStyle = LIT[b]; ctx.fill(lit[b]); }
+    if (visible) raf = requestAnimationFrame(draw);
+  }
+
+  let raf, visible = true;
+  new IntersectionObserver(([e]) => { visible = e.isIntersecting; cancelAnimationFrame(raf); if (visible) raf = requestAnimationFrame(draw); }).observe(cv);
+
+  cv.addEventListener('pointermove', e => { const r = cv.getBoundingClientRect(); mouse.tx = e.clientX - r.left; mouse.ty = e.clientY - r.top; });
+  cv.addEventListener('pointerleave', () => { mouse.tx = mouse.ty = -1e4; });
+  let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(resize, 150); });
+
+  /* Photo input: button, drag and drop, remembered in this browser only */
+  const file = document.getElementById('file'), hint = document.getElementById('hint'), resetBtn = document.getElementById('reset');
+  function useImage(src, remember) {
+    const img = new Image();
+    img.onload = () => {
+      source = img; sample(img);
+      hint.hidden = true; resetBtn.hidden = false;
+      if (remember) {
+        try {
+          const c = document.createElement('canvas'), s = Math.min(1, 700 / Math.max(img.width, img.height));
+          c.width = img.width * s; c.height = img.height * s; c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+          localStorage.setItem('sm-portrait', c.toDataURL('image/jpeg', 0.85));
+        } catch (e) {}
+      }
+    };
+    img.src = src;
+  }
+  function readFile(f) { if (!f || !f.type.startsWith('image/')) return; const fr = new FileReader(); fr.onload = () => useImage(fr.result, true); fr.readAsDataURL(f); }
+  document.getElementById('pick').addEventListener('click', () => file.click());
+  file.addEventListener('change', () => readFile(file.files[0]));
+  box.addEventListener('dragover', e => { e.preventDefault(); box.classList.add('dragging'); });
+  box.addEventListener('dragleave', () => box.classList.remove('dragging'));
+  box.addEventListener('drop', e => { e.preventDefault(); box.classList.remove('dragging'); readFile(e.dataTransfer.files[0]); });
+  resetBtn.addEventListener('click', () => { try { localStorage.removeItem('sm-portrait'); } catch (e) {} source = monogram(); sample(source); hint.hidden = false; resetBtn.hidden = true; });
+
+  function boot() {
+    resize();
+    let saved = null; try { saved = localStorage.getItem('sm-portrait'); } catch (e) {}
+    if (saved) useImage(saved, false); else { source = monogram(); sample(source); }
+    raf = requestAnimationFrame(draw);
+  }
+  (document.fonts && document.fonts.load ? document.fonts.load('italic 100px "Instrument Serif"').catch(() => {}) : Promise.resolve()).then(boot);
+})();
+</script>

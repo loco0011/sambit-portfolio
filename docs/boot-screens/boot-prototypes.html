@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boot Screen Prototypes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --ink: #07070a; --fg: #ededef; --mute: #8b8b95; --dim: #55555e;
+        --line: rgb(255 255 255 / .08); --line-2: rgb(255 255 255 / .14);
+        --acid: #d4ff4f; --ease: cubic-bezier(.16, 1, .3, 1);
+        --gut: clamp(20px, 4vw, 48px);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; background: var(--ink); color: var(--fg); font-family: Geist, system-ui, sans-serif; }
+    button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+    .eyebrow { font: 500 11px 'Geist Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--mute); }
+    .eyebrow b { color: var(--fg); font-weight: 500; }
+    .serif { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; letter-spacing: -.02em; color: var(--acid); }
+
+    /* ---------- mock site (what the loader hands off to) ---------- */
+    #site {
+        position: fixed; inset: 0; display: flex; flex-direction: column; padding: 28px var(--gut);
+        background: radial-gradient(rgb(255 255 255 / .07) 1px, transparent 1px) 0 0 / 24px 24px, var(--ink);
+    }
+    #site nav { display: flex; justify-content: space-between; gap: 16px; }
+    #site .badge { margin-top: auto; display: flex; align-items: center; gap: 10px; }
+    #site .badge i { width: 6px; height: 6px; border-radius: 50%; background: var(--acid); box-shadow: 0 0 12px var(--acid); }
+    #site h1 { margin: 22px 0 16vh; font-weight: 500; letter-spacing: -.045em; line-height: .92; font-size: clamp(2.6rem, min(8vw, 13vh), 7rem); }
+    #site .ln { display: block; overflow: hidden; padding-bottom: .1em; margin-bottom: -.1em; }
+    #site .w { display: inline-block; transform: translateY(115%) rotate(5deg); transition: transform 1.3s var(--ease) calc(var(--i) * 70ms + 100ms); }
+    #site .w.serif { padding-right: .06em; }
+    #site .d { color: var(--dim); }
+    #site.in .w { transform: none; }
+    #site:not(.in) .w { transition: none; }
+    #site nav, #site .badge { opacity: 0; transition: opacity .8s ease .5s; }
+    #site.in nav, #site.in .badge { opacity: 1; }
+    #site:not(.in) nav, #site:not(.in) .badge { transition: none; }
+
+    /* ---------- shared loader shell ---------- */
+    .L { position: fixed; inset: 0; z-index: 50; background: var(--ink); overflow: hidden; }
+    .L .top { position: absolute; top: 28px; left: var(--gut); right: var(--gut); display: flex; justify-content: space-between; gap: 16px; z-index: 2; transition: opacity .4s; }
+    .L canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+    /* 01 — Compile */
+    .l1 {
+        clip-path: inset(0 0 0 0); transition: clip-path .55s cubic-bezier(.7, 0, .84, 0);
+        background:
+            repeating-linear-gradient(transparent 0 2px, rgb(255 255 255 / .018) 2px 3px),
+            radial-gradient(120% 90% at 50% 50%, #0d0d12 0%, var(--ink) 70%);
+    }
+    .l1.off { clip-path: inset(50% 0 50% 0); }
+    .l1 .log { position: absolute; left: var(--gut); bottom: 120px; font: 12px/1.75 'Geist Mono', monospace; color: var(--mute); white-space: pre; transition: opacity .7s, filter .7s; }
+    .l1 .log .ts { color: var(--dim); }
+    .l1 .log .ok { color: var(--acid); opacity: 0; transition: opacity .12s; }
+    .l1 .log .ok.on { opacity: 1; }
+    .l1.b .log { opacity: .1; filter: blur(1px); }
+    .l1 .center { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 22px; text-align: center; pointer-events: none; }
+    .l1 .name { font-weight: 500; letter-spacing: -.045em; line-height: .95; white-space: pre; font-size: clamp(3rem, 10vw, 9.5rem); min-height: 1em; }
+    .l1 .name .x { color: var(--acid); font-family: 'Geist Mono', monospace; font-weight: 400; }
+    .l1 .name .o { opacity: 0; }
+    .l1 .sub { min-height: 1em; }
+    .l1 .sub::after { content: '_'; color: var(--acid); animation: blink 1s steps(1) infinite; }
+    .l1 .foot { position: absolute; left: var(--gut); right: var(--gut); bottom: 48px; display: flex; align-items: center; gap: 20px; }
+    .l1 .bar { flex: 1; height: 1px; background: var(--line); }
+    .l1 .bar i { display: block; height: 100%; background: var(--acid); transform-origin: left; transform: scaleX(0); transition: transform .2s linear; }
+    .l1 .pct { font: 12px 'Geist Mono', monospace; color: var(--mute); font-variant-numeric: tabular-nums; }
+    .scan { position: fixed; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px; z-index: 51; pointer-events: none; background: var(--acid); box-shadow: 0 0 28px 6px rgb(212 255 79 / .55); opacity: 0; transition: opacity .5s cubic-bezier(.7, 0, .84, 0), transform .5s cubic-bezier(.7, 0, .3, 1); }
+    .scan.on { opacity: 1; }
+    .scan.out { opacity: 0; transform: scaleX(0); }
+
+    /* 02 — Topology */
+    .l2 .foot { position: absolute; left: var(--gut); bottom: 36px; display: grid; gap: 10px; z-index: 2; transition: opacity .4s; }
+    .l2 .big { font: 400 clamp(3rem, min(10vw, 16vh), 8rem)/.85 'Geist Mono', monospace; letter-spacing: -.06em; font-variant-numeric: tabular-nums; }
+    .l2.rev .foot, .l2.rev .top { opacity: 0; }
+
+    /* 03 — Raster */
+    .l3 { background: transparent; }
+    .l3 .hint { position: absolute; left: var(--gut); bottom: 36px; z-index: 2; transition: opacity .4s; }
+    .l3.rev .top, .l3.rev .hint { opacity: 0; }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* ---------- prototype switcher ---------- */
+    #ui { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 1000; display: grid; justify-items: center; gap: 10px; width: min(640px, calc(100vw - 32px)); transition: opacity .4s; }
+    body.loading #ui { opacity: .3; }
+    body.loading #ui:hover { opacity: 1; }
+    #cap { font-size: 13px; line-height: 1.5; color: var(--mute); text-align: center; text-wrap: balance; }
+    #cap b { color: var(--fg); font-weight: 500; }
+    .sw { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; padding: 5px; border: 1px solid var(--line-2); border-radius: 999px; background: rgb(12 12 16 / .8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    .sw button { font: 500 11px 'Geist Mono', monospace; letter-spacing: .12em; text-transform: uppercase; padding: 9px 14px; border-radius: 999px; color: var(--mute); transition: background .2s, color .2s; }
+    .sw button:hover { color: var(--fg); }
+    .sw button span { color: var(--dim); margin-right: 4px; }
+    .sw button.on { background: var(--acid); color: var(--ink); }
+    .sw button.on span { color: rgb(7 7 10 / .5); }
+    .sw #rp { color: var(--fg); border-left: 1px solid var(--line-2); border-radius: 0 999px 999px 0; }
+    :focus-visible { outline: 1px solid var(--acid); outline-offset: 3px; }
+</style>
+</head>
+<body>
+
+<main id="site" aria-label="Mock hero the loader hands off to">
+    <nav class="eyebrow"><span>Sambit Maity</span><span>Work · About · Contact</span></nav>
+    <div class="badge eyebrow"><i></i>Open to senior full-stack roles</div>
+    <h1 aria-label="From idea to shipped product, every layer.">
+        <span class="ln" aria-hidden="true"><span class="w" style="--i:0">From</span> <span class="w" style="--i:1">idea</span></span>
+        <span class="ln" aria-hidden="true"><span class="w" style="--i:2">to</span> <span class="w serif" style="--i:3">shipped</span> <span class="w" style="--i:4">product,</span></span>
+        <span class="ln" aria-hidden="true"><span class="w d" style="--i:5">every</span> <span class="w d" style="--i:6">layer.</span></span>
+    </h1>
+</main>
+
+<div id="stage"></div>
+
+<div id="ui">
+    <p id="cap"></p>
+    <div class="sw" role="toolbar" aria-label="Prototypes">
+        <button data-i="0"><span>01</span>Compile</button>
+        <button data-i="1"><span>02</span>Topology</button>
+        <button data-i="2"><span>03</span>Raster</button>
+        <button id="rp" title="Replay (R)">Replay ↻</button>
+    </div>
+</div>
+
+<script>
+const INK = '#07070a', FG = '#ededef', MUTE = '#8b8b95', DIM = '#55555e', ACID = '#d4ff4f';
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+const easeIn = (t) => t * t * t;
+const easeInOut = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+const easeInOutExpo = (t) => (t <= 0 ? 0 : t >= 1 ? 1 : t < .5 ? Math.pow(2, 20 * t - 10) / 2 : (2 - Math.pow(2, -20 * t + 10)) / 2);
+const pad3 = (n) => String(n).padStart(3, '0');
+const h = (s) => { const t = document.createElement('template'); t.innerHTML = s.trim(); return t.content.firstChild; };
+
+/** Timers, rAF loops and listeners that all die together when a prototype is switched. */
+function makeCtl() {
+    let dead = false;
+    const timers = [], offs = [];
+    return {
+        later(fn, ms) { timers.push(setTimeout(() => !dead && fn(), ms)); },
+        loop(fn) { const f = (now) => { if (!dead && fn(now) !== false) requestAnimationFrame(f); }; requestAnimationFrame(f); },
+        on(el, ev, fn) { el.addEventListener(ev, fn); offs.push(() => el.removeEventListener(ev, fn)); },
+        kill() { dead = true; timers.forEach(clearTimeout); offs.forEach((f) => f()); },
+    };
+}
+
+/* ============================================================
+   01 — COMPILE
+   The site boots like an operating system: a live log of the
+   real stack, the name decodes out of noise, then a CRT-style
+   collapse to a single line that retracts into the page.
+   ============================================================ */
+const BOOT_LOG = [
+    ['bios    sambit.dev', 'ok'],
+    ['cpu0    full-stack · every layer', 'ok'],
+    ['mem     4 roles · tech lead @ collabmate', 'ok'],
+    ['mount   /work/wonati.ai', 'ok'],
+    ['mount   /work/finvena', 'ok'],
+    ['mount   /work/ehlostack', 'ok'],
+    ['link    laravel → react', 'ok'],
+    ['link    tailwind · motion', 'ok'],
+    ['net     nginx :443', 'up'],
+    ['agent   claude-api · openai · n8n', 'up'],
+    ['queue   jobs · events · webhooks', 'up'],
+    ['cache   warm', 'ok'],
+    ['a11y    focus rings · reduced motion', 'ok'],
+    ['pixel   last one, aligned', 'ok'],
+    ['ship    idea → product', 'ready'],
+];
+
+function scramble(node, text, dur, c, onDone) {
+    const G = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789#%&*+=/<>';
+    const rand = () => G[(Math.random() * G.length) | 0];
+    const t0 = performance.now();
+    c.loop((now) => {
+        const p = Math.min(1, (now - t0) / dur);
+        let s = '';
+        for (let i = 0; i < text.length; i++) {
+            const ch = text[i];
+            if (ch === ' ') { s += ' '; continue; }
+            const at = (i / text.length) * .6;
+            if (p >= at + .4) s += ch;
+            else if (p >= at) s += `<span class="x">${rand()}</span>`;
+            else s += `<span class="x o">${rand()}</span>`;
+        }
+        node.innerHTML = s;
+        if (p >= 1) { onDone && onDone(); return false; }
+    });
+}
+
+function compile(stage, done) {
+    const c = makeCtl();
+    const el = h(`<div class="L l1">
+        <div class="top eyebrow"><span>SM/OS <b>26.9</b> — sambit.dev</span><span class="st">tty0 · cold boot</span></div>
+        <pre class="log" aria-hidden="true"></pre>
+        <div class="center"><div class="name"></div><div class="sub eyebrow"></div></div>
+        <div class="foot"><div class="bar"><i></i></div><span class="pct">000</span></div>
+    </div>`);
+    const scan = h('<div class="scan"></div>');
+    stage.append(el, scan);
+    const $ = (s) => el.querySelector(s);
+    const log = $('.log'), bar = $('.bar i'), pct = $('.pct'), st = $('.st'), name = $('.name'), sub = $('.sub');
+
+    BOOT_LOG.forEach(([txt, ok], i) => c.later(() => {
+        const ts = (i * .0917 + Math.random() * .01).toFixed(4).padStart(8, ' ');
+        const row = document.createElement('div');
+        row.innerHTML = `<span class="ts">[${ts}]</span> ${txt} ${'.'.repeat(Math.max(2, 42 - txt.length))} <span class="ok">${ok}</span>`;
+        log.append(row);
+        if (log.children.length > 13) log.firstChild.remove();
+        c.later(() => row.querySelector('.ok').classList.add('on'), 60);
+        const v = Math.round(((i + 1) / BOOT_LOG.length) * 100);
+        pct.textContent = pad3(v);
+        bar.style.transform = `scaleX(${v / 100})`;
+    }, 200 + i * 95));
+
+    c.later(() => {
+        el.classList.add('b');
+        st.textContent = 'decoding identity';
+        scramble(name, 'Sambit Maity', 950, c, () => { name.innerHTML = 'Sambit <span class="serif">Maity</span>'; });
+        const line = 'full-stack software engineer';
+        [...line].forEach((_, i) => c.later(() => { sub.textContent = line.slice(0, i + 1); }, 650 + i * 22));
+    }, 1650);
+
+    c.later(() => { st.textContent = 'handoff'; el.classList.add('off'); scan.classList.add('on'); }, 3150);
+    c.later(() => { scan.classList.add('out'); done(); }, 3700);
+    c.later(() => { el.remove(); scan.remove(); }, 4300);
+    return c;
+}
+
+/* ============================================================
+   02 — TOPOLOGY
+   The architecture wires itself up. Requests flow through every
+   layer; the counter is real delivered packets. The graph then
+   collapses into one node, and that node opens into the site.
+   ============================================================ */
+function topology(stage, done) {
+    const c = makeCtl();
+    const el = h(`<div class="L l2"><canvas></canvas>
+        <div class="top eyebrow"><span>topology — sambit.dev</span><span class="st">resolving nodes</span></div>
+        <div class="foot"><div class="big">000</div><div class="req eyebrow">0 / 96 requests</div></div>
+    </div>`);
+    stage.append(el);
+    const cv = el.querySelector('canvas'), ctx = cv.getContext('2d');
+    const big = el.querySelector('.big'), req = el.querySelector('.req'), st = el.querySelector('.st');
+    let W, H, grid;
+
+    function size() {
+        const d = Math.min(2, devicePixelRatio || 1);
+        W = innerWidth; H = innerHeight;
+        cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
+        grid = document.createElement('canvas'); grid.width = W * d; grid.height = H * d;
+        const g = grid.getContext('2d'); g.scale(d, d); g.fillStyle = 'rgba(255,255,255,.07)';
+        for (let x = 12; x < W; x += 24) for (let y = 12; y < H; y += 24) g.fillRect(x, y, 1, 1);
+    }
+    size(); c.on(window, 'resize', size);
+
+    const N = [['client', .12, .5], ['edge', .3, .27], ['auth', .3, .73], ['api', .5, .5], ['queue', .7, .27], ['db', .7, .73], ['ai', .88, .5]]
+        .map(([id, x, y], i) => ({ id, x, y, at: 150 + i * 110, hit: -1e9, ms: 0 }));
+    const byId = Object.fromEntries(N.map((n) => [n.id, n]));
+    const E = [['client', 'edge'], ['client', 'auth'], ['edge', 'api'], ['auth', 'api'], ['api', 'queue'], ['api', 'db'], ['queue', 'ai'], ['db', 'ai']]
+        .map(([a, b]) => ({ a: byId[a], b: byId[b], at: Math.max(byId[a].at, byId[b].at) + 60 }));
+    // Portrait screens flow top → bottom instead of left → right.
+    const P = (n) => (H > W ? { x: W * (.5 + (n.y - .5) * 1.25), y: H * (.14 + n.x * .66) } : { x: W * n.x, y: H * n.y });
+
+    const TOTAL = 96, pk = [], lat = [];
+    let spawned = 0, delivered = 0, shown = -1, tC = null, tR = null;
+    const t0 = performance.now();
+
+    c.loop((now) => {
+        const t = now - t0;
+        const target = Math.floor(TOTAL * clamp((t - 1000) / 1500));
+        while (spawned < target) {
+            const live = E.filter((e) => t > e.at + 380);
+            pk.push({ e: live[(Math.random() * live.length) | 0], f: Math.random() < .5, t0: t, dur: 380 + Math.random() * 320 });
+            spawned++;
+        }
+        if (t > 1100 && tC === null) st.textContent = 'routing traffic';
+        if (delivered >= TOTAL && tC === null) { tC = t + 200; st.textContent = 'all systems nominal'; }
+        const cp = tC === null ? 0 : easeIn(clamp((t - tC) / 650));
+        if (tC !== null && tR === null && t > tC + 870) { tR = t; el.classList.add('rev'); done(); }
+
+        const center = P(byId.api);
+        const pos = (n) => { const p = P(n); return { x: p.x + (center.x - p.x) * cp, y: p.y + (center.y - p.y) * cp }; };
+
+        ctx.clearRect(0, 0, W, H);
+        ctx.globalAlpha = 1 - cp * .7; ctx.drawImage(grid, 0, 0, W, H); ctx.globalAlpha = 1;
+
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = `rgba(255,255,255,${.16 * (1 - cp * .6)})`;
+        for (const e of E) {
+            const p = easeOut(clamp((t - e.at) / 380));
+            if (p <= 0) continue;
+            const A = pos(e.a), B = pos(e.b);
+            ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(A.x + (B.x - A.x) * p, A.y + (B.y - A.y) * p); ctx.stroke();
+        }
+
+        ctx.fillStyle = ACID;
+        for (let i = pk.length - 1; i >= 0; i--) {
+            const k = pk[i], p = (t - k.t0) / k.dur;
+            const from = k.f ? k.e.b : k.e.a, to = k.f ? k.e.a : k.e.b;
+            if (p >= 1) { pk.splice(i, 1); delivered++; to.hit = t; to.ms = (4 + Math.random() * 38) | 0; lat.push(to.ms); continue; }
+            const A = pos(from), B = pos(to);
+            for (let j = 0; j < 5; j++) {
+                const q = easeInOut(clamp(p - j * .035));
+                ctx.globalAlpha = 1 - j / 5;
+                ctx.beginPath(); ctx.arc(A.x + (B.x - A.x) * q, A.y + (B.y - A.y) * q, j ? 1.3 : 2.2, 0, 7); ctx.fill();
+            }
+        }
+        ctx.globalAlpha = 1;
+
+        ctx.font = '500 10px "Geist Mono", monospace'; ctx.textBaseline = 'middle';
+        try { ctx.letterSpacing = '1.5px'; } catch {}
+        for (const n of N) {
+            const a = clamp((t - n.at) / 520);
+            if (a <= 0) continue;
+            const { x, y } = pos(n), hk = Math.max(0, 1 - (t - n.hit) / 320);
+            if (a < 1) { ctx.strokeStyle = `rgba(212,255,79,${1 - a})`; ctx.beginPath(); ctx.arc(x, y, 6 + 30 * easeOut(a), 0, 7); ctx.stroke(); }
+            if (hk > 0) { ctx.fillStyle = `rgba(212,255,79,${.16 * hk})`; ctx.fillRect(x - 13, y - 13, 26, 26); }
+            ctx.strokeStyle = hk > .4 ? ACID : 'rgba(255,255,255,.35)'; ctx.strokeRect(x - 6.5, y - 6.5, 13, 13);
+            ctx.fillStyle = hk > .4 ? ACID : FG; ctx.fillRect(x - 1.5, y - 1.5, 3, 3);
+            const la = a * (1 - cp);
+            if (la > 0) {
+                ctx.globalAlpha = la;
+                ctx.fillStyle = MUTE; ctx.fillText(n.id.toUpperCase(), x + 15, y - 7);
+                ctx.fillStyle = DIM; ctx.fillText(n.ms ? n.ms + 'ms' : '—', x + 15, y + 7);
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        if (cp >= 1) {
+            const r = tR === null ? 4 + Math.sin(t / 40) * 1.5 : 4;
+            ctx.fillStyle = ACID; ctx.shadowColor = ACID; ctx.shadowBlur = 24;
+            ctx.beginPath(); ctx.arc(center.x, center.y, r, 0, 7); ctx.fill(); ctx.shadowBlur = 0;
+        }
+
+        if (tR !== null) {
+            const p = clamp((t - tR) / 950);
+            const r = easeInOutExpo(p) * Math.hypot(W, H) * 1.05;
+            const m = `radial-gradient(circle at ${center.x}px ${center.y}px, transparent ${r}px, #000 ${r + 1}px)`;
+            el.style.webkitMaskImage = el.style.maskImage = m;
+            ctx.strokeStyle = ACID; ctx.lineWidth = 1.5; ctx.shadowColor = ACID; ctx.shadowBlur = 20;
+            ctx.beginPath(); ctx.arc(center.x, center.y, r + 1.5, 0, 7); ctx.stroke(); ctx.shadowBlur = 0;
+            if (p >= 1) { el.remove(); return false; }
+        }
+
+        if (delivered !== shown) {
+            shown = delivered;
+            big.textContent = pad3(Math.round((100 * delivered) / TOTAL));
+            const s = [...lat].sort((a, b) => a - b);
+            req.textContent = `${delivered} / ${TOTAL} requests · p50 ${s.length ? s[s.length >> 1] + 'ms' : '—'}`;
+        }
+    });
+    return c;
+}
+
+/* ============================================================
+   03 — RASTER
+   The whole screen is an ASCII render. The counter, then the
+   name, are drawn in characters over a living noise field the
+   cursor stirs. The page dissolves in cell by cell from the
+   centre behind a glowing pixel front.
+   ============================================================ */
+function raster(stage, done) {
+    const c = makeCtl();
+    const el = h(`<div class="L l3"><canvas></canvas>
+        <div class="top eyebrow"><span>ascii raster · <b class="fps">60</b> fps</span><span class="st">rasterizing</span></div>
+        <div class="hint eyebrow">↖ move your cursor</div>
+    </div>`);
+    stage.append(el);
+    const cv = el.querySelector('canvas'), ctx = cv.getContext('2d');
+    const fpsEl = el.querySelector('.fps'), st = el.querySelector('.st');
+    const off = document.createElement('canvas'), o = off.getContext('2d', { willReadFrequently: true });
+    const S = 2; // offscreen downscale
+    let W, H, CW, CH, FS, cols, rows, rnd, key, mask, last = '';
+
+    function size() {
+        const d = Math.min(2, devicePixelRatio || 1);
+        W = innerWidth; H = innerHeight;
+        cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
+        CW = W < 700 ? 7 : 9; FS = CW / .6; CH = Math.round(FS * 1.12);
+        cols = Math.ceil(W / CW); rows = Math.ceil(H / CH);
+        off.width = Math.ceil(W / S); off.height = Math.ceil(H / S);
+        const n = cols * rows;
+        rnd = new Float32Array(n); key = new Float32Array(n); mask = new Float32Array(n);
+        const cx = cols / 2, cy = rows / 2, md = Math.hypot(cx, (cy * CH) / CW);
+        for (let r = 0; r < rows; r++) for (let q = 0; q < cols; q++) {
+            const i = r * cols + q;
+            rnd[i] = Math.random();
+            key[i] = (Math.hypot(q - cx, ((r - cy) * CH) / CW) / md) * .78 + rnd[i] * .22;
+        }
+        last = '';
+    }
+    size(); c.on(window, 'resize', size);
+
+    // Draw the text into a small offscreen canvas, soft-edged, and sample one value per cell.
+    function rast(text) {
+        if (text === last) return;
+        last = text;
+        const ow = off.width, oh = off.height;
+        o.filter = 'none'; o.fillStyle = '#000'; o.fillRect(0, 0, ow, oh);
+        const fs = text.length > 3 ? Math.min(oh * .42, ow * .19) : Math.min(oh * .62, ow * .33);
+        o.filter = `blur(${(CW / S) * .55}px)`;
+        o.font = `700 ${fs}px Geist, sans-serif`; o.textAlign = 'center'; o.textBaseline = 'middle';
+        try { o.letterSpacing = `${-fs * .05}px`; } catch {}
+        o.fillStyle = '#fff'; o.fillText(text, ow / 2, oh / 2 + fs * .04);
+        const d = o.getImageData(0, 0, ow, oh).data;
+        for (let r = 0; r < rows; r++) for (let q = 0; q < cols; q++) {
+            const px = Math.min(ow - 1, (((q + .5) * CW) / S) | 0), py = Math.min(oh - 1, (((r + .5) * CH) / S) | 0);
+            mask[r * cols + q] = d[(py * ow + px) * 4] / 255;
+        }
+    }
+
+    let mx = -1e3, my = -1e3;
+    c.on(window, 'pointermove', (e) => { mx = e.clientX / CW; my = e.clientY / CH; });
+
+    const DENSE = '@#%&$8BWM', EDGE = '*+=~:', AMB = ' .·:-=+';
+    const B = { fg: [], acid: [], dim: [], soft: [], blk: [] };
+    const t0 = performance.now();
+    let tR = null, prev = t0, fps = 60, fpsAt = 0;
+
+    c.loop((now) => {
+        const t = now - t0;
+        fps += (1000 / Math.max(1, now - prev) - fps) * .1; prev = now;
+        if (t - fpsAt > 400) { fpsAt = t; fpsEl.textContent = Math.round(fps); }
+
+        let text;
+        if (t < 2500) text = pad3(Math.round(100 * easeInOut(clamp((t - 150) / 2300))));
+        else { text = 'SAMBIT'; st.textContent = 'compiled'; }
+        if (t >= 3500 && tR === null) { tR = t; el.classList.add('rev'); st.textContent = 'dissolving'; done(); }
+        const p = tR === null ? -1 : ((t - tR) / 1150) * 1.1;
+        rast(text);
+
+        ctx.clearRect(0, 0, W, H);
+        ctx.fillStyle = INK;
+        if (p < 0) ctx.fillRect(0, 0, W, H);
+        else {
+            for (let r = 0; r < rows; r++) {
+                let run = -1;
+                for (let q = 0; q <= cols; q++) {
+                    const solid = q < cols && key[r * cols + q] >= p;
+                    if (solid && run < 0) run = q;
+                    else if (!solid && run >= 0) { ctx.fillRect(run * CW, r * CH, (q - run) * CW, CH); run = -1; }
+                }
+            }
+        }
+
+        for (const k in B) B[k].length = 0;
+        const scan = ((t * .022) % (rows + 20)) - 10;
+        for (let r = 0; r < rows; r++) for (let q = 0; q < cols; q++) {
+            const i = r * cols + q, k = key[i];
+            if (p >= 0 && k < p) continue;
+            const x = q * CW, y = r * CH;
+            if (p >= 0 && k < p + .045) { B.blk.push(x, y); continue; }
+            const m = mask[i];
+            if (m > .6) { B.fg.push(x, y, DENSE[(i * 7 + ((t / 140 + rnd[i] * 9) | 0)) % DENSE.length]); continue; }
+            if (m > .14) { B.acid.push(x, y, EDGE[(i + ((t / 200) | 0)) % EDGE.length]); continue; }
+            let v = (Math.sin(q * .09 + t * .0011) + Math.sin(r * .21 - t * .0015) + Math.sin((q + r * 1.7) * .045 + t * .0008)) / 3;
+            const dm = Math.hypot(q - mx, ((r - my) * CH) / CW);
+            const bump = dm < 16 ? (1 - dm / 16) ** 2 * 1.4 : 0;
+            if (Math.abs(r - scan) < 1.2) v += .5;
+            v += bump;
+            if (v > .5) (bump > .25 ? B.soft : B.dim).push(x, y, AMB[Math.min(AMB.length - 1, 1 + (((v - .5) * 9) | 0))]);
+        }
+
+        ctx.font = `500 ${FS}px "Geist Mono", monospace`; ctx.textBaseline = 'top';
+        const draw = (arr, color) => { ctx.fillStyle = color; for (let j = 0; j < arr.length; j += 3) ctx.fillText(arr[j + 2], arr[j], arr[j + 1]); };
+        draw(B.dim, 'rgba(139,139,149,.32)');
+        draw(B.soft, 'rgba(212,255,79,.75)');
+        draw(B.acid, ACID);
+        draw(B.fg, FG);
+        ctx.fillStyle = ACID;
+        for (let j = 0; j < B.blk.length; j += 2) ctx.fillRect(B.blk[j] + 1, B.blk[j + 1] + 2, CW - 2, CH - 4);
+
+        if (p > 1.12) { el.remove(); return false; }
+    });
+    return c;
+}
+
+/* ---------- switcher ---------- */
+const PROTOS = [
+    { run: compile, cap: '<b>Compile.</b> The site boots like an OS: a live log of your real stack, your name decodes out of noise, then a CRT collapse to one line that retracts into the page.' },
+    { run: topology, cap: '<b>Topology.</b> Your architecture wires itself up and real requests flow through every layer. The graph collapses to one node, and that node opens into the site.' },
+    { run: raster, cap: '<b>Raster.</b> The whole screen is an ASCII render. The counter and your name are drawn in characters, the cursor stirs the field, and the page dissolves in from the centre.' },
+];
+const site = document.getElementById('site'), stage = document.getElementById('stage');
+const cap = document.getElementById('cap'), btns = document.querySelectorAll('.sw [data-i]');
+let ctl = null, cur = 0;
+
+function play(i) {
+    if (ctl) ctl.kill();
+    stage.innerHTML = '';
+    site.classList.remove('in');
+    document.body.classList.add('loading');
+    cur = i;
+    btns.forEach((b) => b.classList.toggle('on', +b.dataset.i === i));
+    cap.innerHTML = PROTOS[i].cap;
+    ctl = PROTOS[i].run(stage, () => { site.classList.add('in'); document.body.classList.remove('loading'); });
+}
+
+btns.forEach((b) => b.addEventListener('click', () => play(+b.dataset.i)));
+document.getElementById('rp').addEventListener('click', () => play(cur));
+addEventListener('keydown', (e) => {
+    if (e.key >= '1' && e.key <= '3') play(+e.key - 1);
+    if (e.key === 'r' || e.key === 'R') play(cur);
+});
+
+Promise.all([
+    document.fonts.load('500 12px "Geist Mono"'),
+    document.fonts.load('700 40px Geist'),
+    document.fonts.load('500 40px Geist'),
+    document.fonts.load('italic 40px "Instrument Serif"'),
+]).catch(() => {}).finally(() => play(0));
+</script>
+</body>
+</html>

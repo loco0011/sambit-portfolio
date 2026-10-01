@@ -1,0 +1,538 @@
+<title>Sambit Hero Characters</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+/* Single dark look matching the live site's brand, painted explicitly. */
+:root {
+  color-scheme: dark;
+  --ink: #07070a; --ink-2: #0c0c10; --fg: #ededef; --mute: #8b8b95; --dim: #55555e;
+  --line: rgb(255 255 255 / .08); --line-2: rgb(255 255 255 / .14); --acid: #d4ff4f;
+  --ease: cubic-bezier(.16, 1, .3, 1);
+}
+* { box-sizing: border-box; }
+html, body { background: var(--ink); color: var(--fg); }
+body { font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: clip; }
+button { font: inherit; color: inherit; cursor: pointer; }
+a { color: inherit; }
+:focus-visible { outline: 1px solid var(--acid); outline-offset: 3px; border-radius: 6px; }
+.wrap { width: 100%; max-width: 1320px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 48px); }
+
+.hero { position: relative; min-height: min(100svh, 940px); display: flex; flex-direction: column; overflow: hidden; }
+.glow { position: absolute; right: -18%; top: -30%; width: 900px; height: 900px; border-radius: 50%; background: radial-gradient(closest-side, rgb(212 255 79 / .07), transparent); pointer-events: none; }
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 18px; position: relative; z-index: 2; }
+.logo { display: flex; align-items: center; gap: 10px; font-size: 13px; text-decoration: none; }
+.logo i { font: 500 12px 'Geist Mono', monospace; font-style: normal; color: var(--acid); width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 10px; background: var(--ink-2); }
+.logo small { display: block; color: var(--mute); font-size: 12px; }
+.pill-nav { display: flex; gap: 2px; padding: 4px; border: 1px solid var(--line); border-radius: 999px; background: rgb(7 7 10 / .5); }
+.pill-nav a { text-decoration: none; font-size: 13px; color: var(--mute); padding: 6px 14px; border-radius: 999px; }
+.pill-nav a.cur { background: var(--fg); color: var(--ink); }
+.kbd { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--mute); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; background: none; }
+.kbd kbd { font: 10px 'Geist Mono', monospace; border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; }
+@media (max-width: 860px) { .pill-nav { display: none; } }
+
+.stage { flex: 1; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: clamp(20px, 4vw, 56px); align-items: center; position: relative; z-index: 1; padding-block: 8px; }
+@media (max-width: 900px) { .stage { grid-template-columns: 1fr; } }
+.chip { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; font: 11px/1.35 'Geist Mono', monospace; color: var(--fg); background: rgb(255 255 255 / .02); animation: fadeup .9s var(--ease) both; }
+.ping { position: relative; width: 6px; height: 6px; flex: none; }
+.ping::before, .ping::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: var(--acid); }
+.ping::before { animation: ring 1.8s ease-out infinite; }
+@keyframes ring { from { transform: scale(1); opacity: .8; } to { transform: scale(3.2); opacity: 0; } }
+h1 { margin: 26px 0 0; font-weight: 500; letter-spacing: -.045em; line-height: .95; font-size: clamp(2.6rem, min(6.6vw, 12vh), 6.6rem); }
+.line { display: block; overflow: hidden; padding-bottom: .1em; margin-bottom: -.1em; }
+.line > span { display: inline-block; animation: rise 1.3s var(--ease) both; }
+.line:nth-child(2) > span { animation-delay: .07s; }
+.line:nth-child(3) > span { animation-delay: .14s; }
+@keyframes rise { from { transform: translateY(115%) rotate(5deg); } }
+.serif { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -.02em; color: var(--acid); padding-right: .06em; }
+.dim { color: var(--dim); }
+.lede { max-width: 32em; margin: 28px 0 0; font-size: clamp(15px, 1.15vw, 17px); line-height: 1.6; color: var(--mute); animation: fadeup 1s .7s var(--ease) both; }
+.lede b { color: var(--fg); font-weight: 400; }
+@keyframes fadeup { from { opacity: 0; transform: translateY(14px); } }
+.ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; animation: fadeup 1s .85s var(--ease) both; }
+.btn-p { display: inline-flex; align-items: center; gap: 12px; background: var(--acid); color: var(--ink); border-radius: 999px; padding: 12px 12px 12px 22px; font-size: 14px; font-weight: 500; text-decoration: none; transition: box-shadow .4s; }
+.btn-p:hover { box-shadow: 0 0 44px -6px rgb(212 255 79 / .6); }
+.btn-p span { width: 28px; height: 28px; border-radius: 50%; background: var(--ink); color: var(--acid); display: grid; place-items: center; transition: transform .5s var(--ease); }
+.btn-p:hover span { transform: rotate(-45deg); }
+.btn-s { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line-2); border-radius: 999px; padding: 12px 22px; font-size: 14px; text-decoration: none; }
+.btn-s em { font-style: normal; color: var(--mute); }
+
+.meta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; border-top: 1px solid var(--line); padding-block: 20px 26px; margin-top: 40px; animation: fadein 1.2s 1s both; position: relative; z-index: 1; }
+.meta dt { font: 11px 'Geist Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--mute); margin-bottom: 6px; }
+.meta dd { margin: 0; font-size: 13px; font-variant-numeric: tabular-nums; }
+@media (max-width: 720px) { .meta { grid-template-columns: 1fr 1fr; } }
+@keyframes fadein { from { opacity: 0; } }
+
+/* ---------- character stage ---------- */
+.viz { position: relative; width: 100%; max-width: 540px; justify-self: end; aspect-ratio: 5 / 6; animation: fadein 1.2s .2s both; }
+@media (max-width: 900px) { .viz { justify-self: center; max-width: 420px; } }
+.viz > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.breathe { animation: breathe 4.8s ease-in-out infinite; transform-box: view-box; }
+@keyframes breathe { 50% { transform: translateY(-2.5px); } }
+.sweep { animation: sweep 5.5s 1.5s infinite; }
+@keyframes sweep { 0% { transform: translateX(0) skewX(-20deg); } 22%, 100% { transform: translateX(130px) skewX(-20deg); } }
+.spin { animation: spin 70s linear infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* glass cards (1 · Clay) */
+.gcard { position: absolute; padding: 10px 14px; border-radius: 14px; background: rgb(22 22 28 / .55); border: 1px solid var(--line-2); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 20px 40px -18px rgb(0 0 0 / .8); font-size: 13px; line-height: 1.35; white-space: nowrap; will-change: transform; animation: pop .9s var(--ease) both; }
+.gcard small { display: block; font: 10.5px 'Geist Mono', monospace; letter-spacing: .08em; color: var(--mute); text-transform: uppercase; margin-bottom: 3px; }
+.gcard b { font-weight: 500; }
+.gcard .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--acid); margin-right: 7px; vertical-align: 1px; box-shadow: 0 0 10px var(--acid); }
+@keyframes pop { from { opacity: 0; transform: translateY(12px) scale(.96); } }
+
+/* dashboard panels (2 · On call) */
+.panel { position: absolute; padding: 10px 12px; border-radius: 12px; background: rgb(14 14 19 / .8); border: 1px solid var(--line-2); font: 10.5px 'Geist Mono', monospace; color: var(--mute); letter-spacing: .04em; animation: pop .9s var(--ease) both; }
+.panel .big { display: block; font: 500 20px 'Geist', sans-serif; letter-spacing: -.02em; color: var(--fg); margin: 3px 0 6px; font-variant-numeric: tabular-nums; }
+.panel .big em { font-style: normal; color: var(--acid); font-size: 12px; margin-left: 6px; }
+.bars { display: flex; gap: 2px; height: 16px; align-items: flex-end; }
+.bars i { flex: 1; background: var(--acid); opacity: .75; border-radius: 1px; height: 100%; }
+.bars i.lo { opacity: .25; height: 60%; }
+.pipe { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
+.pipe span { padding: 3px 7px; border-radius: 6px; border: 1px solid var(--line-2); color: var(--mute); transition: .3s; }
+.pipe span.on { border-color: var(--acid); color: var(--ink); background: var(--acid); }
+.pipe span.ok { border-color: rgb(212 255 79 / .4); color: var(--acid); }
+.pipe b { width: 10px; height: 1px; background: var(--line-2); }
+
+/* signature (4 · Line) */
+.sig { position: absolute; left: 0; top: 0; opacity: 0; transform: translateY(8px); transition: 1s var(--ease); }
+.sig.on { opacity: 1; transform: none; }
+.sig b { display: block; font: 400 clamp(26px, 3vw, 36px)/1 'Instrument Serif', Georgia, serif; font-style: italic; }
+.sig small { font: 10.5px 'Geist Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--mute); }
+.ln { stroke-dasharray: 1 1; stroke-dashoffset: 1; }
+.drawn .ln { stroke-dashoffset: 0; transition: stroke-dashoffset 1.5s cubic-bezier(.65, 0, .35, 1) var(--d, 0s); }
+
+.cap { position: absolute; left: 0; right: 0; bottom: -26px; display: flex; justify-content: space-between; gap: 10px; font: 10.5px 'Geist Mono', monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); }
+.cap b { color: var(--mute); font-weight: 400; }
+
+/* prototype switcher (review aid only) */
+.switch { position: fixed; z-index: 20; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; gap: 4px; padding: 5px; border-radius: 16px; background: rgb(20 20 26 / .88); border: 1px solid var(--line-2); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 20px 50px -10px rgb(0 0 0 / .7); max-width: calc(100% - 32px); overflow-x: auto; scrollbar-width: none; }
+.switch button { flex: none; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; background: none; border: 0; border-radius: 11px; padding: 8px 14px; text-align: left; color: var(--mute); transition: background .25s, color .25s; }
+.switch button b { font: 500 13px 'Geist', sans-serif; color: var(--fg); white-space: nowrap; }
+.switch button span { font: 10.5px 'Geist Mono', monospace; letter-spacing: .04em; white-space: nowrap; }
+.switch button[aria-pressed="true"] { background: var(--acid); color: rgb(7 7 10 / .7); }
+.switch button[aria-pressed="true"] b { color: var(--ink); }
+@media (max-width: 900px) { .switch button span { display: none; } .switch button { padding: 8px 12px; } }
+.spacer { height: 90px; }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+</style>
+
+<section class="hero">
+  <div class="glow" aria-hidden="true"></div>
+  <header class="wrap nav">
+    <a class="logo" href="#"><i>SM</i><span>Sambit Maity<small>Full-Stack Engineer</small></span></a>
+    <nav class="pill-nav"><a class="cur" href="#">About</a><a href="#">Experience</a><a href="#">Work</a><a href="#">Stack</a><a href="#">Contact</a></nav>
+    <button class="kbd">Quick actions <kbd>⌘K</kbd></button>
+  </header>
+
+  <div class="wrap stage">
+    <div>
+      <span class="chip"><span class="ping"></span>Open to senior full-stack &amp; founding-engineer roles</span>
+      <h1 aria-label="Engineering complete systems, not just features.">
+        <span class="line" aria-hidden="true"><span>Engineering</span></span>
+        <span class="line" aria-hidden="true"><span><span class="serif">complete</span> systems,</span></span>
+        <span class="line" aria-hidden="true"><span class="dim">not just features.</span></span>
+      </h1>
+      <p class="lede"><b>Sambit Maity.</b> Laravel &amp; Node.js engineer who owns products end to end, from architecture and APIs to servers, automation and the pixels on screen.</p>
+      <div class="ctas">
+        <a class="btn-p" href="#">See selected work <span>→</span></a>
+        <a class="btn-s" href="#">Résumé <em>↓</em></a>
+      </div>
+    </div>
+
+    <div class="viz" id="v1" data-k="1">
+      <div class="gcard" data-depth="18" style="left:-4%;top:12%;animation-delay:1s"><small>Currently</small><b>Technical Lead</b> · Collabmate</div>
+      <div class="gcard" data-depth="-14" style="right:-2%;top:40%;animation-delay:1.2s"><small>Track record</small><b>25+ projects</b> · 4 teams</div>
+      <div class="gcard" data-depth="10" style="left:0;top:66%;animation-delay:1.4s"><span class="dot"></span>On call for what I ship</div>
+      <div class="cap"><span><b>Sambit</b> · the lead</span><span>Hover to look around</span></div>
+    </div>
+    <div class="viz" id="v2" data-k="2" hidden>
+      <div class="panel" style="left:0;top:4%;width:44%;animation-delay:.6s">UPTIME · 30 DAYS<span class="big">99.98%<em>● normal</em></span><div class="bars" id="bars2"></div></div>
+      <div class="panel" style="right:0;top:0;width:48%;animation-delay:.8s">DEPLOY · MAIN<span class="big" id="dep2">#214</span><div class="pipe" id="pipe2"><span>build</span><b></b><span>test</span><b></b><span>ship</span></div></div>
+      <div class="panel" style="right:0;top:27%;width:40%;animation-delay:1s">P95 LATENCY<span class="big" id="lat2">142 ms</span><svg viewBox="0 0 100 24" width="100%" height="22" preserveAspectRatio="none"><polyline id="spark2" fill="none" stroke="#d4ff4f" stroke-width="1.5" points=""/></svg></div>
+      <div class="cap"><span><b>Sambit</b> · on call, calm</span><span>Placeholder metrics</span></div>
+    </div>
+    <div class="viz" id="v3" data-k="3" hidden>
+      <div class="cap"><span><b>Sambit</b> · designing the system</span><span>Loops every ~12s</span></div>
+    </div>
+    <div class="viz" id="v4" data-k="4" hidden>
+      <div class="sig" id="sig4"><b>Sambit Maity</b><small>Technical Lead · Full-stack</small></div>
+      <div class="cap"><span><b>Line portrait</b></span><span>Click to redraw</span></div>
+    </div>
+    <div class="viz" id="v5" data-k="5" hidden>
+      <div class="cap"><span><b>Sambit</b> · orchestrating agents</span><span>Every chip is real work</span></div>
+    </div>
+  </div>
+
+  <dl class="wrap meta">
+    <div><dt>Currently</dt><dd>Technical Lead @ Collabmate</dd></div>
+    <div><dt>Based in</dt><dd>Kolkata, IN · <span id="clock">--:--:--</span></dd></div>
+    <div><dt>Core</dt><dd>Laravel · Node · React · Infra</dd></div>
+    <div><dt>Shipping since</dt><dd>2023, 25+ projects, 4 teams</dd></div>
+  </dl>
+  <div class="spacer"></div>
+</section>
+
+<div class="switch" role="group" aria-label="Choose a character">
+  <button aria-pressed="true" data-k="1"><b>1 · The lead</b><span>Clay 3D, arms crossed</span></button>
+  <button aria-pressed="false" data-k="2"><b>2 · On call</b><span>Coffee, systems green</span></button>
+  <button aria-pressed="false" data-k="3"><b>3 · Architect</b><span>Draws the system</span></button>
+  <button aria-pressed="false" data-k="4"><b>4 · Line portrait</b><span>Editorial, self-drawing</span></button>
+  <button aria-pressed="false" data-k="5"><b>5 · Orchestrator</b><span>Directs AI agents</span></button>
+</div>
+
+<script>
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = (s, r = document) => r.querySelector(s);
+const tick = () => { $('#clock').textContent = new Date().toLocaleTimeString('en-GB', { timeZone: 'Asia/Kolkata' }) + ' IST'; };
+tick(); setInterval(tick, 1000);
+
+const pointer = { x: 0, y: 0, t: 0 };
+addEventListener('pointermove', (e) => { pointer.x = e.clientX; pointer.y = e.clientY; pointer.t = performance.now(); });
+const rel = (el) => {
+  const r = el.getBoundingClientRect();
+  if (!pointer.t || performance.now() - pointer.t > 4000) return null;
+  return { x: Math.max(-1, Math.min(1, (pointer.x - (r.left + r.width / 2)) / (r.width / 2))), y: Math.max(-1, Math.min(1, (pointer.y - (r.top + r.height / 2)) / (r.height / 2))) };
+};
+const NS = 'http://www.w3.org/2000/svg';
+
+/* ============ Character rig: one drawing of Sambit, three render styles ============ */
+const INK = '#07070a';
+const FLAT = {
+  skin: ['#b87a55'], skinSh: ['#9a5f40'], hair: ['#17110e'], curl: [null, '#3b2b21', 2], eye: ['#140f0c'], glint: ['#fff'],
+  frame: [null, '#e2e5ea', 2.4], lens: ['rgba(212,255,79,.06)'], lip: ['#4a1b15'], teeth: ['#f5f0ea'],
+  brow: [null, '#17110e', 4.5], noseL: [null, '#83492e', 2.4], lid: [null, '#8a5236', 1.8], stache: [null, '#17110e', 2.2], closed: [null, '#4a1b15', 3],
+  jacket: ['#1e1e27'], jacketSh: ['#18181f'], lapel: ['#272732'], shirt: ['#c9d2db'], shirtSh: ['#a9b3bd'], crease: [null, 'rgba(0,0,0,.45)', 2], cheek: ['rgba(170,70,50,.16)'], cuff: ['#c9d2db'],
+};
+const CLAY = { ...FLAT, skin: ['url(#P-skin)'], skinSh: ['url(#P-skinSh)'], hair: ['url(#P-hair)'], jacket: ['url(#P-jacket)'], jacketSh: ['url(#P-jacket2)'], lapel: ['url(#P-lapel)'], shirt: ['url(#P-shirt)'], lens: ['rgba(255,255,255,.08)'], frame: [null, '#eadfc6', 2.6] };
+const LINE = Object.fromEntries(Object.keys(FLAT).map((k) => [k, [INK, '#ededef', 1.5]]));
+Object.assign(LINE, { eye: ['#ededef'], glint: [null, null], frame: [null, '#d4ff4f', 1.8], lens: [null, null], curl: [null, '#8b8b95', 1.2], brow: [null, '#ededef', 2.2], noseL: [null, '#ededef', 1.4], lid: [null, '#8b8b95', 1.2], stache: [null, '#ededef', 1.4], closed: [null, '#ededef', 1.6], cheek: [null, null] });
+
+function painter(sty, line) {
+  return (tag, attrs, role, cls = '') => {
+    const [f, s, w] = sty[role];
+    if (!f && !s) return '';
+    let a = `<${tag} ${attrs} fill="${f || 'none'}"`;
+    if (s) a += ` stroke="${s}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"`;
+    const c = (cls + (line && s ? ' ln' : '')).trim();
+    if (c) a += ` class="${c}"`;
+    if (line && s) a += ' pathLength="1"';
+    return a + '/>';
+  };
+}
+const clayDefs = `
+  <radialGradient id="P-skin" cx="38%" cy="30%" r="80%"><stop offset="0" stop-color="#e6a77f"/><stop offset=".55" stop-color="#b8774f"/><stop offset="1" stop-color="#8a4f33"/></radialGradient>
+  <radialGradient id="P-skinSh" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#b87a55"/><stop offset="1" stop-color="#7c462d"/></radialGradient>
+  <radialGradient id="P-hair" cx="35%" cy="25%" r="85%"><stop offset="0" stop-color="#55433a"/><stop offset=".45" stop-color="#1c1411"/><stop offset="1" stop-color="#0a0706"/></radialGradient>
+  <linearGradient id="P-jacket" x1="0" y1="0" x2=".3" y2="1"><stop offset="0" stop-color="#34343f"/><stop offset="1" stop-color="#121218"/></linearGradient>
+  <linearGradient id="P-jacket2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3a46"/><stop offset="1" stop-color="#1a1a21"/></linearGradient>
+  <linearGradient id="P-lapel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3c3c48"/><stop offset="1" stop-color="#20202a"/></linearGradient>
+  <linearGradient id="P-shirt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#aab4be"/></linearGradient>`;
+
+function headSVG(d, style) {
+  const clay = style === 'clay', line = style === 'line';
+  const HB = [[-62, -44, 18], [-56, -26, 26], [-50, -58, 26], [-26, -80, 28], [6, -88, 29], [36, -80, 28], [58, -56, 25], [66, -26, 20], [-66, -4, 14], [68, -2, 13]];
+  const HF = [[-56, -30, 11], [56, -30, 11], [-46, -46, 18], [44, -46, 17], [-24, -58, 20], [24, -58, 20], [0, -62, 21]];
+  let s = '<g class="head">';
+  HB.forEach(([x, y, r]) => { s += d('circle', `cx="${x}" cy="${y}" r="${r}"`, 'hair'); });
+  s += d('ellipse', 'cx="-60" cy="8" rx="10" ry="15"', 'skinSh') + d('ellipse', 'cx="60" cy="8" rx="10" ry="15"', 'skinSh');
+  s += d('path', 'd="M-58 -12 C-58 -58 58 -58 58 -12 C58 38 34 74 0 76 C-34 74 -58 38 -58 -12 Z"', 'skin');
+  if (clay) s += '<ellipse cx="-20" cy="-24" rx="24" ry="12" fill="#fff" opacity=".12"/><ellipse cx="-2" cy="16" rx="5" ry="3" fill="#fff" opacity=".18"/>';
+  s += d('ellipse', 'cx="-35" cy="24" rx="11" ry="6"', 'cheek') + d('ellipse', 'cx="35" cy="24" rx="11" ry="6"', 'cheek');
+  HF.forEach(([x, y, r]) => { s += d('circle', `cx="${x}" cy="${y}" r="${r}"`, 'hair'); });
+  if (clay) s += '<ellipse cx="-14" cy="-72" rx="14" ry="6" fill="#fff" opacity=".1"/>';
+  s += d('path', 'd="M-36 -60 q6 -9 13 -2"', 'curl') + d('path', 'd="M-8 -70 q7 -8 14 0"', 'curl') + d('path', 'd="M18 -66 q7 -7 13 1"', 'curl') + d('path', 'd="M38 -54 q6 -6 11 2"', 'curl');
+  s += d('path', 'd="M-37 -21 Q-25 -28 -11 -22"', 'brow', 'brow') + d('path', 'd="M11 -22 Q25 -28 37 -21"', 'brow', 'brow');
+  s += '<g class="eyes"><g class="blink">' + d('ellipse', 'cx="-23" cy="-3" rx="4.8" ry="5.8"', 'eye') + d('circle', 'cx="-21.4" cy="-5" r="1.5"', 'glint') + d('ellipse', 'cx="23" cy="-3" rx="4.8" ry="5.8"', 'eye') + d('circle', 'cx="24.6" cy="-5" r="1.5"', 'glint') + '</g></g>';
+  s += d('path', 'd="M-30 5 Q-23 9 -16 5"', 'lid') + d('path', 'd="M16 5 Q23 9 30 5"', 'lid');
+  s += d('rect', 'x="-42" y="-17" width="36" height="29" rx="9"', 'lens') + d('rect', 'x="6" y="-17" width="36" height="29" rx="9"', 'lens');
+  if (!line) s += '<g clip-path="url(#P-lensclip)"><rect class="sweep" x="-64" y="-30" width="9" height="60" fill="#fff" opacity=".4"/></g>';
+  s += d('rect', 'x="-42" y="-17" width="36" height="29" rx="9"', 'frame') + d('rect', 'x="6" y="-17" width="36" height="29" rx="9"', 'frame');
+  s += d('path', 'd="M-6 -10 Q0 -13 6 -10"', 'frame') + d('path', 'd="M-8 -16 L8 -16"', 'frame') + d('path', 'd="M-42 -9 L-59 -5"', 'frame') + d('path', 'd="M42 -9 L59 -5"', 'frame');
+  s += d('path', 'd="M-1 4 Q-7 17 -2 21 Q2 23 7 19"', 'noseL');
+  s += d('path', 'd="M-14 29 Q0 25 14 29"', 'stache');
+  s += '<g class="m-open">' + d('path', 'd="M-19 32 Q0 55 19 32 Q0 37 -19 32 Z"', 'lip') + d('path', 'd="M-16 33.4 Q0 38.6 16 33.4 L14.4 37.6 Q0 42.4 -14.4 37.6 Z"', 'teeth') + '</g>';
+  s += '<g class="m-closed" style="display:none">' + d('path', 'd="M-14 36 Q0 44 14 36"', 'closed') + '</g>';
+  s += d('path', 'd="M-10 57 Q0 53 10 57 Q9 71 0 75 Q-9 71 -10 57 Z"', 'hair') + d('path', 'd="M-3 46 Q0 49 3 46 L0 51 Z"', 'hair');
+  return s + '</g>';
+}
+function bodySVG(d, arms) {
+  let s = d('path', 'd="M-21 46 L-21 112 L21 112 L21 46 Z"', 'skinSh') + '<g transform="translate(0 -18)">';
+  s += d('path', 'd="M-134 300 C-134 178 -88 130 0 124 C88 130 134 178 134 300 Z"', 'jacket');
+  s += d('path', 'd="M-32 124 L0 200 L32 124 Q0 116 -32 124 Z"', 'shirt');
+  s += d('path', 'd="M-27 116 L-3 146 L-33 154 L-38 127 Z"', 'shirt') + d('path', 'd="M27 116 L3 146 L33 154 L38 127 Z"', 'shirt');
+  s += d('path', 'd="M-38 127 L-6 212 L-60 178 L-51 134 Z"', 'lapel') + d('path', 'd="M38 127 L6 212 L60 178 L51 134 Z"', 'lapel');
+  if (arms === 'crossed') {
+    // upper arms read as creases down the jacket; forearms fold across the chest
+    s += d('path', 'd="M-92 150 Q-104 188 -98 232"', 'crease') + d('path', 'd="M92 150 Q104 188 98 232"', 'crease');
+    s += '<g transform="translate(0 214) rotate(-13)">' + d('rect', 'x="-92" y="-21" width="184" height="42" rx="21"', 'jacket') + '</g>';
+    s += d('ellipse', 'cx="90" cy="190" rx="14" ry="12" transform="rotate(-20 90 190)"', 'skin');
+    s += '<g transform="translate(0 230) rotate(11)">' + d('rect', 'x="-94" y="-21" width="188" height="42" rx="21"', 'jacketSh') + d('path', 'd="M-72 -21 L-72 21"', 'crease') + '</g>';
+    s += d('ellipse', 'cx="-90" cy="210" rx="14" ry="12" transform="rotate(20 -90 210)"', 'skin');
+  }
+  return s + '</g>';
+}
+function svgRoot(extraDefs = '') {
+  return `<svg viewBox="0 0 420 504" aria-hidden="true"><defs>${clayDefs}
+    <clipPath id="P-lensclip"><rect x="-42" y="-17" width="36" height="29" rx="9"/><rect x="6" y="-17" width="36" height="29" rx="9"/></clipPath>
+    <radialGradient id="P-halo"><stop offset="0" stop-color="#d4ff4f" stop-opacity=".16"/><stop offset="1" stop-color="#d4ff4f" stop-opacity="0"/></radialGradient>
+    <filter id="P-soft" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#000" flood-opacity=".55"/></filter>${extraDefs}</defs>`;
+}
+// Gives every id in a scene its own prefix so five scenes can share the page
+const scoped = (html, p) => html.replace(/P-/g, p + '-');
+
+// Head, eyes and blink follow a look target; returns an updater
+function rig(root) {
+  const head = $('.head', root), eyes = $('.eyes', root), blink = $('.blink', root), mo = $('.m-open', root), mc = $('.m-closed', root);
+  let hx = 0, hy = 0, nextBlink = 1500, blinkT = -1, closedUntil = 0;
+  return {
+    update(t, look) {
+      hx += (look.x - hx) * .08; hy += (look.y - hy) * .08;
+      head.setAttribute('transform', `translate(${hx * 7} ${hy * 5}) rotate(${hx * 5} 0 70)`);
+      eyes.setAttribute('transform', `translate(${hx * 4} ${hy * 3})`);
+      if (t > nextBlink) { blinkT = t; nextBlink = t + 2400 + Math.random() * 3200; }
+      const b = blinkT > 0 && t - blinkT < 170 ? Math.abs(Math.cos((t - blinkT) / 170 * Math.PI)) * .9 + .1 : 1;
+      blink.setAttribute('transform', `translate(0 -3) scale(1 ${t < closedUntil ? .1 : b}) translate(0 3)`);
+    },
+    mouth(open) { mo.style.display = open ? '' : 'none'; mc.style.display = open ? 'none' : ''; },
+    closeEyes(ms, t) { closedUntil = t + ms; },
+  };
+}
+// Two-bone arm: shoulder → elbow → hand, clamped to reach
+function ik(sx, sy, tx, ty, a, b, bend) {
+  const dx = tx - sx, dy = ty - sy, L = Math.min(Math.hypot(dx, dy), a + b - .5), ang = Math.atan2(dy, dx);
+  const c = Math.max(-1, Math.min(1, (a * a + L * L - b * b) / (2 * a * L))), e = ang + bend * Math.acos(c);
+  return [sx + Math.cos(e) * a, sy + Math.sin(e) * a, sx + Math.cos(ang) * L, sy + Math.sin(ang) * L];
+}
+const idleLook = (t) => ({ x: Math.sin(t / 2300) * .5, y: Math.sin(t / 3100) * .25 });
+
+/* ============ 1 · The lead (clay 3D, arms crossed, credentials float) ============ */
+const S1 = (() => {
+  const el = $('#v1'), d = painter(CLAY, false);
+  el.insertAdjacentHTML('afterbegin', scoped(svgRoot() + `
+    <circle cx="210" cy="220" r="190" fill="url(#P-halo)"/>
+    <circle class="spin" cx="210" cy="220" r="176" fill="none" stroke="rgba(255,255,255,.09)" stroke-dasharray="2 8"/>
+    <circle cx="210" cy="220" r="136" fill="none" stroke="rgba(255,255,255,.05)"/>
+    <g transform="translate(210 196)" filter="url(#P-soft)"><g class="breathe">${bodySVG(d, 'crossed')}${headSVG(d, 'clay')}</g></g></svg>`, 's1'));
+  const r = rig(el), cards = [...el.querySelectorAll('.gcard')];
+  let px = 0, py = 0;
+  return {
+    frame(t) {
+      const p = rel(el) || idleLook(t); r.update(t, p);
+      px += (p.x - px) * .06; py += (p.y - py) * .06;
+      cards.forEach((c) => { const k = +c.dataset.depth; c.style.translate = `${px * k}px ${py * k * .6}px`; });
+    },
+  };
+})();
+
+/* ============ 2 · On call (flat, coffee, live dashboards) ============ */
+const S2 = (() => {
+  const el = $('#v2'), d = painter(FLAT, false);
+  el.insertAdjacentHTML('afterbegin', scoped(svgRoot() + `
+    <circle cx="210" cy="250" r="170" fill="url(#P-halo)"/>
+    <g transform="translate(210 250) scale(.9)"><g class="breathe">${bodySVG(d, 'none')}${headSVG(d, 'flat')}
+      <path class="arm" fill="none" stroke="#18181f" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+      <g class="mug">
+        <path d="M-22 -8 q0 -6 5 -10 M-8 -10 q0 -7 5 -12 M6 -8 q0 -6 5 -10" class="steam" fill="none" stroke="rgba(237,237,239,.35)" stroke-width="2" stroke-linecap="round"/>
+        <path d="M18 4 h6 a9 9 0 0 1 0 18 h-6" fill="none" stroke="#ededef" stroke-width="5"/>
+        <rect x="-22" y="0" width="42" height="40" rx="7" fill="#ededef"/>
+        <rect x="-22" y="12" width="42" height="7" fill="#d4ff4f"/>
+        <text x="-1" y="34" text-anchor="middle" font-family="Geist Mono, monospace" font-size="8" fill="#07070a">&lt;/&gt;</text>
+        <ellipse cx="-24" cy="22" rx="13" ry="15" fill="#b87a55"/><rect x="-36" y="8" width="10" height="26" rx="4" fill="#c9d2db"/>
+      </g>
+    </g></g></svg>`, 's2'));
+  const r = rig(el), arm = $('.arm', el), mug = $('.mug', el), steam = $('.steam', el);
+  $('#bars2').innerHTML = Array.from({ length: 30 }, (_, i) => `<i${i === 17 ? ' class="lo"' : ''}></i>`).join('');
+  const pipe = [...$('#pipe2').querySelectorAll('span')];
+  let lift = 0, liftT = 0, stage = 0, stageAt = 0, dep = 214, lat = Array.from({ length: 24 }, () => 130 + Math.random() * 25), latAt = 0;
+  return {
+    frame(t) {
+      // every ~7s: raise the mug, close eyes for a sip, lower it
+      if (t > liftT) liftT = t + 7000;
+      const ph = (t % 7000) / 7000, target = ph > .55 && ph < .8 ? 1 : 0;
+      lift += (target - lift) * .07;
+      const look = rel(el) || idleLook(t);
+      r.update(t, lift > .6 ? { x: .15, y: .5 } : look);
+      r.mouth(lift < .6);
+      const hx = 52 - lift * 18, hy = 176 - lift * 104;
+      const [ex, ey, ax, ay] = ik(100, 146, hx, hy, 78, 80, -1);
+      arm.setAttribute('d', `M100 146 L${ex} ${ey} L${ax} ${ay}`);
+      mug.setAttribute('transform', `translate(${ax + 10} ${ay - 14}) rotate(${-lift * 18})`);
+      steam.style.opacity = (.5 + Math.sin(t / 300) * .3) * (1 - lift);
+      steam.setAttribute('transform', `translate(0 ${-((t / 40) % 6)})`);
+      // pipeline: build → test → ship, then a new deploy number
+      if (t > stageAt) {
+        stage = (stage + 1) % 4; stageAt = t + (stage === 3 ? 1800 : 1100);
+        if (stage === 0) { dep++; $('#dep2').textContent = '#' + dep; }
+        pipe.forEach((p, i) => { p.className = i < stage ? 'ok' : i === stage ? 'on' : ''; });
+        if (stage === 3) $('#dep2').innerHTML = `#${dep}<em>✓ live</em>`;
+      }
+      if (t > latAt) {
+        latAt = t + 700; lat.shift(); lat.push(128 + Math.random() * 28);
+        $('#lat2').textContent = Math.round(lat[lat.length - 1]) + ' ms';
+        $('#spark2').setAttribute('points', lat.map((v, i) => `${(i / 23 * 100).toFixed(1)},${(24 - (v - 120) / 40 * 22).toFixed(1)}`).join(' '));
+      }
+    },
+  };
+})();
+
+/* ============ 3 · The architect (draws a system diagram with a laser pen) ============ */
+const S3 = (() => {
+  const el = $('#v3'), d = painter(FLAT, false);
+  const N = [['Client', 185, 66], ['Nginx', 272, 66], ['Laravel API', 272, 132], ['Claude API', 357, 132], ['Queue', 185, 132], ['Workers', 185, 198], ['Postgres', 272, 198]];
+  const E = [[0, 1], [1, 2], [2, 3], [2, 4], [4, 5], [2, 6], [5, 6]];
+  const edgePath = ([a, b]) => {
+    const [, x1, y1] = N[a], [, x2, y2] = N[b];
+    const dx = Math.sign(x2 - x1), dy = Math.sign(y2 - y1);
+    const sx = x1 + dx * 36, sy = y1 + dy * 15, tx = x2 - dx * 38, ty = y2 - dy * 17;
+    return `M${sx} ${sy} L${tx} ${ty}`;
+  };
+  const steps = [];
+  N.forEach((n, i) => { steps.push({ k: 'n', i }); E.forEach((e, j) => { if (Math.max(...e) === i) steps.push({ k: 'e', i: j }); }); });
+  el.insertAdjacentHTML('afterbegin', scoped(svgRoot(`<marker id="P-arr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#d4ff4f"/></marker>`) + `
+    <rect x="138" y="18" width="270" height="222" rx="14" fill="rgba(255,255,255,.025)" stroke="rgba(255,255,255,.14)"/>
+    <text x="154" y="36" font-family="Geist Mono, monospace" font-size="8.5" letter-spacing="1.5" fill="#55555e">SYSTEM · V2 · DRAFT</text>
+    <g class="board">
+      ${E.map((e, j) => `<path class="edge" data-j="${j}" d="${edgePath(e)}" fill="none" stroke="#d4ff4f" stroke-width="1.4" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1" marker-end="url(#P-arr)" opacity=".8"/>`).join('')}
+      ${N.map(([t, x, y], i) => `<g class="node" data-i="${i}" opacity="0"><rect x="${x - 36}" y="${y - 14}" width="72" height="28" rx="7" fill="#101015" stroke="${i === 2 ? '#d4ff4f' : 'rgba(255,255,255,.3)'}" pathLength="1" stroke-dasharray="1 1" stroke-dashoffset="1"/><text x="${x}" y="${y + 3.5}" text-anchor="middle" font-family="Geist Mono, monospace" font-size="9.5" fill="${i === 2 ? '#d4ff4f' : '#ededef'}">${t}</text></g>`).join('')}
+      <g class="pk"></g>
+    </g>
+    <line class="laser" stroke="#d4ff4f" stroke-width="1.2" opacity="0"/>
+    <circle class="spot" r="4" fill="#d4ff4f" opacity="0"/>
+    <g transform="translate(112 338) scale(.8)"><g class="breathe">${bodySVG(d, 'none')}${headSVG(d, 'flat')}
+      <path class="arm" fill="none" stroke="#18181f" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+      <g class="hand"><rect x="-4" y="-26" width="7" height="24" rx="2" fill="#ededef" transform="rotate(30)"/><circle r="14" fill="#b87a55"/></g>
+    </g></g></svg>`, 's3'));
+  const r = rig(el), arm = $('.arm', el), hand = $('.hand', el), laser = $('.laser', el), spot = $('.spot', el), pk = $('.pk', el);
+  const nodes = [...el.querySelectorAll('.node')], edges = [...el.querySelectorAll('.edge')];
+  const AX = 112, AY = 338, SC = .8;
+  let start = 0, step = -1, aim = [185, 66], aimS = [185, 66], packets = [];
+  function reset(t) {
+    start = t; step = -1; packets = []; pk.innerHTML = '';
+    nodes.forEach((n) => { n.setAttribute('opacity', 0); n.firstChild.style.transition = 'none'; n.firstChild.setAttribute('stroke-dashoffset', 1); });
+    edges.forEach((e) => { e.style.transition = 'none'; e.setAttribute('stroke-dashoffset', 1); });
+  }
+  const STEP = 520, DRAWN = steps.length * STEP, LOOP = DRAWN + 6500;
+  return {
+    enter(t) { reset(t); },
+    frame(t) {
+      if (!start) reset(t);
+      const el_ = t - start;
+      if (el_ > LOOP) { reset(t); return; }
+      const s = Math.min(steps.length - 1, Math.floor(el_ / STEP));
+      if (s > step && el_ < DRAWN) {
+        step = s; const st = steps[s];
+        if (st.k === 'n') { const n = nodes[st.i]; n.setAttribute('opacity', 1); n.firstChild.style.transition = 'stroke-dashoffset .45s ease'; requestAnimationFrame(() => n.firstChild.setAttribute('stroke-dashoffset', 0)); aim = [N[st.i][1], N[st.i][2]]; }
+        else { const e = edges[st.i]; e.style.transition = 'stroke-dashoffset .45s ease'; requestAnimationFrame(() => e.setAttribute('stroke-dashoffset', 0)); const b = N[E[st.i][1]]; aim = [b[1], b[2]]; }
+      }
+      const drawing = el_ < DRAWN + 300;
+      aimS[0] += (aim[0] - aimS[0]) * .12; aimS[1] += (aim[1] - aimS[1]) * .12;
+      // arm points toward the spot being drawn; rests when done
+      const sx = 100, sy = 146, cx = (aimS[0] - AX) / SC, cy = (aimS[1] - AY) / SC;
+      const ang = Math.atan2(cy - sy, cx - sx), reach = 150;
+      const tx = drawing ? sx + Math.cos(ang) * reach : 60, ty = drawing ? sy + Math.sin(ang) * reach : 190;
+      const [ex, ey, hx, hy] = ik(sx, sy, tx, ty, 80, 80, 1);
+      arm.setAttribute('d', `M${sx} ${sy} L${ex} ${ey} L${hx} ${hy}`);
+      hand.setAttribute('transform', `translate(${hx} ${hy})`);
+      const wx = AX + hx * SC, wy = AY + hy * SC;
+      laser.setAttribute('x1', wx); laser.setAttribute('y1', wy); laser.setAttribute('x2', aimS[0]); laser.setAttribute('y2', aimS[1]);
+      laser.setAttribute('opacity', drawing ? .7 : 0); spot.setAttribute('cx', aimS[0]); spot.setAttribute('cy', aimS[1]); spot.setAttribute('opacity', drawing ? 1 : 0);
+      // look at the board while drawing, then at the visitor
+      r.update(t, drawing ? { x: .8, y: -.7 } : (rel(el) || idleLook(t)));
+      // once drawn, requests flow along the edges
+      if (!drawing && Math.random() < .08 && packets.length < 12) {
+        const e = edges[Math.random() * edges.length | 0], c = document.createElementNS(NS, 'circle');
+        c.setAttribute('r', 2.6); c.setAttribute('fill', '#d4ff4f'); pk.appendChild(c); packets.push({ e, c, u: 0 });
+      }
+      packets = packets.filter((p) => { p.u += .02; if (p.u >= 1) { p.c.remove(); return false; } const L = p.e.getTotalLength(), q = p.e.getPointAtLength(p.u * L); p.c.setAttribute('cx', q.x); p.c.setAttribute('cy', q.y); return true; });
+      nodes.forEach((n, i) => n.firstChild.setAttribute('fill', !drawing && i === 2 ? `rgba(212,255,79,${.08 + Math.sin(t / 300) * .05})` : '#101015'));
+    },
+  };
+})();
+
+/* ============ 4 · Line portrait (editorial, draws itself) ============ */
+const S4 = (() => {
+  const el = $('#v4'), d = painter(LINE, true);
+  el.insertAdjacentHTML('afterbegin', scoped(svgRoot() + `
+    <circle cx="210" cy="206" r="168" fill="none" stroke="rgba(255,255,255,.12)" class="ln" pathLength="1"/>
+    <circle cx="210" cy="206" r="182" fill="none" stroke="rgba(212,255,79,.5)" stroke-dasharray="1 5" opacity=".6"/>
+    <g transform="translate(210 188)"><g class="breathe">${bodySVG(d, 'crossed')}${headSVG(d, 'line')}</g></g></svg>`, 's4'));
+  const r = rig(el), svg = $('svg', el), sig = $('#sig4');
+  [...el.querySelectorAll('.ln')].forEach((n, i) => n.style.setProperty('--d', (i * .045).toFixed(3) + 's'));
+  let at = 0;
+  const draw = () => { svg.classList.remove('drawn'); sig.classList.remove('on'); void svg.getBoundingClientRect(); requestAnimationFrame(() => svg.classList.add('drawn')); clearTimeout(at); at = setTimeout(() => sig.classList.add('on'), 2600); };
+  el.addEventListener('click', draw);
+  return { enter: draw, frame(t) { r.update(t, rel(el) || idleLook(t)); } };
+})();
+
+/* ============ 5 · Orchestrator (directs a ring of AI agents) ============ */
+const S5 = (() => {
+  const el = $('#v5'), d = painter(CLAY, false);
+  const TASKS = ['deploy api', 'run tests', 'review PR', 'migrate db', 'send campaign', 'scale VPS', 'sync CRM', 'build app'];
+  el.insertAdjacentHTML('afterbegin', scoped(svgRoot() + `
+    <circle cx="210" cy="230" r="180" fill="url(#P-halo)"/>
+    <ellipse cx="210" cy="250" rx="186" ry="48" fill="none" stroke="rgba(255,255,255,.1)" stroke-dasharray="2 6"/>
+    <g class="back"></g>
+    <g transform="translate(210 214) scale(.92)" filter="url(#P-soft)"><g class="breathe">${bodySVG(d, 'none')}${headSVG(d, 'clay')}
+      <path class="arm" fill="none" stroke="#2a2a34" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+      <g class="palm"><rect x="-4" y="-36" width="8" height="24" rx="4" fill="#b87a55"/><rect x="5" y="-38" width="8" height="26" rx="4" fill="#b87a55"/><rect x="14" y="-35" width="8" height="23" rx="4" fill="#b87a55"/><rect x="-13" y="-30" width="8" height="20" rx="4" fill="#b87a55"/><rect x="-14" y="-18" width="36" height="30" rx="12" fill="#b87a55"/><rect x="-24" y="-8" width="16" height="8" rx="4" fill="#b87a55" transform="rotate(30 -16 -4)"/></g>
+    </g></g>
+    <g class="front"></g></svg>`, 's5'));
+  const r = rig(el), arm = $('.arm', el), palm = $('.palm', el), back = $('.back', el), front = $('.front', el);
+  const bots = Array.from({ length: 5 }, (_, i) => {
+    const g = document.createElementNS(NS, 'g');
+    g.innerHTML = `<line x1="0" y1="-15" x2="0" y2="-23" stroke="rgba(255,255,255,.4)"/><circle cy="-24" r="2.4" fill="#d4ff4f"/>
+      <rect x="-19" y="-15" width="38" height="28" rx="11" fill="#1d1d25" stroke="rgba(255,255,255,.2)"/>
+      <rect x="-12" y="-7" width="24" height="10" rx="5" fill="#07070a"/><circle class="e1" cx="-5" cy="-2" r="2.2" fill="#d4ff4f"/><circle class="e2" cx="5" cy="-2" r="2.2" fill="#d4ff4f"/>
+      <g transform="translate(0 26)"><rect class="chipbg" x="-34" y="-9" width="68" height="17" rx="8.5" fill="rgba(14,14,19,.9)" stroke="rgba(255,255,255,.18)"/><text class="chipt" y="3.2" text-anchor="middle" font-family="Geist Mono, monospace" font-size="8.5" fill="#ededef"></text></g>`;
+    const b = { g, a: i / 5 * Math.PI * 2, task: TASKS[i], done: 0 };
+    $('.chipt', g).textContent = b.task; back.appendChild(g); return b;
+  });
+  let nextDone = 1500, focus = null, wave = 0, taskN = 5, last = 0;
+  return {
+    frame(t) {
+      const dt = Math.min(50, t - last || 16); last = t;
+      bots.forEach((b) => {
+        b.a += dt * .00022;
+        const x = 210 + Math.cos(b.a) * 186, y = 250 + Math.sin(b.a) * 48, depth = Math.sin(b.a), s = .78 + (depth + 1) * .16;
+        b.g.setAttribute('transform', `translate(${x} ${y + Math.sin(t / 400 + b.a * 3) * 3}) scale(${s})`);
+        b.g.setAttribute('opacity', (.55 + (depth + 1) * .225).toFixed(2));
+        const want = depth > 0 ? front : back; if (b.g.parentNode !== want) want.appendChild(b.g);
+        b.x = x; b.y = y; b.depth = depth;
+        if (b.done && t > b.done) { b.done = 0; b.task = TASKS[taskN++ % TASKS.length]; $('.chipt', b.g).textContent = b.task; $('.chipt', b.g).setAttribute('fill', '#ededef'); $('.chipbg', b.g).setAttribute('fill', 'rgba(14,14,19,.9)'); }
+      });
+      // every ~1.8s he signs off on a front agent's task
+      if (t > nextDone) {
+        nextDone = t + 1800;
+        const cand = bots.filter((b) => b.depth > .1 && !b.done);
+        if (cand.length) { focus = cand[Math.random() * cand.length | 0]; focus.done = t + 1300; wave = t; $('.chipt', focus.g).textContent = '✓ ' + focus.task; $('.chipt', focus.g).setAttribute('fill', '#07070a'); $('.chipbg', focus.g).setAttribute('fill', '#d4ff4f'); }
+      }
+      const look = focus && focus.done ? { x: (focus.x - 210) / 190, y: (focus.y - 214) / 120 } : (rel(el) || idleLook(t));
+      r.update(t, look);
+      const bob = t - wave < 500 ? Math.sin((t - wave) / 500 * Math.PI) * 14 : 0;
+      const [ex, ey, hx, hy] = ik(100, 146, 150 + bob * .4, -6 - bob, 80, 84, 1);
+      arm.setAttribute('d', `M100 146 L${ex} ${ey} L${hx} ${hy}`);
+      palm.setAttribute('transform', `translate(${hx} ${hy}) rotate(${12 + bob * .8})`);
+    },
+  };
+})();
+
+/* ============ switcher + single animation loop ============ */
+const scenes = { 1: S1, 2: S2, 3: S3, 4: S4, 5: S5 };
+let cur = null, raf = 0;
+const loop = (t) => { scenes[cur].frame(t); if (!reduced) raf = requestAnimationFrame(loop); };
+function show(k) {
+  if (!scenes[k] || k === cur) return;
+  cur = k; cancelAnimationFrame(raf);
+  document.querySelectorAll('.viz').forEach((v) => { v.hidden = v.dataset.k !== k; });
+  document.querySelectorAll('.switch button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.k === k));
+  const v = document.querySelector(`.viz[data-k="${k}"]`); v.style.animation = 'none'; void v.offsetWidth; v.style.animation = '';
+  scenes[k].enter?.(performance.now());
+  raf = requestAnimationFrame(loop);
+  history.replaceState(null, '', '#' + k);
+}
+document.querySelectorAll('.switch button').forEach((b) => b.addEventListener('click', () => show(b.dataset.k)));
+const h = location.hash.slice(1);
+show(scenes[h] ? h : '1');
+</script>

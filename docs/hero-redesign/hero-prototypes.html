@@ -1,0 +1,411 @@
+<title>Sambit Hero Prototypes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Big+Shoulders+Display:wght@500;800;900&display=swap">
+<style>
+/* This page commits to its own looks (one per hero), so it paints every colour explicitly. */
+:root {
+  color-scheme: dark;
+  --bar-bg: #111114;
+  --bar-fg: #ededef;
+  --bar-mute: #8b8b95;
+  --bar-line: rgb(255 255 255 / .1);
+}
+* { box-sizing: border-box; }
+body { background: #07070a; color: #ededef; font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; }
+button { font: inherit; color: inherit; cursor: pointer; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+
+/* ── Switcher ─────────────────────────────────────────── */
+.switch {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  background: var(--bar-bg); border-bottom: 1px solid var(--bar-line);
+  padding: 10px 16px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px;
+}
+.switch-title { font: 500 12px/1.2 'Geist Mono', monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--bar-mute); }
+.tabs { display: flex; gap: 4px; padding: 3px; border: 1px solid var(--bar-line); border-radius: 999px; flex-wrap: wrap; }
+.tab { border: 0; background: transparent; color: var(--bar-mute); padding: 6px 14px; border-radius: 999px; font-size: 13px; }
+.tab[aria-selected="true"] { background: var(--bar-fg); color: #07070a; }
+.tab b { font-family: 'Geist Mono', monospace; font-weight: 500; margin-right: 6px; opacity: .7; }
+.why { flex: 1 1 320px; font-size: 13px; color: var(--bar-mute); line-height: 1.45; margin: 0; }
+.why strong { color: var(--bar-fg); font-weight: 500; }
+.rec { font: 500 10px 'Geist Mono', monospace; letter-spacing: .1em; text-transform: uppercase; color: #07070a; background: #d4ff4f; border-radius: 4px; padding: 2px 5px; margin-left: 6px; vertical-align: 1px; }
+
+.hero { display: none; position: relative; overflow: hidden; min-height: min(calc(100svh - 56px), 900px); }
+.hero.on { display: flex; flex-direction: column; }
+.wrap { width: 100%; max-width: 1320px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 48px); }
+.fake-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 18px; font-size: 13px; }
+.fake-nav nav { display: flex; gap: 22px; }
+@media (max-width: 720px) { .fake-nav nav { display: none; } }
+
+/* ══ A · REQUEST TRACE (in-brand) ═══════════════════════ */
+#a { background: #07070a; color: #ededef; }
+#a .logo { display: flex; align-items: center; gap: 10px; }
+#a .logo i { font: 500 12px 'Geist Mono', monospace; font-style: normal; color: #d4ff4f; width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid rgb(255 255 255 / .1); border-radius: 10px; background: #0c0c10; }
+#a .fake-nav nav a { text-decoration: none; color: #8b8b95; }
+#a .fake-nav nav a:hover { color: #ededef; }
+#a .body { flex: 1; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(28px, 4vw, 64px); align-items: center; padding-block: clamp(24px, 5vh, 56px); }
+@media (max-width: 960px) { #a .body { grid-template-columns: 1fr; } }
+.chip { display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgb(255 255 255 / .1); border-radius: 999px; padding: 5px 12px; font: 11px/1.3 'Geist Mono', monospace; color: #ededef; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: #d4ff4f; box-shadow: 0 0 0 0 rgb(212 255 79 / .6); animation: ping 1.8s infinite; flex: none; }
+@keyframes ping { 70% { box-shadow: 0 0 0 7px rgb(212 255 79 / 0); } 100% { box-shadow: 0 0 0 0 rgb(212 255 79 / 0); } }
+#a h1 { font-weight: 500; letter-spacing: -.045em; line-height: .95; font-size: clamp(2.6rem, 6.2vw, 5.6rem); margin: 22px 0 0; text-wrap: balance; }
+#a h1 em { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; letter-spacing: -.02em; color: #d4ff4f; }
+#a .lede { color: #8b8b95; font-size: clamp(15px, 1.2vw, 17px); line-height: 1.6; max-width: 34em; margin: 24px 0 0; }
+#a .lede b { color: #ededef; font-weight: 500; }
+.ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+#a .btn-p { display: inline-flex; align-items: center; gap: 12px; background: #d4ff4f; color: #07070a; border: 0; border-radius: 999px; padding: 12px 12px 12px 22px; font-size: 14px; font-weight: 500; text-decoration: none; }
+#a .btn-p span { width: 28px; height: 28px; border-radius: 50%; background: #07070a; color: #d4ff4f; display: grid; place-items: center; transition: transform .4s; }
+#a .btn-p:hover span { transform: rotate(-45deg); }
+#a .btn-s { display: inline-flex; align-items: center; border: 1px solid rgb(255 255 255 / .14); border-radius: 999px; padding: 12px 22px; font-size: 14px; text-decoration: none; }
+#a .btn-s:hover { border-color: #ededef; }
+
+.trace { background: #0c0c10; border: 1px solid rgb(255 255 255 / .09); border-radius: 16px; overflow: hidden; font-family: 'Geist Mono', monospace; }
+.trace-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 16px; border-bottom: 1px solid rgb(255 255 255 / .07); font-size: 12px; color: #8b8b95; flex-wrap: wrap; }
+.trace-head .req { color: #ededef; }
+.trace-head .req b { color: #d4ff4f; font-weight: 500; margin-right: 6px; }
+.status { color: #07070a; background: #d4ff4f; border-radius: 4px; padding: 1px 6px; font-size: 11px; opacity: 0; transition: opacity .3s; }
+.status.show { opacity: 1; }
+.replay { background: transparent; border: 1px solid rgb(255 255 255 / .14); color: #ededef; border-radius: 999px; padding: 4px 10px; font-size: 11px; }
+.replay:hover { border-color: #d4ff4f; color: #d4ff4f; }
+.scale { display: grid; grid-template-columns: 150px 1fr; padding: 10px 16px 4px; font-size: 10px; color: #55555e; }
+.ticks { position: relative; height: 14px; }
+.ticks span { position: absolute; transform: translateX(-50%); }
+.ticks span:first-child { transform: none; }
+.ticks span:last-child { transform: translateX(-100%); }
+.spans { list-style: none; margin: 0; padding: 4px 0 10px; }
+.span { display: grid; grid-template-columns: 150px 1fr; align-items: center; padding: 5px 16px; font-size: 12px; cursor: default; position: relative; }
+.span:hover, .span:focus-visible { background: rgb(255 255 255 / .03); outline: none; }
+.span .name { color: #ededef; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px; }
+.span .name small { display: block; color: #55555e; font-size: 10px; }
+.lane { position: relative; height: 18px; background-image: linear-gradient(to right, rgb(255 255 255 / .05) 1px, transparent 1px); background-size: 33.333% 100%; }
+.bar { position: absolute; top: 3px; height: 12px; border-radius: 3px; background: rgb(237 237 239 / .22); transform-origin: left; transform: scaleX(0); }
+.bar.ext { background: repeating-linear-gradient(135deg, rgb(237 237 239 / .28) 0 4px, rgb(237 237 239 / .12) 4px 8px); }
+.bar.mine { background: #d4ff4f; }
+.bar.go { animation: grow .5s cubic-bezier(.16, 1, .3, 1) forwards; }
+@keyframes grow { to { transform: scaleX(1); } }
+.ms { position: absolute; top: 1px; font-size: 10px; color: #8b8b95; white-space: nowrap; opacity: 0; transition: opacity .3s; }
+.ms.show { opacity: 1; }
+.detail { border-top: 1px solid rgb(255 255 255 / .07); padding: 12px 16px 14px; font-family: 'Geist', sans-serif; font-size: 13px; color: #8b8b95; min-height: 64px; line-height: 1.5; }
+.detail b { color: #ededef; font-weight: 500; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 10px; color: #55555e; padding: 0 16px 12px; }
+.legend i { display: inline-block; width: 10px; height: 8px; border-radius: 2px; margin-right: 5px; vertical-align: 0; }
+
+#a .meta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; border-top: 1px solid rgb(255 255 255 / .08); padding-block: 18px 24px; }
+#a .meta dt { font: 11px 'Geist Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: #8b8b95; margin-bottom: 5px; }
+#a .meta dd { margin: 0; font-size: 13px; }
+@media (max-width: 720px) { #a .meta { grid-template-columns: 1fr 1fr; } .scale, .span { grid-template-columns: 112px 1fr; } }
+
+/* ══ B · BLUEPRINT ════════════════════════════════════════ */
+#b {
+  --paper: #eef1f3; --ink: #1c3f8f; --ink-2: #4d6bb0; --grid: rgb(28 63 143 / .09); --red: #c23a2b; --txt: #16213a;
+  background-color: var(--paper); color: var(--txt);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    linear-gradient(rgb(28 63 143 / .04) 1px, transparent 1px), linear-gradient(90deg, rgb(28 63 143 / .04) 1px, transparent 1px);
+  background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px;
+  font-family: 'IBM Plex Sans Condensed', 'Arial Narrow', sans-serif;
+  padding: clamp(10px, 2vw, 22px);
+}
+.sheet { flex: 1; display: flex; flex-direction: column; border: 2px solid var(--ink); outline: 1px solid var(--ink); outline-offset: 5px; position: relative; margin: 6px; }
+.zones { position: absolute; inset: 0; pointer-events: none; font: 500 9px 'IBM Plex Mono', monospace; color: var(--ink-2); }
+.zones span { position: absolute; }
+#b .fake-nav { padding: 14px clamp(14px, 3vw, 32px); border-bottom: 1px solid var(--ink); font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--ink); }
+#b .fake-nav nav a { text-decoration: none; }
+#b .fake-nav nav a:hover { text-decoration: underline; }
+#b .main { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 340px; }
+@media (max-width: 960px) { #b .main { grid-template-columns: 1fr; } }
+#b .draw { padding: clamp(22px, 4vw, 52px) clamp(16px, 4vw, 52px); display: flex; flex-direction: column; justify-content: center; border-right: 1px solid var(--ink); }
+@media (max-width: 960px) { #b .draw { border-right: 0; border-bottom: 1px solid var(--ink); } }
+.dim { position: relative; display: flex; align-items: center; gap: 10px; color: var(--ink); font: 500 11px 'IBM Plex Mono', monospace; letter-spacing: .08em; margin-bottom: 14px; }
+.dim::before, .dim::after { content: ''; flex: 1; height: 1px; background: var(--ink); transform-origin: center; animation: dimgrow 1s .2s cubic-bezier(.16, 1, .3, 1) both; }
+.dim::before { transform-origin: right; } .dim::after { transform-origin: left; }
+@keyframes dimgrow { from { transform: scaleX(0); } }
+.dim .ah { position: absolute; top: 50%; width: 9px; height: 9px; border-top: 1px solid var(--ink); border-left: 1px solid var(--ink); }
+.dim .ah.l { left: 0; transform: translateY(-50%) rotate(-45deg); }
+.dim .ah.r { right: 0; transform: translateY(-50%) rotate(135deg); }
+.name-row { display: flex; align-items: stretch; gap: 16px; }
+.vdim { writing-mode: vertical-rl; transform: rotate(180deg); border-left: 1px solid var(--ink); padding-left: 6px; font: 500 10px 'IBM Plex Mono', monospace; color: var(--ink); letter-spacing: .1em; text-align: center; }
+#b h1 { margin: 0; font-weight: 700; font-size: clamp(3.2rem, 9.5vw, 8.6rem); line-height: .86; letter-spacing: -.02em; text-transform: uppercase; color: var(--ink); }
+#b .thesis { font-size: clamp(1.35rem, 2.7vw, 2.3rem); line-height: 1.12; font-weight: 500; margin: 26px 0 0; max-width: 22em; text-wrap: balance; position: relative; }
+.redline { position: relative; display: inline-block; white-space: nowrap; }
+.redline svg { position: absolute; left: -10%; top: -28%; width: 120%; height: 156%; overflow: visible; pointer-events: none; }
+.redline path { fill: none; stroke: var(--red); stroke-width: 2; stroke-dasharray: 420; stroke-dashoffset: 420; animation: pen 1.1s 1s ease-out forwards; }
+@keyframes pen { to { stroke-dashoffset: 0; } }
+.rnote { position: absolute; left: 100%; top: -1.9em; margin-left: 6px; font: 500 11px 'IBM Plex Mono', monospace; color: var(--red); white-space: nowrap; opacity: 0; animation: fade .4s 1.9s forwards; }
+@keyframes fade { to { opacity: 1; } }
+@media (max-width: 560px) { .rnote { left: 0; top: auto; bottom: -2em; margin: 0; } }
+#b .lede { font-size: 16px; line-height: 1.55; max-width: 38em; margin: 22px 0 0; color: #34405c; }
+#b .btn-p { display: inline-flex; align-items: center; gap: 10px; background: var(--ink); color: var(--paper); border: 0; padding: 12px 20px; font: 600 13px 'IBM Plex Mono', monospace; letter-spacing: .04em; text-transform: uppercase; text-decoration: none; }
+#b .btn-p:hover { background: #122c68; }
+#b .btn-s { display: inline-flex; align-items: center; border: 1px solid var(--ink); color: var(--ink); padding: 12px 20px; font: 600 13px 'IBM Plex Mono', monospace; letter-spacing: .04em; text-transform: uppercase; text-decoration: none; }
+#b .btn-s:hover { background: rgb(28 63 143 / .07); }
+.side { display: flex; flex-direction: column; }
+.bom-h, .tb-h { font: 600 11px 'IBM Plex Mono', monospace; letter-spacing: .14em; color: var(--ink); padding: 10px 14px; border-bottom: 1px solid var(--ink); }
+.bom { width: 100%; border-collapse: collapse; font-size: 13px; }
+.bom td { border-bottom: 1px solid rgb(28 63 143 / .3); padding: 8px 10px; vertical-align: top; }
+.bom td:first-child { width: 36px; text-align: center; padding-inline: 0; }
+.balloon { display: inline-grid; place-items: center; width: 22px; height: 22px; border: 1px solid var(--ink); border-radius: 50%; font: 500 11px 'IBM Plex Mono', monospace; color: var(--ink); }
+.bom b { display: block; font-weight: 600; color: var(--ink); }
+.bom span { color: #4a5570; font-size: 12px; }
+.bom tr { transition: background .2s; } .bom tr:hover { background: rgb(28 63 143 / .06); }
+.tblock { margin-top: auto; border-top: 1px solid var(--ink); display: grid; grid-template-columns: 1fr 1fr; font-family: 'IBM Plex Mono', monospace; }
+.tblock div { border-bottom: 1px solid var(--ink); padding: 7px 12px; }
+.tblock div:nth-child(odd) { border-right: 1px solid var(--ink); }
+.tblock div.full { grid-column: 1 / -1; border-right: 0; }
+.tblock small { display: block; font-size: 9px; letter-spacing: .12em; color: var(--ink-2); }
+.tblock span { font-size: 12px; color: var(--txt); font-variant-numeric: tabular-nums; }
+.tblock .open { color: var(--red); font-weight: 600; }
+
+/* ══ C · FULL STACK, LITERALLY ═══════════════════════════ */
+#c { --bg: #0d1014; --fg: #e9ebee; --mute: #7d8591; --line: rgb(233 235 238 / .1); --amber: #f5a524; background: var(--bg); color: var(--fg); }
+#c .fake-nav { color: var(--mute); }
+#c .fake-nav .me { color: var(--fg); }
+#c .fake-nav .me small { display: block; color: var(--mute); font-size: 12px; }
+#c .fake-nav nav a { text-decoration: none; } #c .fake-nav nav a:hover { color: var(--fg); }
+#c .avail { display: inline-flex; align-items: center; gap: 8px; font: 12px 'Geist Mono', monospace; color: var(--fg); }
+#c .avail i { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 10px var(--amber); }
+.stack-wrap { flex: 1; display: grid; grid-template-columns: 34px minmax(0, 1fr) minmax(220px, 300px); gap: 0 clamp(14px, 2vw, 28px); align-items: stretch; padding-block: 8px 0; }
+@media (max-width: 860px) { .stack-wrap { grid-template-columns: 22px minmax(0, 1fr); } .layer-note { grid-column: 2; } }
+.brace { border: 1px solid var(--mute); border-right: 0; border-radius: 10px 0 0 10px; position: relative; margin-block: 10px; }
+.brace span { position: absolute; left: -1px; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); background: var(--bg); padding: 0 8px; font: 10px 'Geist Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--mute); white-space: nowrap; }
+.layers { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; justify-content: center; }
+.layer { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; border-top: 1px solid var(--line); padding: 2px 0; cursor: default; }
+.layer:last-child { border-bottom: 1px solid var(--line); }
+.layer .word { font-family: 'Big Shoulders Display', 'Arial Narrow', sans-serif; font-weight: 900; text-transform: uppercase; font-size: clamp(2.6rem, min(8.4vw, 10.5vh), 7.4rem); line-height: .9; letter-spacing: .005em; color: transparent; -webkit-text-stroke: 1px rgb(233 235 238 / .28); transition: color .35s, -webkit-text-stroke-color .35s; }
+.layer .tag { font: 11px 'Geist Mono', monospace; color: var(--mute); white-space: nowrap; transition: color .35s; }
+.layer.on .word { color: var(--amber); -webkit-text-stroke-color: var(--amber); }
+.layer.on .tag { color: var(--fg); }
+@media (max-width: 560px) { .layer .tag { display: none; } }
+.layer-note { align-self: center; border-left: 2px solid var(--amber); padding: 4px 0 4px 16px; min-height: 150px; }
+.layer-note .k { font: 11px 'Geist Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--amber); }
+.layer-note p { margin: 10px 0 0; font-size: 15px; line-height: 1.55; color: var(--fg); }
+.layer-note .tools { margin-top: 10px; font: 12px 'Geist Mono', monospace; color: var(--mute); line-height: 1.7; }
+.c-foot { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px; align-items: end; border-top: 1px solid var(--line); padding-block: 22px 26px; margin-top: 18px; }
+@media (max-width: 860px) { .c-foot { grid-template-columns: 1fr; } }
+.c-foot h1 { margin: 0; font-weight: 500; font-size: clamp(1.4rem, 2.6vw, 2.2rem); letter-spacing: -.03em; line-height: 1.15; max-width: 26em; text-wrap: balance; }
+.c-foot h1 em { font-style: normal; color: var(--amber); }
+#c .btn-p { display: inline-flex; align-items: center; gap: 10px; background: var(--amber); color: #0d1014; border: 0; border-radius: 999px; padding: 12px 22px; font-size: 14px; font-weight: 600; text-decoration: none; }
+#c .btn-p:hover { background: #ffb840; }
+#c .btn-s { display: inline-flex; align-items: center; border: 1px solid rgb(233 235 238 / .2); border-radius: 999px; padding: 12px 22px; font-size: 14px; text-decoration: none; }
+#c .btn-s:hover { border-color: var(--fg); }
+#c .ctas { margin-top: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; transition-duration: .01ms !important; }
+}
+</style>
+
+<div class="switch" role="region" aria-label="Choose a hero prototype">
+  <span class="switch-title">Hero · 3 directions</span>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="tab-a" aria-controls="a" aria-selected="true" data-k="a"><b>A</b>Request trace<span class="rec">Pick</span></button>
+    <button class="tab" role="tab" id="tab-b" aria-controls="b" aria-selected="false" data-k="b"><b>B</b>Blueprint</button>
+    <button class="tab" role="tab" id="tab-c" aria-controls="c" aria-selected="false" data-k="c"><b>C</b>Full stack</button>
+  </div>
+  <p class="why" id="why"></p>
+</div>
+
+<!-- ═══════════════ A ═══════════════ -->
+<section class="hero on" id="a" role="tabpanel" aria-labelledby="tab-a">
+  <div class="wrap fake-nav">
+    <span class="logo"><i>SM</i><span>Sambit Maity</span></span>
+    <nav><a href="#a">About</a><a href="#a">Experience</a><a href="#a">Work</a><a href="#a">Stack</a><a href="#a">Contact</a></nav>
+    <span style="font:11px 'Geist Mono',monospace;color:#8b8b95">KOL <span class="clock" style="color:#ededef"></span> IST</span>
+  </div>
+  <div class="wrap body">
+    <div>
+      <span class="chip"><span class="dot"></span>Open to senior full-stack &amp; founding-engineer roles</span>
+      <h1>From click to database and back. <em>I built every hop.</em></h1>
+      <p class="lede"><b>Sambit Maity</b>, Technical Lead at Collabmate. I design the architecture, write the Laravel and Node backends, build the React front end, run the servers and stay on call for what I ship.</p>
+      <div class="ctas">
+        <a class="btn-p" href="#a">See selected work <span>→</span></a>
+        <a class="btn-s" href="#a">Résumé ↓</a>
+      </div>
+    </div>
+
+    <div class="trace" aria-label="Trace of one checkout request through systems Sambit built">
+      <div class="trace-head">
+        <span class="req"><b>POST</b>/api/checkout</span>
+        <span style="display:flex;gap:8px;align-items:center"><span class="status" id="status">200 OK · 84 ms</span><button class="replay" id="replay">↻ Replay</button></span>
+      </div>
+      <div class="scale"><span>span</span><div class="ticks"><span style="left:0">0</span><span style="left:33.333%">30</span><span style="left:66.666%">60</span><span style="left:100%">90 ms</span></div></div>
+      <ul class="spans" id="spans"></ul>
+      <div class="legend"><span><i style="background:#d4ff4f"></i>code I wrote</span><span><i style="background:rgb(237 237 239 / .22)"></i>infra I run</span><span><i style="background:repeating-linear-gradient(135deg,rgb(237 237 239/.3) 0 3px,transparent 3px 6px)"></i>third-party API</span></div>
+      <div class="detail" id="detail" aria-live="polite"><b>Hover a span</b> to see what I built at that step.</div>
+    </div>
+  </div>
+  <div class="wrap">
+    <dl class="meta">
+      <div><dt>Currently</dt><dd>Technical Lead @ Collabmate</dd></div>
+      <div><dt>Based in</dt><dd>Kolkata, IN · <span class="clock s"></span></dd></div>
+      <div><dt>Core</dt><dd>Laravel · Node · React · Infra</dd></div>
+      <div><dt>Shipping since</dt><dd>2023 · 25+ projects, 4 teams</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- ═══════════════ B ═══════════════ -->
+<section class="hero" id="b" role="tabpanel" aria-labelledby="tab-b">
+  <div class="sheet">
+    <div class="zones" aria-hidden="true">
+      <span style="top:-17px;left:12.5%">1</span><span style="top:-17px;left:37.5%">2</span><span style="top:-17px;left:62.5%">3</span><span style="top:-17px;left:87.5%">4</span>
+      <span style="left:-15px;top:22%">A</span><span style="left:-15px;top:50%">B</span><span style="left:-15px;top:78%">C</span>
+    </div>
+    <div class="fake-nav">
+      <span>SM / PORTFOLIO</span>
+      <nav><a href="#b">ABOUT</a><a href="#b">EXPERIENCE</a><a href="#b">WORK</a><a href="#b">STACK</a><a href="#b">CONTACT</a></nav>
+      <span>SHEET 1 OF 6</span>
+    </div>
+    <div class="main">
+      <div class="draw">
+        <div class="dim"><i class="ah l"></i>FULL STACK · ARCHITECTURE → PIXELS<i class="ah r"></i></div>
+        <div class="name-row">
+          <span class="vdim">3 YRS</span>
+          <h1>Sambit<br>Maity</h1>
+        </div>
+        <p class="thesis">Full-stack engineer who ships <span class="redline">complete systems<svg viewBox="0 0 200 60" preserveAspectRatio="none" aria-hidden="true"><path d="M12 34 C 10 10, 70 4, 110 6 C 160 8, 196 16, 192 34 C 188 52, 130 58, 90 56 C 40 54, 6 50, 14 30"/></svg><span class="rnote">REV 3: was "features"</span></span>, from the schema to the server to the screen.</p>
+        <p class="lede">Laravel and Node.js engineer. I own products end to end: architecture and APIs, servers and automation, and the interface people actually touch.</p>
+        <div class="ctas">
+          <a class="btn-p" href="#b">See selected work →</a>
+          <a class="btn-s" href="#b">Résumé (PDF)</a>
+        </div>
+      </div>
+      <div class="side">
+        <div class="bom-h">BILL OF MATERIALS</div>
+        <table class="bom">
+          <tr><td><span class="balloon">1</span></td><td><b>Architecture</b><span>System design, schemas, HMAC-signed APIs</span></td></tr>
+          <tr><td><span class="balloon">2</span></td><td><b>Backend</b><span>Laravel, Node.js, BullMQ queues</span></td></tr>
+          <tr><td><span class="balloon">3</span></td><td><b>Interface</b><span>React, Vue, Flutter, motion</span></td></tr>
+          <tr><td><span class="balloon">4</span></td><td><b>Infrastructure</b><span>5+ VPS, Nginx, Docker, CI/CD</span></td></tr>
+          <tr><td><span class="balloon">5</span></td><td><b>Automation &amp; AI</b><span>Self-hosted n8n, Claude API agents</span></td></tr>
+        </table>
+        <div class="tblock">
+          <div class="full"><small>TITLE</small><span>Full-Stack Software Engineer</span></div>
+          <div><small>DRAWN BY</small><span>S. MAITY</span></div>
+          <div><small>CURRENT</small><span>Tech Lead, Collabmate</span></div>
+          <div><small>PROJECTS</small><span>25+ / 4 teams</span></div>
+          <div><small>REGION</small><span>India &amp; NZ</span></div>
+          <div><small>LOCATION</small><span>Kolkata · <span class="clock"></span></span></div>
+          <div><small>STATUS</small><span class="open">OPEN TO ROLES</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ C ═══════════════ -->
+<section class="hero" id="c" role="tabpanel" aria-labelledby="tab-c">
+  <div class="wrap fake-nav">
+    <span class="me">Sambit Maity<small>Full-Stack Software Engineer</small></span>
+    <nav><a href="#c">About</a><a href="#c">Experience</a><a href="#c">Work</a><a href="#c">Contact</a></nav>
+    <span class="avail"><i></i>Open to roles</span>
+  </div>
+  <div class="wrap stack-wrap">
+    <div class="brace" aria-hidden="true"><span>one engineer</span></div>
+    <ul class="layers" id="layers"></ul>
+    <div class="layer-note" id="note" aria-live="polite"></div>
+  </div>
+  <div class="wrap c-foot">
+    <h1>I don't hand off at the API boundary. <em>I own every layer of the stack</em>, and I've shipped 25+ products that way.</h1>
+    <div class="ctas">
+      <a class="btn-p" href="#c">See selected work →</a>
+      <a class="btn-s" href="#c">Résumé ↓</a>
+    </div>
+  </div>
+</section>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── Tabs ── */
+  const WHY = {
+    a: '<strong>Stays on-brand, shows proof.</strong> A real trace of one checkout request replaces the decorative dot field. Every bar is something you built or run, so it proves "full stack" in two seconds. Hover the spans.',
+    b: '<strong>Stands apart from other dev portfolios.</strong> It reads as an engineering drawing: a bill of materials for your skills, a title block with live status, and a redline that turns "features" into "systems". It uses a new light palette.',
+    c: '<strong>The boldest typography.</strong> Your stack is shown as a literal stack of layers that light up one after another, with what you shipped at each layer. It is memorable, but it gives the most space to type and the least to proof.'
+  };
+  const tabs = [...document.querySelectorAll('.tab')];
+  const why = document.getElementById('why');
+  function show(k) {
+    tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.k === k));
+    document.querySelectorAll('.hero').forEach(h => h.classList.toggle('on', h.id === k));
+    why.innerHTML = WHY[k];
+    if (k === 'a') runTrace();
+    try { history.replaceState(null, '', '#' + k); } catch (e) {}
+  }
+  tabs.forEach(t => t.addEventListener('click', () => show(t.dataset.k)));
+  document.querySelector('.tabs').addEventListener('keydown', e => {
+    const i = tabs.findIndex(t => t.getAttribute('aria-selected') === 'true');
+    const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+    if (!d) return;
+    const n = tabs[(i + d + tabs.length) % tabs.length]; n.focus(); show(n.dataset.k);
+  });
+
+  /* ── Clocks (IST) ── */
+  const fmt = s => new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: s ? '2-digit' : undefined, hour12: false }).format(new Date());
+  const tick = () => document.querySelectorAll('.clock').forEach(c => c.textContent = fmt(c.classList.contains('s')));
+  tick(); setInterval(tick, 1000);
+
+  /* ── A: trace waterfall (scale 0–90 ms) ── */
+  const MAX = 90;
+  const SPANS = [
+    ['nginx', 'reverse proxy', 0, 84, 'infra', 'Nginx on a VPS I provision and harden myself. I run 5+ of these, with SSH deploys and monitoring.'],
+    ['auth.hmac', 'verify signature', 3, 4, 'mine', 'HMAC request signing and role-based access. The same pattern protects webhooks, 2FA and OTP flows.'],
+    ['CheckoutController', 'laravel', 7, 66, 'mine', 'The Laravel API: validation, business rules and a service layer designed to pair with React and Vue clients.'],
+    ['orders.select', 'postgresql', 10, 9, 'infra', 'Schema design and query tuning across PostgreSQL, MySQL and MongoDB.'],
+    ['stripe.intent', 'payments', 21, 36, 'ext', 'Payment integrations with Stripe and Razorpay, with idempotent retries and verified webhooks.'],
+    ['receipt.enqueue', 'bullmq', 58, 4, 'mine', 'BullMQ job queues in Node.js move slow work (email, PDFs, AI calls) off the request path.'],
+    ['order.paid', 'pusher', 63, 5, 'mine', 'Realtime events over Pusher, so the UI updates the moment the payment clears.'],
+    ['hydrate', 'react', 74, 10, 'mine', 'The React interface on the other end, including the motion and micro-interactions.']
+  ];
+  const ul = document.getElementById('spans');
+  const detail = document.getElementById('detail');
+  ul.innerHTML = SPANS.map(([n, s, st, d, k], i) =>
+    `<li class="span" tabindex="0" data-i="${i}"><span class="name">${n}<small>${s}</small></span><span class="lane"><span class="bar ${k}" style="left:${st / MAX * 100}%;width:${d / MAX * 100}%"></span><span class="ms" style="${d > 60 ? `left:calc(${st / MAX * 100}% + 6px);color:#ededef` : st + d > 76 ? `right:calc(${100 - st / MAX * 100}% + 6px)` : `left:calc(${(st + d) / MAX * 100}% + 6px)`}">${d} ms</span></span></li>`).join('');
+  const setDetail = i => { const s = SPANS[i]; detail.innerHTML = `<b>${s[0]}</b> · ${s[5]}`; };
+  ul.querySelectorAll('.span').forEach(li => {
+    li.addEventListener('mouseenter', () => setDetail(li.dataset.i));
+    li.addEventListener('focus', () => setDetail(li.dataset.i));
+  });
+  let timers = [];
+  function runTrace() {
+    timers.forEach(clearTimeout); timers = [];
+    const bars = ul.querySelectorAll('.bar'), ms = ul.querySelectorAll('.ms'), st = document.getElementById('status');
+    bars.forEach(b => { b.classList.remove('go'); b.style.transform = ''; }); ms.forEach(m => m.classList.remove('show')); st.classList.remove('show');
+    if (reduce) { bars.forEach(b => b.style.transform = 'scaleX(1)'); ms.forEach(m => m.classList.add('show')); st.classList.add('show'); return; }
+    void ul.offsetWidth;
+    SPANS.forEach((s, i) => timers.push(setTimeout(() => { bars[i].classList.add('go'); timers.push(setTimeout(() => ms[i].classList.add('show'), 380)); }, 150 + s[2] * 14)));
+    timers.push(setTimeout(() => st.classList.add('show'), 150 + 84 * 14 + 300));
+  }
+  document.getElementById('replay').addEventListener('click', runTrace);
+
+  /* ── C: layers ── */
+  const LAYERS = [
+    ['Interface', 'React · Vue · Flutter', 'Interfaces with real motion design: web in React and Vue, mobile in Flutter.', 'React.js, Vue.js, Flutter, Tailwind CSS'],
+    ['APIs', 'Laravel · Node.js', 'REST APIs in Laravel and Node.js, with HMAC-signed requests, 2FA and role-based access.', 'Laravel, Node.js, REST, TypeScript'],
+    ['Queues', 'BullMQ · Pusher', 'Background jobs and realtime events that keep the request path fast.', 'BullMQ, Pusher, ZoneMTA, Brevo SMTP'],
+    ['Data', 'Postgres · MySQL', 'Schema design and queries across relational and document stores.', 'PostgreSQL, MySQL, MongoDB, Supabase'],
+    ['Servers', 'Nginx · Docker · VPS', 'I provision, deploy and monitor my own infrastructure (5+ VPS instances).', 'Linux, Nginx, Docker, CI/CD, SSH deploys'],
+    ['AI', 'Claude · n8n', 'AI agents that answer from company data, and self-hosted automation workflows.', 'Claude API, OpenAI, n8n, multi-model flows']
+  ];
+  const lu = document.getElementById('layers'), note = document.getElementById('note');
+  lu.innerHTML = LAYERS.map(([w, t], i) => `<li class="layer" data-i="${i}"><span class="word">${w}</span><span class="tag">L${LAYERS.length - i} · ${t}</span></li>`).join('');
+  const rows = [...lu.children];
+  let cur = 0, pinned = false;
+  function light(i) {
+    cur = i; rows.forEach((r, j) => r.classList.toggle('on', j === i));
+    const L = LAYERS[i];
+    note.innerHTML = `<div class="k">Layer ${LAYERS.length - i} · ${L[0]}</div><p>${L[2]}</p><div class="tools">${L[3]}</div>`;
+  }
+  rows.forEach(r => { r.addEventListener('mouseenter', () => { pinned = true; light(+r.dataset.i); }); });
+  lu.addEventListener('mouseleave', () => pinned = false);
+  light(0);
+  if (!reduce) setInterval(() => { if (!pinned && document.getElementById('c').classList.contains('on')) light((cur + 1) % LAYERS.length); }, 2200);
+
+  const start = (location.hash || '').slice(1);
+  show(['a', 'b', 'c'].includes(start) ? start : 'a');
+})();
+</script>

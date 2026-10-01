@@ -1,0 +1,167 @@
+<title>Shades Dev Illustrated</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+/* Single dark look matching the portfolio brand, painted explicitly. */
+:root { color-scheme: dark; --ink: #07070a; --ink-2: #0c0c10; --fg: #ededef; --mute: #8b8b95; --dim: #55555e; --line: rgb(255 255 255 / .08); --line-2: rgb(255 255 255 / .14); --acid: #d4ff4f; --ease: cubic-bezier(.16, 1, .3, 1); }
+* { box-sizing: border-box; }
+html, body { background: var(--ink); color: var(--fg); }
+body { font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow-x: clip; margin: 0; }
+button { font: inherit; color: inherit; cursor: pointer; }
+a { color: inherit; }
+:focus-visible { outline: 1px solid var(--acid); outline-offset: 3px; border-radius: 6px; }
+.wrap { width: 100%; max-width: 1320px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 48px); }
+
+.hero { position: relative; min-height: min(100svh, 940px); display: flex; flex-direction: column; overflow: hidden; }
+.glow { position: absolute; right: -18%; top: -30%; width: 900px; height: 900px; border-radius: 50%; background: radial-gradient(closest-side, rgb(212 255 79 / .06), transparent); pointer-events: none; }
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 18px; position: relative; z-index: 2; }
+.logo { display: flex; align-items: center; gap: 10px; font-size: 13px; text-decoration: none; }
+.logo i { font: 500 12px 'Geist Mono', monospace; font-style: normal; color: var(--acid); width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 10px; background: var(--ink-2); }
+.logo small { display: block; color: var(--mute); font-size: 12px; }
+.pill-nav { display: flex; gap: 2px; padding: 4px; border: 1px solid var(--line); border-radius: 999px; background: rgb(7 7 10 / .5); }
+.pill-nav a { text-decoration: none; font-size: 13px; color: var(--mute); padding: 6px 14px; border-radius: 999px; }
+.pill-nav a.cur { background: var(--fg); color: var(--ink); }
+.kbd { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--mute); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; background: none; }
+.kbd kbd { font: 10px 'Geist Mono', monospace; border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; }
+@media (max-width: 860px) { .pill-nav { display: none; } }
+
+.stage { flex: 1; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: clamp(20px, 4vw, 56px); align-items: center; position: relative; z-index: 1; padding-block: 8px; }
+@media (max-width: 900px) { .stage { grid-template-columns: 1fr; } }
+.chip { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; font: 11px/1.35 'Geist Mono', monospace; background: rgb(255 255 255 / .02); animation: fadeup .9s var(--ease) both; }
+.ping { position: relative; width: 6px; height: 6px; flex: none; }
+.ping::before, .ping::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: var(--acid); }
+.ping::before { animation: ring 1.8s ease-out infinite; }
+@keyframes ring { from { transform: scale(1); opacity: .8; } to { transform: scale(3.2); opacity: 0; } }
+h1 { margin: 26px 0 0; font-weight: 500; letter-spacing: -.045em; line-height: .95; font-size: clamp(2.6rem, min(6.6vw, 12vh), 6.6rem); }
+.line { display: block; overflow: hidden; padding-bottom: .1em; margin-bottom: -.1em; }
+.line > span { display: inline-block; animation: rise 1.3s var(--ease) both; }
+.line:nth-child(2) > span { animation-delay: .07s; }
+.line:nth-child(3) > span { animation-delay: .14s; }
+@keyframes rise { from { transform: translateY(115%) rotate(5deg); } }
+.serif { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -.02em; color: var(--acid); padding-right: .06em; }
+.dim { color: var(--dim); }
+.lede { max-width: 32em; margin: 28px 0 0; font-size: clamp(15px, 1.15vw, 17px); line-height: 1.6; color: var(--mute); animation: fadeup 1s .7s var(--ease) both; }
+.lede b { color: var(--fg); font-weight: 400; }
+@keyframes fadeup { from { opacity: 0; transform: translateY(14px); } }
+@keyframes fadein { from { opacity: 0; } }
+.ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; animation: fadeup 1s .85s var(--ease) both; }
+.btn-p { display: inline-flex; align-items: center; gap: 12px; background: var(--acid); color: var(--ink); border-radius: 999px; padding: 12px 12px 12px 22px; font-size: 14px; font-weight: 500; text-decoration: none; }
+.btn-p span { width: 28px; height: 28px; border-radius: 50%; background: var(--ink); color: var(--acid); display: grid; place-items: center; }
+.btn-s { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line-2); border-radius: 999px; padding: 12px 22px; font-size: 14px; text-decoration: none; }
+.btn-s em { font-style: normal; color: var(--mute); }
+.meta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; border-top: 1px solid var(--line); padding-block: 20px 26px; margin-top: 40px; position: relative; z-index: 1; }
+.meta dt { font: 11px 'Geist Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--mute); margin-bottom: 6px; }
+.meta dd { margin: 0; font-size: 13px; font-variant-numeric: tabular-nums; }
+@media (max-width: 720px) { .meta { grid-template-columns: 1fr 1fr; } }
+
+/* character: no box, edges dissolve into the page */
+.viz { position: relative; width: 100%; max-width: 540px; justify-self: end; animation: fadein 1.2s .2s both; perspective: 1200px; }
+@media (max-width: 900px) { .viz { justify-self: center; max-width: 420px; } }
+.frame { position: relative; aspect-ratio: 1; transform-style: preserve-3d; transition: transform .5s var(--ease); }
+.float { position: absolute; inset: 0; animation: float 5.5s ease-in-out infinite; }
+@keyframes float { 50% { transform: translateY(-6px); } }
+.pose { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transform: scale(.97); filter: blur(6px);
+  transition: opacity .7s var(--ease), transform .9s var(--ease), filter .7s var(--ease);
+  -webkit-mask-image: radial-gradient(ellipse 58% 56% at 50% 48%, #000 62%, transparent 100%); mask-image: radial-gradient(ellipse 58% 56% at 50% 48%, #000 62%, transparent 100%); }
+.pose.on { opacity: 1; transform: none; filter: none; }
+.status { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 6px; }
+.status p { margin: 0; font: 12px 'Geist Mono', monospace; letter-spacing: .06em; color: var(--mute); }
+.status p b { color: var(--acid); font-weight: 400; margin-right: 8px; }
+.dots { display: flex; gap: 6px; }
+.dots button { width: 22px; height: 6px; padding: 0; border: 0; border-radius: 3px; background: var(--line-2); transition: background .3s, width .3s; }
+.dots button[aria-current="true"] { background: var(--acid); width: 34px; }
+
+.all { padding-block: 56px 72px; }
+.all h2 { margin: 0 0 6px; font-weight: 500; letter-spacing: -.03em; font-size: clamp(24px, 3vw, 32px); }
+.all > p { margin: 0 0 22px; color: var(--mute); font-size: 14.5px; max-width: 42em; line-height: 1.55; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px 18px; }
+.grid figure { margin: 0; }
+.grid img { width: 100%; aspect-ratio: 1; object-fit: contain; display: block; -webkit-mask-image: radial-gradient(ellipse 58% 56% at 50% 48%, #000 62%, transparent 100%); mask-image: radial-gradient(ellipse 58% 56% at 50% 48%, #000 62%, transparent 100%); }
+.grid figcaption { font-size: 14px; display: flex; gap: 10px; align-items: baseline; padding-left: 4px; }
+.grid figcaption span { font: 11px 'Geist Mono', monospace; color: var(--dim); }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+</style>
+
+<section class="hero">
+  <div class="glow" aria-hidden="true"></div>
+  <header class="wrap nav">
+    <a class="logo" href="#"><i>SM</i><span>Sambit Maity<small>Full-Stack Engineer</small></span></a>
+    <nav class="pill-nav"><a class="cur" href="#">About</a><a href="#">Experience</a><a href="#">Work</a><a href="#">Stack</a><a href="#">Contact</a></nav>
+    <button class="kbd">Quick actions <kbd>⌘K</kbd></button>
+  </header>
+
+  <div class="wrap stage">
+    <div>
+      <span class="chip"><span class="ping"></span>Open to senior full-stack &amp; founding-engineer roles</span>
+      <h1 aria-label="Engineering complete systems, not just features.">
+        <span class="line" aria-hidden="true"><span>Engineering</span></span>
+        <span class="line" aria-hidden="true"><span><span class="serif">complete</span> systems,</span></span>
+        <span class="line" aria-hidden="true"><span class="dim">not just features.</span></span>
+      </h1>
+      <p class="lede"><b>Sambit Maity.</b> Laravel &amp; Node.js engineer who owns products end to end, from architecture and APIs to servers, automation and the pixels on screen.</p>
+      <div class="ctas">
+        <a class="btn-p" href="#">See selected work <span>→</span></a>
+        <a class="btn-s" href="#">Résumé <em>↓</em></a>
+      </div>
+    </div>
+
+    <div class="viz" id="viz">
+      <div class="frame" id="frame"><div class="float" id="stack"></div></div>
+      <div class="status"><p id="label"></p><div class="dots" id="dots" role="group" aria-label="Choose a pose"></div></div>
+    </div>
+  </div>
+
+  <dl class="wrap meta">
+    <div><dt>Currently</dt><dd>Technical Lead @ Collabmate</dd></div>
+    <div><dt>Based in</dt><dd>Kolkata, IN · <span id="clock">--:--:--</span></dd></div>
+    <div><dt>Core</dt><dd>Laravel · Node · React · Infra</dd></div>
+    <div><dt>Shipping since</dt><dd>2023, 25+ projects, 4 teams</dd></div>
+  </dl>
+</section>
+
+<section class="wrap all">
+  <h2>All six poses</h2>
+  <p>Cut from your reference image and colour-matched to the page, so there is no box around them. The hero cycles every few seconds, pauses while you hover it, and tilts toward the cursor.</p>
+  <div class="grid" id="grid"></div>
+</section>
+
+<script>
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const tick = () => { document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-GB', { timeZone: 'Asia/Kolkata' }) + ' IST'; };
+tick(); setInterval(tick, 1000);
+
+const POSES = ['Code mode on', 'Power nap between deploys', 'New mechanical keyboard', 'Picking the stack', 'Bug fix fuel', 'Plan · code · deploy · repeat'];
+const src = (i) => `shades-dev/pose-${i + 1}.webp`;
+const alt = (l) => `Developer in sunglasses and a black hoodie: ${l}`;
+
+const stack = document.getElementById('stack'), dots = document.getElementById('dots'), label = document.getElementById('label');
+stack.innerHTML = POSES.map((l, i) => `<img class="pose" src="${src(i)}" alt="${alt(l)}" width="467" height="468" ${i ? 'loading="lazy"' : ''}>`).join('');
+dots.innerHTML = POSES.map((l) => `<button aria-label="${l}"></button>`).join('');
+const imgs = [...stack.children], bars = [...dots.children];
+let cur = 0, timer = 0, paused = false;
+function go(i) {
+  cur = (i + POSES.length) % POSES.length;
+  imgs.forEach((im, k) => im.classList.toggle('on', k === cur));
+  bars.forEach((b, k) => b.setAttribute('aria-current', k === cur));
+  label.innerHTML = `<b>${String(cur + 1).padStart(2, '0')} / 06</b>${POSES[cur]}`;
+}
+const start = () => { clearInterval(timer); if (!reduced) timer = setInterval(() => { if (!paused) go(cur + 1); }, 4500); };
+bars.forEach((b, k) => b.addEventListener('click', () => { go(k); start(); }));
+go(0); start();
+
+// tilt toward the cursor; pause cycling while hovered
+const viz = document.getElementById('viz'), frame = document.getElementById('frame');
+viz.addEventListener('pointerenter', () => { paused = true; });
+viz.addEventListener('pointerleave', () => { paused = false; frame.style.transform = ''; });
+addEventListener('pointermove', (e) => {
+  if (reduced) return;
+  const r = frame.getBoundingClientRect();
+  const x = Math.max(-1, Math.min(1, (e.clientX - r.left - r.width / 2) / r.width));
+  const y = Math.max(-1, Math.min(1, (e.clientY - r.top - r.height / 2) / r.height));
+  frame.style.transform = `rotateY(${(x * 8).toFixed(2)}deg) rotateX(${(-y * 6).toFixed(2)}deg)`;
+});
+
+document.getElementById('grid').innerHTML = POSES.map((l, i) => `<figure><img src="${src(i)}" alt="${alt(l)}" width="467" height="468" loading="lazy"><figcaption><span>${String(i + 1).padStart(2, '0')}</span>${l}</figcaption></figure>`).join('');
+</script>

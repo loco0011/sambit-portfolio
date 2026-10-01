@@ -1,0 +1,282 @@
+<title>Sambit Minimal Heroes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+/* Each hero commits to its own look, so every colour is painted explicitly. */
+:root { color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: #08080a; color: #ececee; font-family: 'Geist', ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; border-radius: 2px; }
+
+.switch { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: #121215; border-bottom: 1px solid rgb(255 255 255 / .08); padding: 10px 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; }
+.switch-title { font: 500 11px 'Geist Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: #85858f; }
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; padding: 3px; border: 1px solid rgb(255 255 255 / .1); border-radius: 999px; }
+.tab { border: 0; background: none; color: #85858f; padding: 6px 14px; border-radius: 999px; font-size: 13px; }
+.tab[aria-selected="true"] { background: #ececee; color: #08080a; }
+.rec { font: 500 10px 'Geist Mono', monospace; letter-spacing: .08em; text-transform: uppercase; background: #d4ff4f; color: #08080a; border-radius: 4px; padding: 2px 5px; margin-left: 6px; vertical-align: 1px; }
+.why { flex: 1 1 320px; margin: 0; font-size: 13px; line-height: 1.45; color: #85858f; }
+.why strong { color: #ececee; font-weight: 500; }
+
+.hero { display: none; min-height: min(calc(100svh - 56px), 860px); position: relative; }
+.hero.on { display: flex; flex-direction: column; }
+.wrap { width: 100%; max-width: 1240px; margin-inline: auto; padding-inline: clamp(20px, 5vw, 64px); }
+.top { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-block: 26px; font-size: 13px; }
+.menu { font-size: 13px; background: none; border: 0; padding: 0; }
+.tlink { display: inline-flex; gap: 10px; align-items: center; font-size: 14px; text-decoration: none; padding-bottom: 4px; border-bottom: 1px solid; transition: gap .4s cubic-bezier(.16, 1, .3, 1); }
+.tlink:hover { gap: 16px; }
+.links { display: flex; flex-wrap: wrap; gap: 14px 32px; }
+
+/* ══ 1 · FOOTNOTES ═════════════════════════════════════ */
+#f { background: #09090b; color: #ececee; }
+#f .top { color: #85858f; }
+#f .top .n { color: #ececee; }
+#f .avail { display: inline-flex; align-items: center; gap: 9px; }
+#f .avail i { width: 5px; height: 5px; border-radius: 50%; background: #d4ff4f; }
+#f .mid { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-block: 40px; }
+#f h1 { margin: 0; font-weight: 400; font-size: clamp(2.3rem, 5.4vw, 4.9rem); line-height: 1.08; letter-spacing: -.04em; max-width: 15em; text-wrap: balance; }
+#f h1 .muted { color: #5c5c66; }
+.v { position: relative; cursor: default; transition: color .5s; background-image: linear-gradient(currentColor, currentColor); background-size: 0% 1px; background-repeat: no-repeat; background-position: 0 92%; transition: color .5s, background-size .6s cubic-bezier(.16, 1, .3, 1); }
+.v sup { font: 400 .26em 'Geist Mono', monospace; letter-spacing: 0; vertical-align: 2.1em; margin-left: .15em; color: #5c5c66; transition: color .5s; }
+.v.on { color: #d4ff4f; background-size: 100% 1px; }
+.v.on sup { color: #d4ff4f; }
+#f .links { margin-top: 44px; }
+#f .tlink { color: #ececee; border-color: rgb(236 236 238 / .35); }
+#f .tlink.dim { color: #85858f; border-color: transparent; }
+.notes { list-style: none; margin: 0; padding: 22px 0 30px; border-top: 1px solid rgb(255 255 255 / .08); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px 28px; counter-reset: fn; }
+.notes li { font-size: 13px; line-height: 1.55; color: #5c5c66; transition: color .5s; display: grid; grid-template-columns: 18px 1fr; cursor: default; }
+.notes li::before { counter-increment: fn; content: counter(fn); font: 11px 'Geist Mono', monospace; padding-top: 2px; }
+.notes li b { font-weight: 500; }
+.notes li.on { color: #b9b9c1; }
+.notes li.on b { color: #ececee; }
+.notes li.on::before { color: #d4ff4f; }
+@media (max-width: 860px) { .notes { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) { .notes { grid-template-columns: 1fr; } }
+
+/* ══ 2 · THE PATH ═════════════════════════════════════ */
+#p { background: #070709; color: #ececee; }
+#p .top { color: #85858f; }
+#p .mid { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-block: 40px 20px; }
+#p .eyebrow { font: 11px 'Geist Mono', monospace; letter-spacing: .16em; text-transform: uppercase; color: #85858f; }
+#p h1 { margin: 20px 0 0; font-weight: 400; font-size: clamp(2.6rem, 6.6vw, 6rem); line-height: 1; letter-spacing: -.045em; text-wrap: balance; }
+#p h1 em { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; letter-spacing: -.01em; }
+#p .sub { margin: 22px 0 0; color: #85858f; font-size: 16px; line-height: 1.6; max-width: 36em; }
+#p .links { margin-top: 36px; }
+#p .tlink { color: #ececee; border-color: rgb(236 236 238 / .35); }
+#p .tlink.dim { color: #85858f; border-color: transparent; }
+.path { position: relative; margin-top: clamp(48px, 9vh, 96px); padding-bottom: 36px; }
+.rail { position: relative; height: 1px; background: rgb(236 236 238 / .14); }
+.packet { position: absolute; top: 50%; left: 0; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 50%; background: #d4ff4f; box-shadow: 0 0 0 4px rgb(212 255 79 / .12), 0 0 18px rgb(212 255 79 / .55); }
+.stops { list-style: none; margin: 0; padding: 0; position: absolute; inset: 0; }
+.stop { position: absolute; top: 0; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; cursor: default; }
+.stop:first-child { transform: none; align-items: flex-start; }
+.stop:last-child { transform: translateX(-100%); align-items: flex-end; }
+.stop i { width: 5px; height: 5px; border-radius: 50%; background: #08080a; border: 1px solid rgb(236 236 238 / .45); margin-top: -3px; transition: border-color .3s, background .3s; }
+.stop span { margin-top: 14px; font: 11px 'Geist Mono', monospace; letter-spacing: .12em; text-transform: uppercase; color: #5c5c66; transition: color .3s; white-space: nowrap; }
+.stop.on i { border-color: #d4ff4f; background: #d4ff4f; }
+.stop.on span { color: #ececee; }
+.proof { margin: 0; padding-block: 18px 30px; font-size: 14px; color: #85858f; min-height: 3.2em; line-height: 1.55; }
+.proof b { color: #ececee; font-weight: 500; }
+@media (max-width: 600px) { .stop span { font-size: 9px; letter-spacing: .06em; } }
+
+/* ══ 3 · THE RULER ════════════════════════════════════ */
+#r { --paper: #f3f4f5; --ink: #111317; --mute: #6b7079; --faint: #b9bdc4; --accent: #2848d0; background: var(--paper); color: var(--ink); }
+#r .top { color: var(--mute); }
+#r .top .n { color: var(--ink); }
+#r .mid { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-block: 40px 24px; }
+#r h1 { margin: 0; font-weight: 400; font-size: clamp(2.5rem, 6vw, 5.4rem); line-height: 1.02; letter-spacing: -.045em; text-wrap: balance; max-width: 13em; }
+#r h1 em { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; letter-spacing: -.01em; color: var(--accent); }
+#r .sub { margin: 24px 0 0; color: var(--mute); font-size: 16px; line-height: 1.6; max-width: 36em; }
+#r .links { margin-top: 34px; }
+#r .tlink { color: var(--ink); border-color: rgb(17 19 23 / .35); }
+#r .tlink.dim { color: var(--mute); border-color: transparent; }
+.ruler { margin-top: clamp(44px, 8vh, 84px); padding-bottom: 30px; }
+.segs { display: grid; grid-template-columns: repeat(39, 1fr); margin-bottom: 10px; }
+.seg { border-top: 1px solid var(--faint); padding-top: 7px; margin-right: 6px; font: 11px 'Geist Mono', monospace; color: var(--mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: default; transition: color .3s, border-color .3s; }
+.seg.on { color: var(--ink); border-top-color: var(--ink); }
+.seg.now.on { color: var(--accent); border-top-color: var(--accent); }
+.ticks { display: grid; grid-template-columns: repeat(39, 1fr); align-items: end; height: 22px; border-bottom: 1px solid var(--ink); }
+.ticks i { width: 1px; height: 6px; background: var(--faint); }
+.ticks i.y { height: 16px; background: var(--ink); }
+.ticks i.now { height: 22px; width: 2px; background: var(--accent); position: relative; }
+.ticks i.now::after { content: ''; position: absolute; left: 50%; top: -5px; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 50%; background: var(--accent); animation: beat 2.4s ease-in-out infinite; }
+@keyframes beat { 50% { box-shadow: 0 0 0 5px rgb(40 72 208 / .15); } }
+.years { display: grid; grid-template-columns: repeat(39, 1fr); margin-top: 8px; font: 11px 'Geist Mono', monospace; color: var(--mute); }
+.years span { white-space: nowrap; }
+.role { margin: 18px 0 0; font-size: 14px; color: var(--mute); min-height: 1.6em; }
+.role b { color: var(--ink); font-weight: 500; }
+@media (max-width: 700px) { .seg { font-size: 0; margin-right: 3px; } .seg::after { content: attr(data-s); font-size: 10px; } }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; } }
+</style>
+
+<div class="switch" role="region" aria-label="Choose a hero">
+  <span class="switch-title">Minimal · round 2</span>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="tab-f" aria-controls="f" aria-selected="true" data-k="f">Footnotes<span class="rec">Pick</span></button>
+    <button class="tab" role="tab" id="tab-p" aria-controls="p" aria-selected="false" data-k="p">The path</button>
+    <button class="tab" role="tab" id="tab-r" aria-controls="r" aria-selected="false" data-k="r">The ruler</button>
+  </div>
+  <p class="why" id="why"></p>
+</div>
+
+<!-- ═══ 1 · FOOTNOTES ═══ -->
+<section class="hero on" id="f" role="tabpanel" aria-labelledby="tab-f">
+  <div class="wrap top">
+    <span class="n">Sambit Maity</span>
+    <span class="avail"><i></i>Available for senior roles</span>
+    <button class="menu">Menu</button>
+  </div>
+  <div class="wrap mid">
+    <h1>Sambit Maity <span class="v" data-i="0">designs<sup>1</sup></span>, <span class="v" data-i="1">builds<sup>2</sup></span>, <span class="v" data-i="2">ships<sup>3</sup></span> and <span class="v" data-i="3">runs<sup>4</sup></span> <span class="muted">software, end to end.</span></h1>
+    <div class="links">
+      <a class="tlink" href="#f">Selected work <span>→</span></a>
+      <a class="tlink dim" href="#f">Résumé</a>
+    </div>
+  </div>
+  <div class="wrap">
+    <ol class="notes" id="notes">
+      <li data-i="0"><span><b>Design.</b> System architecture and data models for 25+ products across four teams.</span></li>
+      <li data-i="1"><span><b>Build.</b> Laravel and Node.js backends. React, Vue and Flutter on the front.</span></li>
+      <li data-i="2"><span><b>Ship.</b> SSH-based CI/CD and Docker, with no manual release steps.</span></li>
+      <li data-i="3"><span><b>Run.</b> 5+ production servers I provision, secure and monitor myself.</span></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ═══ 2 · THE PATH ═══ -->
+<section class="hero" id="p" role="tabpanel" aria-labelledby="tab-p">
+  <div class="wrap top">
+    <span style="color:#ececee">Sambit Maity</span>
+    <span>Kolkata · <span class="clock"></span> IST</span>
+    <button class="menu">Menu</button>
+  </div>
+  <div class="wrap mid">
+    <span class="eyebrow">Technical Lead · Collabmate</span>
+    <h1>I build software <em>end to end.</em></h1>
+    <p class="sub">Every stop a request makes, from the screen to the server, is something I've designed, built and kept running.</p>
+    <div class="links">
+      <a class="tlink" href="#p">Selected work <span>→</span></a>
+      <a class="tlink dim" href="#p">Résumé</a>
+    </div>
+    <div class="path">
+      <div class="rail" id="rail">
+        <ul class="stops" id="stops"></ul>
+        <span class="packet" id="packet"></span>
+      </div>
+    </div>
+    <p class="proof" id="proof" aria-live="polite"></p>
+  </div>
+</section>
+
+<!-- ═══ 3 · THE RULER ═══ -->
+<section class="hero" id="r" role="tabpanel" aria-labelledby="tab-r">
+  <div class="wrap top">
+    <span class="n">Sambit Maity</span>
+    <span>Full-stack engineer</span>
+    <button class="menu">Menu</button>
+  </div>
+  <div class="wrap mid">
+    <h1>Three years. Four teams. <em>Every layer of the stack.</em></h1>
+    <p class="sub">Laravel and Node.js engineer who owns products from architecture and APIs to servers, automation and the interface.</p>
+    <div class="links">
+      <a class="tlink" href="#r">Selected work <span>→</span></a>
+      <a class="tlink dim" href="#r">Résumé</a>
+    </div>
+    <div class="ruler" aria-label="Career timeline, July 2023 to now">
+      <div class="segs" id="segs"></div>
+      <div class="ticks" id="ticks"></div>
+      <div class="years" id="years"></div>
+      <p class="role" id="role" aria-live="polite"></p>
+    </div>
+  </div>
+</section>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const WHY = {
+    f: '<strong>One sentence, four footnotes.</strong> The headline is a plain claim and the footnotes back it up, like a well-cited paper. It uses no graphics, so it stays elegant on any screen. Hover a verb.',
+    p: '<strong>One line, one moving dot.</strong> A single hairline is the path of a request, and the dot is the request moving through the layers you own. Hover a stop to see what you built there.',
+    r: '<strong>Your career as a precise instrument.</strong> A ruler of every month since July 2023, with your four roles marked and a live "now" tick. It uses a light palette and shows real dates.'
+  };
+  const tabs = [...document.querySelectorAll('.tab')], why = document.getElementById('why');
+  const active = k => document.getElementById(k).classList.contains('on');
+  function show(k) {
+    tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.k === k));
+    document.querySelectorAll('.hero').forEach(h => h.classList.toggle('on', h.id === k));
+    why.innerHTML = WHY[k];
+    try { history.replaceState(null, '', '#' + k); } catch (e) {}
+  }
+  tabs.forEach(t => t.addEventListener('click', () => show(t.dataset.k)));
+
+  const clock = () => document.querySelectorAll('.clock').forEach(c => c.textContent = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date()));
+  clock(); setInterval(clock, 15000);
+
+  /* 1 · Footnotes */
+  const verbs = [...document.querySelectorAll('.v')], notes = [...document.querySelectorAll('.notes li')];
+  let fi = 0, fPin = false;
+  const fLight = i => { fi = i; verbs.forEach((v, j) => v.classList.toggle('on', j === i)); notes.forEach((n, j) => n.classList.toggle('on', j === i)); };
+  [...verbs, ...notes].forEach(el => {
+    el.addEventListener('mouseenter', () => { fPin = true; fLight(+el.dataset.i); });
+    el.addEventListener('mouseleave', () => fPin = false);
+  });
+  fLight(0);
+  if (!reduce) setInterval(() => { if (!fPin && active('f')) fLight((fi + 1) % 4); }, 3200);
+
+  /* 2 · Path */
+  const STOPS = [
+    ['Screen', 0, 'React, Vue and Flutter. I rebuilt Collabmate\'s site and took its performance score from ~80 to 95+.'],
+    ['API', 25, 'Laravel and Node.js REST APIs with HMAC-signed requests, 2FA and role-based access.'],
+    ['Queue', 50, 'BullMQ jobs, Pusher realtime events and self-hosted n8n workflows.'],
+    ['Data', 75, 'Schema design across PostgreSQL, MySQL and MongoDB.'],
+    ['Server', 100, '5+ production VPS instances with Linux, Nginx and Docker, which I run alone.']
+  ];
+  const stopsEl = document.getElementById('stops'), packet = document.getElementById('packet'), proof = document.getElementById('proof');
+  stopsEl.innerHTML = STOPS.map(([n, x], i) => `<li class="stop" data-i="${i}" style="left:${x}%" tabindex="0"><i></i><span>${n}</span></li>`).join('');
+  const stopEls = [...stopsEl.children];
+  let pos = 0, target = null, lit = -1;
+  const setProof = i => { if (i === lit) return; lit = i; stopEls.forEach((s, j) => s.classList.toggle('on', j === i)); proof.innerHTML = `<b>${STOPS[i][0]}.</b> ${STOPS[i][2]}`; };
+  stopEls.forEach(s => {
+    const go = () => target = STOPS[+s.dataset.i][1];
+    s.addEventListener('mouseenter', go); s.addEventListener('focus', go);
+    s.addEventListener('mouseleave', () => target = null); s.addEventListener('blur', () => target = null);
+  });
+  setProof(0);
+  let t0 = performance.now(), phase = 0;
+  function frame(now) {
+    const dt = Math.min(50, now - t0); t0 = now;
+    if (active('p')) {
+      if (target !== null) pos += (target - pos) * 0.12;
+      else if (!reduce) { phase += dt / 9000; pos = (1 - Math.cos(phase * Math.PI * 2)) * 50; }
+      packet.style.left = pos + '%';
+      const near = STOPS.findIndex(s => Math.abs(s[1] - pos) < 4);
+      if (near > -1) setProof(near);
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  /* 3 · Ruler: Jul 2023 → Sep 2026, one cell per month */
+  const M = 39;
+  const ROLES = [
+    ['FXBS', 'FX', 0, 8, 'Web Developer, FXBS · Jul 2023 to Feb 2024'],
+    ['Spiral Compute (NZ)', 'SC', 8, 20, 'SDE-1, Spiral Compute, remote for New Zealand · Mar 2024 to Oct 2025'],
+    ['Triophase', 'TP', 28, 7, 'Software Developer, Triophase Global Services · Nov 2025 to May 2026'],
+    ['Collabmate', 'CM', 35, 4, 'Technical Lead, Collabmate · Jun 2026 to now']
+  ];
+  const segs = document.getElementById('segs'), role = document.getElementById('role');
+  segs.innerHTML = ROLES.map(([n, s, st, len], i) => `<span class="seg${i === 3 ? ' now' : ''}" data-i="${i}" data-s="${s}" style="grid-column:${st + 1} / span ${len}" title="${n}">${n}</span>`).join('');
+  document.getElementById('ticks').innerHTML = Array.from({ length: M }, (_, i) => `<i class="${i === M - 1 ? 'now' : (i + 6) % 12 === 0 ? 'y' : ''}"></i>`).join('');
+  document.getElementById('years').innerHTML = `<span style="grid-column:1">Jul '23</span><span style="grid-column:7">2024</span><span style="grid-column:19">2025</span><span style="grid-column:31">2026</span>`;
+  const segEls = [...segs.children];
+  const rLight = i => { segEls.forEach((s, j) => s.classList.toggle('on', j === i)); role.innerHTML = `<b>${ROLES[i][4].split(' · ')[0]}</b> · ${ROLES[i][4].split(' · ')[1]}`; };
+  segEls.forEach(s => s.addEventListener('mouseenter', () => rLight(+s.dataset.i)));
+  segs.addEventListener('mouseleave', () => rLight(3));
+  rLight(3);
+
+  const start = (location.hash || '').slice(1);
+  show(['f', 'p', 'r'].includes(start) ? start : 'f');
+})();
+</script>
