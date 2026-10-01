@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { MotionConfig } from 'motion/react';
 import { initSmoothScroll } from './lib/scroll';
-import Loader from './components/Loader';
+import Loader, { shouldPlayIntro } from './components/Loader';
 import Cursor from './components/Cursor';
 import Nav from './components/Nav';
 import CommandPalette from './components/CommandPalette';
@@ -17,6 +17,7 @@ import Footer from './components/Footer';
 
 export default function App({ data }) {
     const [ready, setReady] = useState(false);
+    const [intro] = useState(shouldPlayIntro);
     const [palette, setPalette] = useState(false);
 
     useEffect(() => initSmoothScroll(), []);
@@ -34,7 +35,7 @@ export default function App({ data }) {
 
     return (
         <MotionConfig reducedMotion="user">
-            <Loader name={data.profile.name} onDone={() => setReady(true)} />
+            <Loader play={intro} name={data.profile.name} role={data.profile.role} onReveal={() => setReady(true)} />
             <Cursor />
             <div className="grain" aria-hidden />
 
@@ -42,7 +43,7 @@ export default function App({ data }) {
             <CommandPalette open={palette} onClose={() => setPalette(false)} profile={data.profile} />
 
             <main>
-                <Hero profile={{ ...data.profile, projectsTotal: data.projects_total }} ready={ready} />
+                <Hero profile={{ ...data.profile, projectsTotal: data.projects_total }} ready={ready} handoff={intro} />
                 <Marquee items={data.stack} />
                 <About manifesto={data.manifesto} stats={data.stats} />
                 <Experience items={data.experience} />

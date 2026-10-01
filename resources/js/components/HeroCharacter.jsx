@@ -14,9 +14,9 @@ const INTERVAL = 4500;
 
 // The poses have transparent backgrounds; only soften where the body is cut by the frame (bottom and sides).
 const MASK = 'linear-gradient(to bottom, #000 82%, transparent 99%), linear-gradient(to right, transparent 0%, #000 5%, #000 95%, transparent 100%)';
-const MASK_STYLE = { maskImage: MASK, WebkitMaskImage: MASK, maskComposite: 'intersect', WebkitMaskComposite: 'source-in' };
+export const HERO_IMAGE_MASK = { maskImage: MASK, WebkitMaskImage: MASK, maskComposite: 'intersect', WebkitMaskComposite: 'source-in' };
 
-export default function HeroCharacter({ ready }) {
+export default function HeroCharacter({ ready, handoff = false }) {
     const reduced = useReducedMotion();
     const ref = useRef(null);
     const [index, setIndex] = useState(0);
@@ -61,7 +61,8 @@ export default function HeroCharacter({ ready }) {
         <motion.div
             ref={ref}
             className="relative mx-auto w-full max-w-[340px] sm:max-w-[420px] lg:mx-0 lg:ml-auto lg:max-w-[520px]"
-            initial={{ opacity: 0, y: 20 }}
+            // After the boot intro he flies into this box himself, so skip the entrance.
+            initial={handoff ? false : { opacity: 0, y: 20 }}
             animate={ready ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1.2, ease, delay: 0.35 }}
             onPointerEnter={() => setHovered(true)}
@@ -71,7 +72,7 @@ export default function HeroCharacter({ ready }) {
                 rotateY.set(0);
             }}
         >
-            <div style={{ perspective: 1200 }}>
+            <div data-hero-figure style={{ perspective: 1200 }}>
                 <motion.div className="relative aspect-square" style={{ rotateX, rotateY }}>
                     <motion.div
                         className="absolute inset-0"
@@ -88,7 +89,7 @@ export default function HeroCharacter({ ready }) {
                                 draggable={false}
                                 decoding="async"
                                 className="absolute inset-0 h-full w-full select-none object-contain will-change-[opacity,transform]"
-                                style={MASK_STYLE}
+                                style={HERO_IMAGE_MASK}
                                 // Outgoing pose clears quickly; the next one settles in a beat later, so the
                                 // two never sit on top of each other at full strength.
                                 initial={{ opacity: 0, scale: 0.985, y: 10 }}

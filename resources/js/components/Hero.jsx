@@ -28,7 +28,7 @@ const bandTop = (s) => {
     return -FADE_BAND + t * (HIDE_UNTIL + FADE_BAND);
 };
 
-export default function Hero({ profile, ready }) {
+export default function Hero({ profile, ready, handoff = false }) {
     const ref = useRef(null);
     const content = useRef(null);
     const { scrollY, scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
@@ -149,7 +149,7 @@ export default function Hero({ profile, ready }) {
                 </div>
 
                 <div className="lg:col-span-5">
-                    <HeroCharacter ready={ready} />
+                    <HeroCharacter ready={ready} handoff={handoff} />
                 </div>
             </motion.div>
 

@@ -193,6 +193,65 @@
         pointer-events: none;
     }
 
+    /* Boot intro ("Lens"): the Shades Dev powers on, then flies into the hero figure */
+    .boot-fig {
+        --s: min(52vh, 74vw, 500px);
+        width: var(--s);
+        height: var(--s);
+    }
+    .boot-led,
+    .boot-glint {
+        position: absolute;
+        opacity: 0;
+        transform: translate(-50%, -50%);
+        background: var(--color-acid);
+    }
+    .boot-led {
+        width: 1.1%;
+        height: 1.1%;
+        border-radius: 50%;
+        box-shadow: 0 0 8px 2px var(--color-acid);
+    }
+    .boot-glint {
+        height: 1.1%;
+        border-radius: 4px;
+        box-shadow: 0 0 14px 3px rgb(212 255 79 / 0.7), 0 0 40px 8px rgb(212 255 79 / 0.25);
+    }
+    .boot-scan {
+        position: absolute;
+        inset-inline: -6%;
+        top: 0;
+        height: 2px;
+        opacity: 0;
+        background: linear-gradient(90deg, transparent, var(--color-acid) 20%, var(--color-acid) 80%, transparent);
+        box-shadow: 0 0 24px 4px rgb(212 255 79 / 0.5);
+    }
+    .boot-shine {
+        position: absolute;
+        left: 38%;
+        top: 24.5%;
+        width: 33%;
+        height: 13%;
+        overflow: hidden;
+        mix-blend-mode: screen;
+        pointer-events: none;
+    }
+    .boot-shine i {
+        position: absolute;
+        inset-block: -60%;
+        left: -40%;
+        width: 22%;
+        transform: skewX(-24deg);
+        background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.55), transparent);
+    }
+    .boot-role::after {
+        content: '_';
+        color: var(--color-acid);
+        animation: blink 1s steps(1) infinite;
+    }
+    /* The real hero figure stays hidden until the flying one lands on it */
+    html[data-boot] [data-hero-figure] { visibility: hidden; }
+
     .mask-fade-x {
         mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
     }

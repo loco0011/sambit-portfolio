@@ -6,6 +6,7 @@ export function initSmoothScroll() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return () => {};
 
     lenis = new Lenis({ lerp: 0.1, smoothWheel: true, wheelMultiplier: 1 });
+    if (locked) lenis.stop();
 
     let frame;
     const raf = (time) => {
@@ -28,7 +29,11 @@ export function scrollTo(target) {
     else (el ?? document.body).scrollIntoView({ behavior: 'smooth' });
 }
 
-export function lockScroll(locked) {
+// Remembered so a lock requested before Lenis exists (the boot intro mounts first) still applies.
+let locked = false;
+
+export function lockScroll(value) {
+    locked = value;
     if (!lenis) return;
     locked ? lenis.stop() : lenis.start();
 }
