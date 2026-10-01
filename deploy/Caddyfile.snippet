@@ -1,0 +1,11 @@
+# Appended to the shared Caddyfile at /opt/apps/pmp-ornaments/deploy/infra/Caddyfile.
+# Caddy handles HTTPS certificates automatically.
+
+sambitmaity.com {
+	encode zstd gzip
+	reverse_proxy portfolio:8080
+}
+
+www.sambitmaity.com {
+	redir https://sambitmaity.com{uri} permanent
+}

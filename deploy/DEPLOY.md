@@ -1,87 +1,38 @@
-# Deploying the portfolio to the VPS
-
-Layout on the VPS:
+# Deploying the portfolio to the VPS (93.127.172.207)
 
 ```
-/opt/apps/pmp-ornaments/   existing app + Nginx container (ports 80/443)  ← untouched apart from 1 config file + network
-/opt/apps/sambit-portfolio/            this repo → container "portfolio" (no public ports)
+/opt/apps/pmp-ornaments/              other app + shared infra (Caddy on 80/443, MariaDB)
+/opt/apps/pmp-ornaments/deploy/infra/Caddyfile   ← shared Caddy config (our site block lives here)
+/opt/apps/sambit-portfolio/           this repo → container "portfolio" (port 8080, no public ports)
 ```
 
-The two containers talk over a shared Docker network called `proxy`.
+Both apps join the external Docker network `proxy`; Caddy proxies `sambitmaity.com` to `portfolio:8080`
+and issues the TLS certificate automatically.
 
-## 1. DNS (at your domain registrar)
+## DNS
 
-| Type | Name | Value         |
-|------|------|---------------|
-| A    | @    | 93.127.172.207   |
-| A    | www  | 93.127.172.207   |
+A records `@` and `www` → `93.127.172.207`.
 
-Check with `nslookup sambitmaity.com` (can take 5 min – a few hours).
-
-## 2. Push code to GitHub (on your PC)
+## First-time setup
 
 ```bash
-git init && git add . && git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/loco0011/sambit-portfolio.git   # create a PRIVATE repo first
-git push -u origin main
-```
-
-## 3. Shared network (on the VPS, once)
-
-```bash
-docker network create proxy
-```
-
-Then edit the EXISTING project's docker-compose.yml so its nginx service joins it:
-
-```yaml
-services:
-  nginx:              # your existing nginx service
-    # ...existing config...
-    networks:
-      - default       # keep its current network(s)!
-      - proxy
-
-networks:
-  proxy:
-    external: true
-```
-
-`docker compose up -d` in that folder (recreates only nginx, a few seconds).
-
-## 4. Clone & configure the portfolio
-
-```bash
-sudo mkdir -p /opt/apps/sambit-portfolio && sudo chown $USER /opt/apps/sambit-portfolio
-git clone https://github.com/loco0011/sambit-portfolio.git /opt/apps/sambit-portfolio
-cd /opt/apps/sambit-portfolio
+cd /opt/apps
+git clone https://github.com/loco0011/sambit-portfolio.git
+cd sambit-portfolio
 cp .env.production.example .env.production
-nano .env.production          # domain, mail settings
-```
-
-Generate an APP_KEY and paste it into `.env.production`:
-
-```bash
-docker run --rm php:8.4-cli php -r 'echo "base64:".base64_encode(random_bytes(32)).PHP_EOL;'
-```
-
-## 5. Build & start
-
-```bash
+docker run --rm php:8.4-cli php -r 'echo "base64:".base64_encode(random_bytes(32)).PHP_EOL;'   # → APP_KEY
+nano .env.production
 docker compose up -d --build
-docker compose logs -f        # migrations run automatically on boot
 ```
 
-## 6. Nginx site + SSL
+Add `deploy/Caddyfile.snippet` to the shared Caddyfile, then:
 
-1. Copy `deploy/nginx-portfolio.conf` into the existing Nginx's conf folder, replace `sambitmaity.com`.
-2. First time only: comment out the two `443` server blocks (the cert doesn't exist yet).
-3. Reload: `docker exec <nginx-container> nginx -t && docker exec <nginx-container> nginx -s reload`
-4. Issue the certificate the same way your existing project does (e.g. certbot container with webroot `/var/www/certbot`).
-5. Uncomment the 443 blocks, test and reload again.
+```bash
+docker exec caddy caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
+docker exec caddy caddy reload   --config /etc/caddy/Caddyfile --adapter caddyfile
+```
 
-## Updating later
+## Updating
 
 ```bash
 cd /opt/apps/sambit-portfolio && git pull && docker compose up -d --build
@@ -91,5 +42,6 @@ cd /opt/apps/sambit-portfolio && git pull && docker compose up -d --build
 
 ```bash
 docker compose logs -f portfolio
-docker compose exec portfolio php artisan tinker     # e.g. App\Models\ContactMessage::latest()->get()
+docker compose exec portfolio php artisan tinker     # App\Models\ContactMessage::latest()->get()
+docker logs caddy --tail 50                           # certificate / proxy issues
 ```
