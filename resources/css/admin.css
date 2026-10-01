@@ -1398,6 +1398,56 @@ textarea.well {
     color: rgba(95, 227, 255, 0.3);
 }
 
+/* Password field with a show/hide toggle inside its right edge */
+.well-reveal {
+    position: relative;
+    display: block;
+}
+
+.well-reveal .well {
+    padding-right: 46px;
+}
+
+.reveal-btn {
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    transform: translateY(-50%);
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: rgba(95, 227, 255, 0.45);
+    cursor: pointer;
+    transition: color 0.2s, background 0.2s;
+}
+
+.reveal-btn:hover,
+.reveal-btn[aria-pressed='true'] {
+    color: var(--amber);
+    background: var(--amber-dim);
+}
+
+.reveal-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--orange);
+}
+
+.reveal-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 4px var(--amber-soft));
+}
+
 .grid-2 {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));

@@ -32,6 +32,7 @@ export default function Lock({ onUnlock }) {
     const [state, setState] = useState('locked'); // locked | checking | denied | booting
     const [error, setError] = useState('');
     const [user, setUser] = useState(null);
+    const [showKey, setShowKey] = useState(false);
 
     const submit = async (e) => {
         e.preventDefault();
@@ -98,15 +99,32 @@ export default function Lock({ onUnlock }) {
                     </label>
                     <label className="field">
                         <span className="field-label">Key</span>
-                        <input
-                            className="well well--lcd"
-                            type="password"
-                            autoComplete="current-password"
-                            placeholder="••••••••••"
-                            value={form.password}
-                            onChange={(e) => setForm({ ...form, password: e.target.value })}
-                            required
-                        />
+                        <span className="well-reveal">
+                            <input
+                                className="well well--lcd"
+                                type={showKey ? 'text' : 'password'}
+                                autoComplete="current-password"
+                                placeholder="••••••••••"
+                                value={form.password}
+                                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                                required
+                            />
+                            <button
+                                type="button"
+                                className="reveal-btn"
+                                onClick={() => setShowKey((v) => !v)}
+                                onMouseDown={(e) => e.preventDefault()} // keep focus and caret in the field
+                                aria-label={showKey ? 'Hide password' : 'Show password'}
+                                aria-pressed={showKey}
+                                title={showKey ? 'Hide password' : 'Show password'}
+                            >
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" />
+                                    <circle cx="12" cy="12" r="3" />
+                                    {showKey && <path d="M4 4l16 16" />}
+                                </svg>
+                            </button>
+                        </span>
                     </label>
                     <button className="btn btn--orange btn--block" style={{ height: 50, marginTop: 8 }} disabled={state === 'checking' || state === 'booting'}>
                         Unlock ⏎
