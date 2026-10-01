@@ -57,13 +57,20 @@ export default function Nav({ profile, onPalette }) {
                 <span />
             </div>
             <div className="container-x relative flex items-center justify-between gap-3 py-3 sm:py-4">
-                <button onClick={() => scrollTo(0)} className="group flex items-center gap-3" data-cursor="Top">
-                    <span className="grid h-9 w-9 place-items-center rounded-xl border hairline bg-ink-2 font-mono text-[12px] font-medium text-acid transition-colors group-hover:border-acid/60">
-                        SM
-                    </span>
-                    <span className="hidden text-[13px] leading-tight min-[480px]:max-md:block xl:block">
-                        <span className="block text-fg">{profile.name}</span>
-                        <span className="block text-mute">{profile.role}</span>
+                {/* Wordmark; the role drops in underneath on hover/focus without shifting the bar */}
+                <button
+                    onClick={() => scrollTo(0)}
+                    className="group relative flex items-center gap-2 py-1.5"
+                    data-cursor="Top"
+                    aria-label={`${profile.name}, ${profile.role}. Back to top`}
+                >
+                    <span className="text-[15px] font-medium tracking-[-0.02em] text-fg">{profile.name}</span>
+                    <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-acid transition-shadow duration-300 group-hover:shadow-[0_0_10px_var(--color-acid)]" />
+                    <span
+                        aria-hidden
+                        className="pointer-events-none absolute left-0 top-full -translate-y-1 whitespace-nowrap text-[12px] text-mute opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
+                    >
+                        {profile.role}
                     </span>
                 </button>
 
