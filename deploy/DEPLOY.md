@@ -2,7 +2,7 @@
 
 ```
 /opt/apps/pmp-ornaments/              other app + shared infra (Caddy on 80/443, MariaDB)
-/opt/apps/pmp-ornaments/deploy/infra/Caddyfile   ← shared Caddy config (our site block lives here)
+/opt/infra/Caddyfile                  ← shared Caddy config actually mounted into the caddy container
 /opt/apps/sambit-portfolio/           this repo → container "portfolio" (port 8080, no public ports)
 ```
 
@@ -25,11 +25,11 @@ nano .env.production
 docker compose up -d --build
 ```
 
-Add `deploy/Caddyfile.snippet` to the shared Caddyfile, then:
+Append `deploy/Caddyfile.snippet` to /opt/infra/Caddyfile, then (admin API is off, so restart instead of reload):
 
 ```bash
 docker exec caddy caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
-docker exec caddy caddy reload   --config /etc/caddy/Caddyfile --adapter caddyfile
+docker restart caddy
 ```
 
 ## Updating
