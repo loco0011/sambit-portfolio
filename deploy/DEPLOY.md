@@ -3,8 +3,8 @@
 Layout on the VPS:
 
 ```
-/opt/<existing-project>/   existing app + Nginx container (ports 80/443)  ← untouched apart from 1 config file + network
-/opt/portfolio/            this repo → container "portfolio" (no public ports)
+/opt/apps/pmp-ornaments/   existing app + Nginx container (ports 80/443)  ← untouched apart from 1 config file + network
+/opt/apps/sambit-portfolio/            this repo → container "portfolio" (no public ports)
 ```
 
 The two containers talk over a shared Docker network called `proxy`.
@@ -13,17 +13,17 @@ The two containers talk over a shared Docker network called `proxy`.
 
 | Type | Name | Value         |
 |------|------|---------------|
-| A    | @    | YOUR_VPS_IP   |
-| A    | www  | YOUR_VPS_IP   |
+| A    | @    | 93.127.172.207   |
+| A    | www  | 93.127.172.207   |
 
-Check with `nslookup YOURDOMAIN.com` (can take 5 min – a few hours).
+Check with `nslookup sambitmaity.com` (can take 5 min – a few hours).
 
 ## 2. Push code to GitHub (on your PC)
 
 ```bash
 git init && git add . && git commit -m "Initial commit"
 git branch -M main
-git remote add origin git@github.com:<you>/portfolio.git   # create a PRIVATE repo first
+git remote add origin https://github.com/loco0011/sambit-portfolio.git   # create a PRIVATE repo first
 git push -u origin main
 ```
 
@@ -53,9 +53,9 @@ networks:
 ## 4. Clone & configure the portfolio
 
 ```bash
-sudo mkdir -p /opt/portfolio && sudo chown $USER /opt/portfolio
-git clone git@github.com:<you>/portfolio.git /opt/portfolio
-cd /opt/portfolio
+sudo mkdir -p /opt/apps/sambit-portfolio && sudo chown $USER /opt/apps/sambit-portfolio
+git clone https://github.com/loco0011/sambit-portfolio.git /opt/apps/sambit-portfolio
+cd /opt/apps/sambit-portfolio
 cp .env.production.example .env.production
 nano .env.production          # domain, mail settings
 ```
@@ -75,7 +75,7 @@ docker compose logs -f        # migrations run automatically on boot
 
 ## 6. Nginx site + SSL
 
-1. Copy `deploy/nginx-portfolio.conf` into the existing Nginx's conf folder, replace `YOURDOMAIN.com`.
+1. Copy `deploy/nginx-portfolio.conf` into the existing Nginx's conf folder, replace `sambitmaity.com`.
 2. First time only: comment out the two `443` server blocks (the cert doesn't exist yet).
 3. Reload: `docker exec <nginx-container> nginx -t && docker exec <nginx-container> nginx -s reload`
 4. Issue the certificate the same way your existing project does (e.g. certbot container with webroot `/var/www/certbot`).
@@ -84,7 +84,7 @@ docker compose logs -f        # migrations run automatically on boot
 ## Updating later
 
 ```bash
-cd /opt/portfolio && git pull && docker compose up -d --build
+cd /opt/apps/sambit-portfolio && git pull && docker compose up -d --build
 ```
 
 ## Useful commands
