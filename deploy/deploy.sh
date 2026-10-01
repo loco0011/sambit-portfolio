@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# One-command deploy on the VPS:  ./deploy.sh
+# One-command deploy on the VPS:  ./deploy/deploy.sh
 # Pulls the latest code, rebuilds and restarts the container (migrations run on boot),
 # waits until it's healthy, and creates the admin login the first time.
 set -euo pipefail
 
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."   # repo root
 
 CONTAINER=portfolio
 step() { printf '\n\033[1;33m==> %s\033[0m\n' "$1"; }

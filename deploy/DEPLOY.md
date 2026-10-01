@@ -35,7 +35,7 @@ docker restart caddy
 ## Updating
 
 ```bash
-cd /opt/apps/sambit-portfolio && ./deploy.sh
+cd /opt/apps/sambit-portfolio && ./deploy/deploy.sh
 ```
 
 ## Useful commands
