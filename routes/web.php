@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PortfolioController;
+use App\Http\Controllers\SeoController;
 use App\Http\Middleware\TrackPageView;
 use Illuminate\Support\Facades\Route;
 
@@ -10,6 +11,9 @@ Route::middleware(TrackPageView::class)->group(function () {
     Route::get('/', [PortfolioController::class, 'index'])->name('home');
     Route::get('/resume', [PortfolioController::class, 'resume'])->name('resume');
 });
+
+Route::get('/robots.txt', [SeoController::class, 'robots']);
+Route::get('/sitemap.xml', [SeoController::class, 'sitemap']);
 
 Route::post('/contact', [ContactController::class, 'store'])
     ->middleware('throttle:5,10')
