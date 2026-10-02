@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Support\PortfolioContent;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -17,6 +18,25 @@ class SeoTest extends TestCase
             ->assertSee('<h1>Sambit Maity — Full-Stack Software Engineer</h1>', false)
             ->assertSee('"@type":"WebSite"', false)
             ->assertSee('"@type":"Person"', false);
+    }
+
+    public function test_older_saved_content_picks_up_new_config_sections(): void
+    {
+        // A save made before the `seo` section existed, with one experience entry removed.
+        $saved = config('portfolio');
+        unset($saved['seo'], $saved['profile']['timezone']);
+        $saved['profile']['headline'] = 'Saved headline';
+        $saved['experience'] = array_slice($saved['experience'], 1);
+        PortfolioContent::save($saved);
+
+        $content = PortfolioContent::get();
+
+        $this->assertSame(config('portfolio.seo'), $content['seo']);
+        $this->assertSame(config('portfolio.profile.timezone'), $content['profile']['timezone']);
+        $this->assertSame('Saved headline', $content['profile']['headline']);
+        $this->assertCount(count(config('portfolio.experience')) - 1, $content['experience']);
+
+        $this->get('/')->assertSee('<title>'.e(config('portfolio.seo.title')).'</title>', false);
     }
 
     public function test_google_tags_render_only_when_configured_and_in_production(): void

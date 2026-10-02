@@ -13,7 +13,25 @@ class PortfolioContent
 
     public static function get(): array
     {
-        return self::override()?->value ?? config('portfolio');
+        $defaults = config('portfolio');
+        $saved = self::override()?->value;
+
+        if (! $saved) {
+            return $defaults;
+        }
+
+        // Saved edits win, but sections (and object fields) added to the config after the
+        // last save are filled in from the defaults. Lists are never merged: a saved list
+        // with fewer items stays that way.
+        foreach ($defaults as $key => $value) {
+            if (! array_key_exists($key, $saved)) {
+                $saved[$key] = $value;
+            } elseif (is_array($value) && ! array_is_list($value) && is_array($saved[$key])) {
+                $saved[$key] += $value;
+            }
+        }
+
+        return $saved;
     }
 
     public static function override(): ?SiteSetting
