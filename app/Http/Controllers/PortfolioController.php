@@ -65,6 +65,47 @@ class PortfolioController extends Controller
         ];
     }
 
+    public function caseStudy(string $slug): View
+    {
+        $portfolio = PortfolioContent::get();
+        $all = PortfolioContent::caseStudies($portfolio);
+        abort_unless(isset($all[$slug]), 404);
+
+        $project = $all[$slug];
+        $url = route('work.show', $slug);
+        $home = url('/');
+
+        return view('case-study', [
+            'portfolio' => $portfolio,
+            'project' => $project,
+            'others' => array_values(array_diff_key($all, [$slug => true])),
+            'schema' => [
+                '@context' => 'https://schema.org',
+                '@graph' => [
+                    [
+                        '@type' => 'BreadcrumbList',
+                        'itemListElement' => [
+                            ['@type' => 'ListItem', 'position' => 1, 'name' => $portfolio['profile']['name'], 'item' => $home],
+                            ['@type' => 'ListItem', 'position' => 2, 'name' => 'Work', 'item' => $home.'/#work'],
+                            ['@type' => 'ListItem', 'position' => 3, 'name' => $project['name'], 'item' => $url],
+                        ],
+                    ],
+                    [
+                        '@type' => 'CreativeWork',
+                        '@id' => $url.'#work',
+                        'name' => $project['name'],
+                        'headline' => $project['name'].' — '.$project['kind'],
+                        'description' => $project['blurb'],
+                        'url' => $url,
+                        'keywords' => implode(', ', $project['stack'] ?? []),
+                        'author' => ['@type' => 'Person', '@id' => $home.'#person', 'name' => $portfolio['profile']['name'], 'url' => $home],
+                        'isPartOf' => ['@id' => $home.'#website'],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
     public function resume(): StreamedResponse
     {
         abort_unless(Storage::disk('local')->exists('resume.pdf'), 404);

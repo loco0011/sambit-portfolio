@@ -20,6 +20,27 @@ class SeoTest extends TestCase
             ->assertSee('"@type":"Person"', false);
     }
 
+    public function test_every_case_study_has_a_page_linked_from_home_and_sitemap(): void
+    {
+        $slugs = array_keys(PortfolioContent::caseStudies());
+        $this->assertContains('samgeet', $slugs);
+
+        foreach ($slugs as $slug) {
+            $project = PortfolioContent::caseStudies()[$slug];
+
+            $this->get("/work/$slug")
+                ->assertOk()
+                ->assertSee('<h1 class="display mt-6 text-[clamp(3rem,9vw,7.5rem)]">'.e($project['name']).'</h1>', false)
+                ->assertSee('<link rel="canonical" href="'.route('work.show', $slug).'">', false)
+                ->assertSee('"@type":"BreadcrumbList"', false);
+
+            $this->get('/')->assertSee('href="'.route('work.show', $slug).'"', false);
+            $this->get('/sitemap.xml')->assertSee('<loc>'.route('work.show', $slug).'</loc>', false);
+        }
+
+        $this->get('/work/nope')->assertNotFound();
+    }
+
     public function test_older_saved_content_picks_up_new_config_sections(): void
     {
         // A save made before the `seo` section existed, with one experience entry removed.

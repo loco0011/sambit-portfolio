@@ -223,7 +223,8 @@ const SPANS = ['md:col-span-3', 'md:col-span-3', 'md:col-span-2', 'md:col-span-2
 function Card({ item, index }) {
     const Visual = VISUALS[item.card];
     const Tag = item.url ? 'a' : 'div';
-    const linkProps = item.url ? { href: item.url, target: '_blank', rel: 'noopener', 'data-cursor': 'Open' } : {};
+    const external = item.url && !item.url.startsWith('/');
+    const linkProps = item.url ? { href: item.url, ...(external && { target: '_blank', rel: 'noopener' }), 'data-cursor': 'Open' } : {};
     return (
         <FadeUp delay={(index % 3) * 0.07} className={SPANS[index % SPANS.length]}>
             <Tag {...linkProps} onPointerMove={spotlight} className="spotlight group flex h-full flex-col overflow-hidden rounded-3xl">
@@ -231,7 +232,7 @@ function Card({ item, index }) {
                 <div className="flex flex-1 flex-col p-5 sm:p-6">
                     <div className="flex items-start justify-between gap-3">
                         <h4 className="text-[18px] font-medium tracking-tight text-fg">{item.name}</h4>
-                        {item.url && <span className="text-dim transition-colors group-hover:text-acid">↗</span>}
+                        {item.url && <span className="text-dim transition-colors group-hover:text-acid">{external ? '↗' : '→'}</span>}
                     </div>
                     {(item.org || item.year) && (
                         <p className="mt-1 font-mono text-[11px] text-dim">{[item.org, item.year].filter(Boolean).join(' · ')}</p>

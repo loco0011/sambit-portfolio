@@ -200,6 +200,52 @@ return [
     ],
 
     /*
+    | Extra case studies with their own page at /work/{slug}, beyond the featured
+    | projects above (which get pages automatically). Same shape as a project,
+    | plus optional `links` and `sections` (titled paragraphs).
+    */
+    'case_studies' => [
+        [
+            'slug' => 'samgeet',
+            'name' => 'Samgeet',
+            'kind' => 'Open-source Android music player',
+            'role' => 'Creator · design, app, backend',
+            'blurb' => 'An open-source, ad-free music player for Android: up to 320 kbps streaming, offline downloads, mood-matched autoplay, on-device taste learning and a library that syncs across phones.',
+            'highlights' => [
+                'On-device taste profile that learns from likes, skips and completions and feeds a pure ranking recommender for autoplay',
+                'Mood theme: the whole app recolours itself to the inferred mood of the current song',
+                'Library sync across phones with merging (deletions included); the password is stretched with PBKDF2 on the phone, so the server only ever stores a hash',
+                'Small PHP + MySQL backend with signed requests, session tokens and an admin panel for listening reports, app updates and in-app messages',
+                'Short share links with Android App Links: they open straight in the app, with a web page as the fallback',
+                'Equalizer with saved custom sounds, offline downloads, background playback with lock-screen controls, and voice control through Google Assistant and Bixby',
+            ],
+            'stack' => ['Flutter', 'Dart', 'PHP', 'MySQL', 'Android'],
+            'links' => [
+                ['label' => 'Source on GitHub', 'url' => 'https://github.com/loco0011/samgeet'],
+                ['label' => 'Download the APK', 'url' => 'https://github.com/loco0011/samgeet/releases/latest'],
+            ],
+            'sections' => [
+                ['title' => 'Why I built it', 'body' => 'I wanted a music player without ads that still felt smart: good recommendations, a library on every phone I use and sound I could tune. Samgeet is that app, built end to end and released as open source under the MIT licence.'],
+                ['title' => 'How it is put together', 'body' => 'The Flutter app is split into four layers: data (API client, models, library store, account sync, share links), engine (taste profile, a pure ranking recommender and candidate gathering), player (queue, autoplay refills, sleep timer, error recovery, equalizer) and UI. Keeping the recommender a pure function made it easy to unit-test offline.'],
+                ['title' => 'Privacy and accounts', 'body' => 'Signing in needs only an email and a password. The password never leaves the phone: PBKDF2 with 150,000 rounds turns it into the account key and the server stores only a hash. Every API request is signed with a key built into release builds, so the server only answers the app, and each account can only reach its own data.'],
+                ['title' => 'Details that took the longest', 'body' => 'Background playback had to survive the app being swiped away, with working lock-screen controls on Android 13+. A release-only bug, where the resource shrinker deleted the notification icons the audio plugin loads by name, was fixed with an explicit keep rule. The layout switches from a bottom bar to a side rail at 720 dp and was verified on phones and tablets in both orientations.'],
+            ],
+            'diagram' => [
+                'nodes' => [
+                    ['id' => 'ui', 'label' => 'Flutter UI', 'x' => 12, 'y' => 50],
+                    ['id' => 'player', 'label' => 'Player', 'x' => 36, 'y' => 18],
+                    ['id' => 'engine', 'label' => 'Taste engine', 'x' => 36, 'y' => 82],
+                    ['id' => 'data', 'label' => 'Data & sync', 'x' => 52, 'y' => 50, 'core' => true],
+                    ['id' => 'api', 'label' => 'PHP API', 'x' => 76, 'y' => 30],
+                    ['id' => 'db', 'label' => 'MySQL', 'x' => 90, 'y' => 62],
+                    ['id' => 'share', 'label' => 'Share pages', 'x' => 72, 'y' => 86],
+                ],
+                'edges' => [['ui', 'player'], ['ui', 'engine'], ['ui', 'data'], ['engine', 'data'], ['data', 'api'], ['api', 'db'], ['api', 'share']],
+            ],
+        ],
+    ],
+
+    /*
     | Total shown on the site ("25+ projects"). Bump it as you ship more.
     */
     'projects_total' => 25,
@@ -225,7 +271,7 @@ return [
         ['name' => 'CRM systems', 'card' => 'crm', 'kind' => 'Multiple custom CRMs for businesses'],
         ['name' => 'ID card management system', 'kind' => 'Issue & manage identity cards'],
         ['name' => 'Business & company websites', 'kind' => 'Multiple sites for different businesses'],
-        ['name' => 'Ad-free music player', 'card' => 'music', 'kind' => 'Personal app, built to skip ads', 'stack' => ['Flutter', 'Dart']],
+        ['name' => 'Samgeet, ad-free music player', 'card' => 'music', 'kind' => 'Open-source Android app, built to skip ads', 'stack' => ['Flutter', 'Dart'], 'url' => '/work/samgeet'],
         ['name' => 'Open-source contributions', 'kind' => 'Contributions to public projects', 'url' => 'https://github.com/loco0011'],
     ],
 

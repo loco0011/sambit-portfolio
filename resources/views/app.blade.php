@@ -4,7 +4,6 @@
 @php($description = $seo['description'] ?? $p['headline'])
 @php($image = asset('og-image.png'))
 @php($google = config('services.google'))
-@php($track = app()->isProduction())
 <!DOCTYPE html>
 <html lang="en" class="bg-ink">
 <head>
@@ -16,13 +15,7 @@
     <script>document.documentElement.classList.add('js')</script>
     <style>.js #root > .static-copy { display: none }</style>
 
-    @if ($track && $google['gtm'])
-        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',@json($google['gtm']));</script>
-    @endif
-    @if ($track && $google['ga4'])
-        <script async src="https://www.googletagmanager.com/gtag/js?id={{ $google['ga4'] }}"></script>
-        <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config',@json($google['ga4']));</script>
-    @endif
+    @include('partials.google-head')
 
     <title>{{ $title }}</title>
     <meta name="description" content="{{ $description }}">
@@ -70,9 +63,7 @@
     @vite(['resources/css/app.css', 'resources/js/main.jsx'])
 </head>
 <body class="bg-ink text-fg antialiased">
-    @if ($track && $google['gtm'])
-        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ $google['gtm'] }}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    @endif
+    @include('partials.google-body')
 
     <div id="root">
         {{-- The full portfolio as plain HTML for crawlers, link previews and no-JS visitors. React replaces it on load. --}}
@@ -101,9 +92,9 @@
 
             <section>
                 <h2>Projects</h2>
-                @foreach ($portfolio['projects'] as $project)
+                @foreach (\App\Support\PortfolioContent::caseStudies($portfolio) as $slug => $project)
                     <article>
-                        <h3>{{ $project['name'] }} — {{ $project['kind'] }}</h3>
+                        <h3><a href="{{ route('work.show', $slug) }}">{{ $project['name'] }} — {{ $project['kind'] }}</a></h3>
                         <p>{{ $project['blurb'] }}</p>
                         <p>Built with {{ implode(', ', $project['stack'] ?? []) }}</p>
                     </article>

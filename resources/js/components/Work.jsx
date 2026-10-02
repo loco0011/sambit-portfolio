@@ -46,6 +46,14 @@ function ProjectCard({ project, index, total, progress, stacking }) {
                             ))}
                         </ul>
 
+                        <a
+                            href={`/work/${project.slug}`}
+                            className="group/cs mt-5 inline-flex items-center gap-2 self-start font-mono text-[12px] text-fg/85 transition-colors hover:text-acid"
+                            data-cursor="Read"
+                        >
+                            Read the case study <span className="transition-transform group-hover/cs:translate-x-1">→</span>
+                        </a>
+
                         <div className="mt-auto flex flex-wrap gap-2 pt-6">
                             {project.stack.map((s) => (
                                 <span key={s} className="chip">{s}</span>
@@ -68,7 +76,8 @@ const INITIAL = 8;
 
 function ArchiveRow({ item, index }) {
     const Tag = item.url ? 'a' : 'div';
-    const linkProps = item.url ? { href: item.url, target: '_blank', rel: 'noopener', 'data-cursor': 'Open' } : {};
+    const external = item.url && !item.url.startsWith('/');
+    const linkProps = item.url ? { href: item.url, ...(external && { target: '_blank', rel: 'noopener' }), 'data-cursor': 'Open' } : {};
     return (
         <motion.li
             layout="position"
@@ -93,7 +102,7 @@ function ArchiveRow({ item, index }) {
                 <span className="col-start-2 truncate text-[13.5px] text-mute sm:col-start-auto">{item.kind}</span>
                 <span className="col-start-2 truncate font-mono text-[11px] text-dim sm:col-start-auto">{(item.stack ?? []).join(' · ')}</span>
                 <span className="col-start-3 row-start-1 text-right text-dim transition-colors group-hover:text-acid sm:col-start-auto sm:row-start-auto">
-                    {item.url ? '↗' : ''}
+                    {item.url ? (external ? '↗' : '→') : ''}
                 </span>
             </Tag>
         </motion.li>

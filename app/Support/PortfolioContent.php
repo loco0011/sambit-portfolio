@@ -34,6 +34,25 @@ class PortfolioContent
         return $saved;
     }
 
+    /**
+     * Every project with its own /work/{slug} page: the featured projects, then the extra case studies.
+     *
+     * @return array<string, array>
+     */
+    public static function caseStudies(?array $content = null): array
+    {
+        $content ??= self::get();
+        $all = [];
+
+        foreach ([...($content['projects'] ?? []), ...($content['case_studies'] ?? [])] as $project) {
+            if (! empty($project['slug'])) {
+                $all[$project['slug']] = $project;
+            }
+        }
+
+        return $all;
+    }
+
     public static function override(): ?SiteSetting
     {
         return SiteSetting::find(self::KEY);
