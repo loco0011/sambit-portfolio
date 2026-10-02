@@ -28,7 +28,7 @@ export default function Login({ onSignIn }) {
     return (
         <div className="login">
             <form className="login-card" onSubmit={submit}>
-                <span className="brand-mark">SM</span>
+                <span className="brand-mark"><img src="/images/brand/logo-mark.png" alt="" /></span>
                 <h1>Sign in</h1>
                 <p className="muted">Admin for sambitmaity.com</p>
 

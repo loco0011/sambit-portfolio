@@ -9,7 +9,9 @@
     <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)">
     <title>Admin · Sambit Maity</title>
 
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2318181b'/><text x='16' y='21' font-family='system-ui,sans-serif' font-size='12' font-weight='700' text-anchor='middle' fill='%23fafafa'>SM</text></svg>">
+    <link rel="icon" href="/favicon.ico" sizes="32x32">
+    <link rel="icon" type="image/png" href="/icon-192.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

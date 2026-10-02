@@ -100,7 +100,7 @@ function Shell({ user, site, onSignOut }) {
             <div className="shell">
                 <aside className="sidebar">
                     <div className="brand">
-                        <span className="brand-mark">SM</span>
+                        <span className="brand-mark"><img src="/images/brand/logo-mark.png" alt="" /></span>
                         <span>
                             <strong>Sambit Maity</strong>
                             <small>Admin</small>

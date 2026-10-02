@@ -195,12 +195,25 @@ code {
     place-items: center;
     width: 32px;
     height: 32px;
+    flex-shrink: 0;
     border-radius: 8px;
-    background: var(--primary);
-    color: var(--primary-fg);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.02em;
+    background: #0c0c10; /* the logo tile, same in both themes */
+}
+
+.brand-mark img {
+    width: 25px;
+    height: 25px;
+}
+
+.login-card .brand-mark {
+    width: 44px;
+    height: 44px;
+    border-radius: 11px;
+}
+
+.login-card .brand-mark img {
+    width: 34px;
+    height: 34px;
 }
 
 .nav {

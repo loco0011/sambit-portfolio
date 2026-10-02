@@ -111,35 +111,35 @@ export default function Loader({ play, name, role, onReveal }) {
             const glints = qa('[data-glint]');
             await img.decode().catch(() => {});
 
-            await sleep(350);
+            await sleep(150);
             if (!alive()) return;
             st.textContent = 'power';
             leds.forEach((l, i) => l.animate({ opacity: [0, 1, 0, 1, 0.2, 1] }, { duration: 700, delay: i * 120, easing: 'steps(1)', fill: 'forwards' }));
 
-            await sleep(650);
+            await sleep(550);
             if (!alive()) return;
             st.textContent = 'optics';
             glints.forEach((g, i) => g.animate({ opacity: [0, 1, 0.1, 0.9, 0.3, 1] }, { duration: 650, delay: i * 90, easing: 'steps(1)', fill: 'forwards' }));
 
-            await sleep(800);
+            await sleep(650);
             if (!alive()) return;
             st.textContent = 'scanning';
             const scanEase = 'cubic-bezier(.65,0,.35,1)';
-            img.animate([{ clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)' }], { duration: 1100, easing: scanEase, fill: 'forwards' });
+            img.animate([{ clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)' }], { duration: 950, easing: scanEase, fill: 'forwards' });
             q('[data-scan]').animate(
                 [{ top: '0%', opacity: 1 }, { top: '96%', opacity: 1, offset: 0.92 }, { top: '100%', opacity: 0 }],
-                { duration: 1100, easing: scanEase, fill: 'forwards' },
+                { duration: 950, easing: scanEase, fill: 'forwards' },
             );
-            leds.concat(glints).forEach((g) => g.animate([{ opacity: 1 }, { opacity: 0.35 }], { duration: 600, delay: 700, fill: 'forwards' }));
+            leds.concat(glints).forEach((g) => g.animate([{ opacity: 1 }, { opacity: 0.35 }], { duration: 600, delay: 600, fill: 'forwards' }));
 
-            await sleep(1150);
+            await sleep(1000);
             if (!alive()) return;
             q('[data-shine] i').animate([{ left: '-40%' }, { left: '130%' }], { duration: 750, easing: 'cubic-bezier(.6,0,.3,1)' });
             st.innerHTML = '<span class="text-acid">code mode on</span>';
             type(q('[data-role]'), role, 40, alive);
-            await decode(q('[data-name]'), name.toUpperCase(), 950, alive);
+            await decode(q('[data-name]'), name.toUpperCase(), 850, alive);
 
-            await sleep(800);
+            await sleep(650);
             if (!alive()) return;
 
             // Hand-off: fly into the hero figure's exact box. If it's off screen (small phones), just fade.
@@ -159,7 +159,7 @@ export default function Loader({ play, name, role, onReveal }) {
                 await fig
                     .animate(
                         [{ transform: 'none' }, { transform: `translate(${target.left - from.left}px, ${target.top - from.top}px) scale(${target.width / from.width})` }],
-                        { duration: 1150, easing: CURTAIN, fill: 'forwards' },
+                        { duration: 1050, easing: CURTAIN, fill: 'forwards' },
                     )
                     .finished.catch(() => {});
             } else {

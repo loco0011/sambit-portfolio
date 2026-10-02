@@ -84,7 +84,9 @@ export default function Footer({ profile }) {
                     {/* Brand */}
                     <FadeUp className="md:col-span-5">
                         <div className="flex items-center gap-3">
-                            <span className="grid h-10 w-10 place-items-center rounded-xl border hairline bg-ink-2 font-mono text-[12px] font-medium text-acid">SM</span>
+                            <span className="grid h-10 w-10 place-items-center rounded-xl border hairline bg-ink-2">
+                                <img src="/images/brand/logo-mark.png" alt="" width="30" height="30" className="h-[30px] w-[30px]" />
+                            </span>
                             <div className="leading-tight">
                                 <p className="text-[15px] font-medium text-fg">{profile.name}</p>
                                 <p className="text-[13px] text-mute">{profile.role}</p>
