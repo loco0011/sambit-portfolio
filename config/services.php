@@ -28,6 +28,13 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    // Google tools. Each is optional and only rendered when set; set an env var to empty to turn one off.
+    'google' => [
+        'site_verification' => env('GOOGLE_SITE_VERIFICATION'), // Search Console HTML-tag token
+        'gtm' => env('GOOGLE_TAG_MANAGER_ID', 'GTM-MNK2J42H'), // GTM container ID (public)
+        'ga4' => env('GOOGLE_ANALYTICS_ID', 'G-CVD68RBHX8'),    // GA4 measurement ID (public, appears in page source)
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

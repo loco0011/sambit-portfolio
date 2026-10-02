@@ -20,27 +20,47 @@ class PortfolioController extends Controller
     private function schema(array $portfolio): array
     {
         $p = $portfolio['profile'];
+        $home = url('/');
+        [$given, $family] = array_pad(explode(' ', $p['name'], 2), 2, '');
 
         return [
             '@context' => 'https://schema.org',
-            '@type' => 'ProfilePage',
-            'url' => url('/'),
-            'name' => $p['name'].' — '.$p['role'],
-            'description' => $p['headline'],
-            'mainEntity' => [
-                '@type' => 'Person',
-                '@id' => url('/').'#person',
-                'name' => $p['name'],
-                'url' => url('/'),
-                'image' => asset('og-image.png'),
-                'description' => $p['headline'],
-                'jobTitle' => $p['role'],
-                'email' => 'mailto:'.$p['email'],
-                'address' => ['@type' => 'PostalAddress', 'addressLocality' => 'Kolkata', 'addressCountry' => 'IN'],
-                'worksFor' => ['@type' => 'Organization', 'name' => $p['current']['company']],
-                'alumniOf' => ['@type' => 'CollegeOrUniversity', 'name' => $portfolio['education']['school']],
-                'knowsAbout' => $portfolio['stack'],
-                'sameAs' => array_column($p['links'], 'url'),
+            '@graph' => [
+                [
+                    '@type' => 'WebSite',
+                    '@id' => $home.'#website',
+                    'url' => $home,
+                    'name' => $p['name'],
+                    'alternateName' => preg_replace('#^https?://#', '', $home),
+                    'inLanguage' => 'en',
+                    'publisher' => ['@id' => $home.'#person'],
+                ],
+                [
+                    '@type' => 'ProfilePage',
+                    '@id' => $home.'#profile',
+                    'url' => $home,
+                    'name' => $portfolio['seo']['title'] ?? $p['name'].' — '.$p['role'],
+                    'description' => $portfolio['seo']['description'] ?? $p['headline'],
+                    'isPartOf' => ['@id' => $home.'#website'],
+                    'mainEntity' => ['@id' => $home.'#person'],
+                ],
+                [
+                    '@type' => 'Person',
+                    '@id' => $home.'#person',
+                    'name' => $p['name'],
+                    'givenName' => $given,
+                    'familyName' => $family,
+                    'url' => $home,
+                    'image' => asset('og-image.png'),
+                    'description' => $p['headline'],
+                    'jobTitle' => $p['role'],
+                    'email' => 'mailto:'.$p['email'],
+                    'address' => ['@type' => 'PostalAddress', 'addressLocality' => 'Kolkata', 'addressRegion' => 'West Bengal', 'addressCountry' => 'IN'],
+                    'worksFor' => ['@type' => 'Organization', 'name' => $p['current']['company']],
+                    'alumniOf' => ['@type' => 'CollegeOrUniversity', 'name' => $portfolio['education']['school']],
+                    'knowsAbout' => $portfolio['stack'],
+                    'sameAs' => array_column($p['links'], 'url'),
+                ],
             ],
         ];
     }

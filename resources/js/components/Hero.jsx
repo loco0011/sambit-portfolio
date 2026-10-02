@@ -87,7 +87,12 @@ export default function Hero({ profile, ready, handoff = false }) {
                 </motion.div>
 
                 {/* Sized by width AND height so all three lines + CTAs fit one screen */}
-                <h1 className="display text-[clamp(2.5rem,min(9vw,13.5vh),8.5rem)] max-sm:text-[11.5vw] lg:text-[clamp(3rem,min(5.7vw,11.5vh),6.6rem)]" aria-label="From idea to shipped product, every layer.">
+                <h1 className="display text-[clamp(2.5rem,min(9vw,13.5vh),8.5rem)] max-sm:text-[11.5vw] lg:text-[clamp(3rem,min(5.7vw,11.5vh),6.6rem)]">
+                    {/* Who this is, for search engines and screen readers; the slogan below is the visual headline */}
+                    <span className="sr-only">
+                        {profile.name}, {profile.role} in {profile.location}:{' '}
+                    </span>
+                    <span className="sr-only">From idea to shipped product, every layer.</span>
                     <motion.span initial="hide" animate={show} transition={{ staggerChildren: 0.07, delayChildren: 0.15 }} className="block" aria-hidden>
                         {LINES.map((line, li) => (
                             <span key={li} className="block">

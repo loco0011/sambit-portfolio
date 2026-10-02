@@ -27,6 +27,12 @@ return [
         ],
     ],
 
+    // Search result title and description. Keep the title under ~60 characters and the description under ~155.
+    'seo' => [
+        'title' => 'Sambit Maity — Full-Stack Developer, Kolkata (Laravel & Node.js)',
+        'description' => 'Sambit Maity is a full-stack software engineer in Kolkata, India building Laravel, Node.js and React apps, Linux/Docker DevOps and AI automation with n8n.',
+    ],
+
     'manifesto' => 'I don\'t hand off at the API boundary. I design the architecture, write the backend, build the interface, provision the servers, wire the automations and stay on call for what I ship. Three years across four teams taught me that the best engineering is the kind nobody has to think about — fast, reliable, and quietly doing its job.',
 
     // Headline numbers shown under the About statement.
