@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { humanize } from '../lib';
-import { MiniToggle } from '../ui/Hardware';
+import { Icon, Switch } from '../ui/Kit';
 
 // Keys whose strings are paragraphs, not one-liners.
 const LONG = new Set(['headline', 'manifesto', 'summary', 'blurb', 'body', 'availability', 'points', 'highlights']);
-// Lists of short tokens edited as chips.
+// Lists of short tokens edited as tags.
 const CHIPS = new Set(['stack', 'tags', 'items']);
 
 const isObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
@@ -36,9 +36,9 @@ const move = (list, from, to) => {
 function Text({ name, value, onChange }) {
     const long = LONG.has(name) || value.length > 70;
     return long ? (
-        <textarea className="well" rows={Math.min(8, Math.ceil(value.length / 80) + 1)} value={value} onChange={(e) => onChange(e.target.value)} />
+        <textarea className="input" rows={Math.min(8, Math.ceil(value.length / 80) + 1)} value={value} onChange={(e) => onChange(e.target.value)} />
     ) : (
-        <input className="well" value={value} onChange={(e) => onChange(e.target.value)} />
+        <input className="input" value={value} onChange={(e) => onChange(e.target.value)} />
     );
 }
 
@@ -51,9 +51,9 @@ function Chips({ value, onChange }) {
     };
 
     return (
-        <div className="chips">
+        <div className="tags">
             {value.map((chip, i) => (
-                <span className="chip" key={i}>
+                <span className="tag" key={i}>
                     <input
                         value={chip}
                         size={Math.max(2, chip.length)}
@@ -61,13 +61,13 @@ function Chips({ value, onChange }) {
                         aria-label={`Item ${i + 1}`}
                     />
                     <button type="button" onClick={() => onChange(value.filter((_, j) => j !== i))} aria-label="Remove">
-                        ×
+                        <Icon name="x" size={12} />
                     </button>
                 </span>
             ))}
             <input
-                className="chip-add"
-                placeholder="+ add, press Enter"
+                className="tag-input"
+                placeholder="Add and press Enter"
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
                 onKeyDown={(e) => {
@@ -83,21 +83,28 @@ function Chips({ value, onChange }) {
     );
 }
 
+function AddButton({ onClick, children }) {
+    return (
+        <div>
+            <button type="button" className="btn btn-ghost btn-sm" onClick={onClick}>
+                <Icon name="plus" size={14} />
+                {children}
+            </button>
+        </div>
+    );
+}
+
 function Lines({ name, value, onChange }) {
     return (
-        <div className="slots">
+        <div className="items">
             {value.map((line, i) => (
                 <div className="line-item" key={i}>
-                    <span className="line-num">{String(i + 1).padStart(2, '0')}</span>
+                    <span className="line-num">{i + 1}</span>
                     <Text name={name} value={line} onChange={(v) => onChange(value.map((x, j) => (j === i ? v : x)))} />
                     <ItemActions i={i} list={value} onChange={onChange} />
                 </div>
             ))}
-            <div>
-                <button type="button" className="btn btn--sm" onClick={() => onChange([...value, ''])}>
-                    + Add line
-                </button>
-            </div>
+            <AddButton onClick={() => onChange([...value, ''])}>Add line</AddButton>
         </div>
     );
 }
@@ -105,20 +112,21 @@ function Lines({ name, value, onChange }) {
 function ItemActions({ i, list, onChange }) {
     return (
         <span className="row-actions" onClick={(e) => e.stopPropagation()}>
-            <button type="button" className="btn btn--sm btn--icon" disabled={i === 0} onClick={() => onChange(move(list, i, i - 1))} aria-label="Move up">
-                ↑
+            <button type="button" className="icon-btn" disabled={i === 0} onClick={() => onChange(move(list, i, i - 1))} aria-label="Move up" title="Move up">
+                <Icon name="up" size={14} />
             </button>
             <button
                 type="button"
-                className="btn btn--sm btn--icon"
+                className="icon-btn"
                 disabled={i === list.length - 1}
                 onClick={() => onChange(move(list, i, i + 1))}
                 aria-label="Move down"
+                title="Move down"
             >
-                ↓
+                <Icon name="down" size={14} />
             </button>
-            <button type="button" className="btn btn--sm btn--icon" onClick={() => onChange(list.filter((_, j) => j !== i))} aria-label="Remove">
-                ×
+            <button type="button" className="icon-btn" onClick={() => onChange(list.filter((_, j) => j !== i))} aria-label="Remove" title="Remove">
+                <Icon name="x" size={14} />
             </button>
         </span>
     );
@@ -128,12 +136,21 @@ function Cards({ name, value, onChange }) {
     const [open, setOpen] = useState(null);
 
     return (
-        <div className="slots">
+        <div className="items">
             {value.map((item, i) => (
-                <div className="slotcard" key={i}>
-                    <div className="slotcard-head" onClick={() => setOpen(open === i ? null : i)}>
-                        <span className="slotcard-idx">{String(i + 1).padStart(2, '0')}</span>
-                        <span className="slotcard-title">
+                <div className={`item ${open === i ? 'is-open' : ''}`} key={i}>
+                    <div
+                        className="item-head"
+                        role="button"
+                        tabIndex={0}
+                        aria-expanded={open === i}
+                        onClick={() => setOpen(open === i ? null : i)}
+                        onKeyDown={(e) => e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), setOpen(open === i ? null : i))}
+                    >
+                        <span className="item-chevron">
+                            <Icon name="chevron" size={14} />
+                        </span>
+                        <span className="item-title">
                             {titleOf(item, i)}
                             {subtitleOf(item) && <small>{subtitleOf(item)}</small>}
                         </span>
@@ -147,40 +164,36 @@ function Cards({ name, value, onChange }) {
                         />
                     </div>
                     {open === i && (
-                        <div className="slotcard-body">
+                        <div className="item-body">
                             <Field name={name} value={item} onChange={(v) => onChange(value.map((x, j) => (j === i ? v : x)))} bare />
                         </div>
                     )}
                 </div>
             ))}
-            <div>
-                <button
-                    type="button"
-                    className="btn btn--sm"
-                    onClick={() => {
-                        onChange([...value, value.length ? blank(value[0]) : '']);
-                        setOpen(value.length);
-                    }}
-                >
-                    + Add {humanize(name).replace(/s$/, '')}
-                </button>
-            </div>
+            <AddButton
+                onClick={() => {
+                    onChange([...value, value.length ? blank(value[0]) : '']);
+                    setOpen(value.length);
+                }}
+            >
+                Add {humanize(name).toLowerCase().replace(/s$/, '')}
+            </AddButton>
         </div>
     );
 }
 
 /**
  * Renders an editor for any value by looking at its shape:
- * text → input/textarea, bool → switch, number → number, short lists → chips,
- * lists of text → numbered lines, lists of objects → collapsible cards, objects → groups.
+ * text → input/textarea, bool → switch, number → number, short lists → tags,
+ * lists of text → numbered lines, lists of objects → collapsible items, objects → groups.
  */
 export default function Field({ name, value, onChange, bare = false }) {
     let control;
 
     if (typeof value === 'boolean') {
-        control = <MiniToggle on={value} onChange={onChange} />;
+        control = <Switch label={humanize(name)} checked={value} onChange={onChange} />;
     } else if (typeof value === 'number') {
-        control = <input className="well" type="number" value={value} onChange={(e) => onChange(e.target.value === '' ? 0 : Number(e.target.value))} />;
+        control = <input className="input" type="number" value={value} onChange={(e) => onChange(e.target.value === '' ? 0 : Number(e.target.value))} />;
     } else if (typeof value === 'string' || value === null) {
         control = <Text name={name} value={value ?? ''} onChange={onChange} />;
     } else if (Array.isArray(value)) {
@@ -216,21 +229,21 @@ export default function Field({ name, value, onChange, bare = false }) {
 
         if (bare) return body;
         return (
-            <div className="group">
-                <span className="field-label">{humanize(name)}</span>
+            <fieldset className="group">
+                <legend className="label">{humanize(name)}</legend>
                 {body}
-            </div>
+            </fieldset>
         );
     }
 
     if (bare) return control;
 
-    // Lists hold their own inputs and buttons, so they get a plain wrapper instead of a <label>.
-    const Wrap = Array.isArray(value) ? 'div' : 'label';
+    // Lists and switches hold their own buttons, so they get a plain wrapper instead of a <label>.
+    const Wrap = Array.isArray(value) || typeof value === 'boolean' ? 'div' : 'label';
 
     return (
         <Wrap className="field">
-            <span className="field-label">{humanize(name)}</span>
+            <span className="label">{humanize(name)}</span>
             {control}
         </Wrap>
     );

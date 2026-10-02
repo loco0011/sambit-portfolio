@@ -1,22 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
 import { api } from '../api';
-import { ago, bytes, useTicker } from '../lib';
-import { Led, ModLabel } from '../ui/Hardware';
+import { ago, bytes, stamp, useToast } from '../lib';
+import { Card, Icon, PageHeader, Spinner } from '../ui/Kit';
 
-// Shared by the Résumé module and the dashboard shortcut.
+// Shared by the Résumé page and the dashboard card.
 export function useResume() {
-    const ticker = useTicker();
+    const toast = useToast();
     const [info, setInfo] = useState(null);
     const [busy, setBusy] = useState(false);
 
     useEffect(() => {
-        api('resume').then(setInfo).catch((e) => ticker(e.message, 'warn'));
+        api('resume').then(setInfo).catch((e) => toast(e.message, 'warn'));
     }, []);
 
     const upload = async (file) => {
         if (!file) return;
         if (file.type !== 'application/pdf') {
-            ticker('Drive A only accepts PDF', 'warn');
+            toast('Please choose a PDF file', 'warn');
             return;
         }
         const form = new FormData();
@@ -24,9 +24,9 @@ export function useResume() {
         setBusy(true);
         try {
             setInfo(await api('resume', { method: 'POST', body: form }));
-            ticker(`Résumé written · ${bytes(file.size)} · live at /resume`);
+            toast(`Résumé uploaded (${bytes(file.size)}). It’s live at /resume.`);
         } catch (e) {
-            ticker(e.message, 'warn');
+            toast(e.message, 'warn');
         } finally {
             setBusy(false);
         }
@@ -41,68 +41,68 @@ export default function Files() {
     const input = useRef();
 
     return (
-        <div className="dash">
-            <section className="mod span-7">
-                <ModLabel index="D1" aside={<><Led on={busy} color="orange" blink /> Drive A</>}>
-                    Résumé · PDF
-                </ModLabel>
-                <div
-                    className={`drive ${over ? 'drive--over' : ''} ${busy ? 'drive--busy' : ''}`}
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => input.current.click()}
-                    onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && input.current.click()}
-                    onDragOver={(e) => {
-                        e.preventDefault();
-                        setOver(true);
-                    }}
-                    onDragLeave={() => setOver(false)}
-                    onDrop={(e) => {
-                        e.preventDefault();
-                        setOver(false);
-                        upload(e.dataTransfer.files[0]);
-                    }}
-                >
-                    <div className="floppy" />
-                    <div className="drive-mouth" />
-                    <div className="drive-hint">{busy ? 'Writing to disk…' : over ? 'Release to insert' : 'Drop a PDF here · or click to browse'}</div>
-                    <input ref={input} type="file" accept="application/pdf" hidden onChange={(e) => upload(e.target.files[0])} />
-                </div>
-            </section>
-
-            <section className="mod span-5">
-                <ModLabel index="D2">Disk status</ModLabel>
-                <div className="lcd lcd-pad">
-                    <div className="lcd-rows">
-                        <div>
-                            <span className="lcd-dim">File</span>
-                            <span>RESUME.PDF</span>
-                        </div>
-                        <div>
-                            <span className="lcd-dim">Status</span>
-                            <span>{!info ? 'Reading…' : info.exists ? 'Ready' : 'Empty'}</span>
-                        </div>
-                        <div>
-                            <span className="lcd-dim">Size</span>
-                            <span>{info?.exists ? bytes(info.size) : '—'}</span>
-                        </div>
-                        <div>
-                            <span className="lcd-dim">Written</span>
-                            <span>{info?.exists ? ago(info.updated_at) : '—'}</span>
-                        </div>
-                        <div>
-                            <span className="lcd-dim">Public URL</span>
-                            <span>/resume</span>
-                        </div>
+        <>
+            <PageHeader title="Résumé" description="The PDF visitors download from your site." />
+            <div className="grid">
+                <Card className="span-7" title="Upload" description="Uploading replaces the current file immediately.">
+                    <div
+                        className={`dropzone ${over ? 'is-over' : ''}`}
+                        role="button"
+                        tabIndex={0}
+                        aria-disabled={busy}
+                        onClick={() => !busy && input.current.click()}
+                        onKeyDown={(e) => !busy && (e.key === 'Enter' || e.key === ' ') && input.current.click()}
+                        onDragOver={(e) => {
+                            e.preventDefault();
+                            setOver(true);
+                        }}
+                        onDragLeave={() => setOver(false)}
+                        onDrop={(e) => {
+                            e.preventDefault();
+                            setOver(false);
+                            upload(e.dataTransfer.files[0]);
+                        }}
+                    >
+                        <span className="dropzone-icon">{busy ? <Spinner /> : <Icon name="upload" size={20} />}</span>
+                        <strong>{busy ? 'Uploading…' : over ? 'Drop to upload' : 'Click to upload or drag and drop'}</strong>
+                        <span className="muted">PDF, up to 10 MB</span>
+                        <input ref={input} type="file" accept="application/pdf" hidden onChange={(e) => upload(e.target.files[0])} />
                     </div>
-                </div>
-                <p className="note" style={{ marginTop: 22 }}>
-                    Visitors download it as <b>Sambit_Maity_Full_Stack_Software_Engineer_Resume.pdf</b>. Uploading replaces the old file instantly.
-                </p>
-                <a className="btn btn--dark" href="/resume" target="_blank" rel="noreferrer" aria-disabled={!info?.exists}>
-                    Test download ↗
-                </a>
-            </section>
-        </div>
+                </Card>
+
+                <Card className="span-5" title="Current file">
+                    <dl className="meta">
+                        <div>
+                            <dt>Status</dt>
+                            <dd>{!info ? 'Checking…' : info.exists ? <span className="badge badge-success">Live</span> : <span className="badge">Not uploaded</span>}</dd>
+                        </div>
+                        <div>
+                            <dt>Size</dt>
+                            <dd>{info?.exists ? bytes(info.size) : '—'}</dd>
+                        </div>
+                        <div>
+                            <dt>Updated</dt>
+                            <dd title={info?.exists ? stamp(info.updated_at) : undefined}>{info?.exists ? ago(info.updated_at) : '—'}</dd>
+                        </div>
+                        <div>
+                            <dt>Public URL</dt>
+                            <dd>
+                                <code>/resume</code>
+                            </dd>
+                        </div>
+                        <div>
+                            <dt>Downloads as</dt>
+                            <dd className="break">Sambit_Maity_Full_Stack_Software_Engineer_Resume.pdf</dd>
+                        </div>
+                    </dl>
+                    {info?.exists && (
+                        <a className="btn" href="/resume" target="_blank" rel="noreferrer">
+                            <Icon name="download" />
+                            Test download
+                        </a>
+                    )}
+                </Card>
+            </div>
+        </>
     );
 }

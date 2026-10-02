@@ -6,7 +6,7 @@ const activity = new Set();
 export const setCsrf = (token) => (csrf = token);
 export const onSessionLost = (fn) => (onUnauthorized = fn);
 
-// The NET LED subscribes to this to flicker while requests are in flight.
+// The top loading bar subscribes to this to show while requests are in flight.
 export function subscribeActivity(fn) {
     activity.add(fn);
     return () => activity.delete(fn);

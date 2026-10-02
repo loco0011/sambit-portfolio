@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { api } from '../api';
-import { ago, pad, useTicker } from '../lib';
-import { HoldButton, Led, ModLabel } from '../ui/Hardware';
-import Receipt from '../ui/Receipt';
+import { ago, stamp, useToast } from '../lib';
+import { ConfirmDialog, Icon, Loading, PageHeader, Segmented } from '../ui/Kit';
 
 const replyLink = (m) => {
     const quoted = m.message
@@ -14,11 +13,12 @@ const replyLink = (m) => {
 };
 
 export default function Inbox({ focusId, onUnread }) {
-    const ticker = useTicker();
+    const toast = useToast();
     const [messages, setMessages] = useState(null);
-    const [filter, setFilter] = useState('all');
+    const [filter, setFilter] = useState('All');
     const [selected, setSelected] = useState(focusId ?? null);
-    const [shredding, setShredding] = useState(false);
+    const [confirming, setConfirming] = useState(false);
+    const [deleting, setDeleting] = useState(false);
 
     useEffect(() => {
         api('messages')
@@ -26,7 +26,7 @@ export default function Inbox({ focusId, onUnread }) {
                 setMessages(list);
                 setSelected((id) => id ?? list[0]?.id ?? null);
             })
-            .catch((e) => ticker(e.message, 'warn'));
+            .catch((e) => toast(e.message, 'warn'));
     }, []);
 
     const unread = messages?.filter((m) => !m.read_at).length ?? 0;
@@ -35,112 +35,143 @@ export default function Inbox({ focusId, onUnread }) {
     }, [unread]);
 
     const current = messages?.find((m) => m.id === selected);
-    const visible = useMemo(() => (messages ?? []).filter((m) => filter === 'all' || !m.read_at), [messages, filter]);
+    const visible = useMemo(() => (messages ?? []).filter((m) => filter === 'All' || !m.read_at), [messages, filter]);
 
     const setRead = async (m, read) => {
         setMessages((list) => list.map((x) => (x.id === m.id ? { ...x, read_at: read ? new Date().toISOString() : null } : x)));
         try {
             await api(`messages/${m.id}`, { method: 'PATCH', body: { read } });
         } catch (e) {
-            ticker(e.message, 'warn');
+            toast(e.message, 'warn');
         }
     };
 
-    // Opening an unread message marks it read after a beat, like actually reading it.
+    // Opening an unread message marks it read after a moment.
     useEffect(() => {
         if (!current || current.read_at) return;
         const t = setTimeout(() => setRead(current, true), 900);
         return () => clearTimeout(t);
     }, [current?.id]);
 
-    const shred = async () => {
+    const remove = async () => {
+        setDeleting(true);
         try {
             await api(`messages/${current.id}`, { method: 'DELETE' });
-            setShredding(true);
+            const index = visible.findIndex((m) => m.id === current.id);
+            const next = visible[index + 1] ?? visible[index - 1];
+            setMessages((list) => list.filter((m) => m.id !== current.id));
+            setSelected(next?.id ?? null);
+            toast('Message deleted');
         } catch (e) {
-            ticker(e.message, 'warn');
+            toast(e.message, 'warn');
+        } finally {
+            setDeleting(false);
+            setConfirming(false);
         }
     };
 
-    const afterShred = () => {
-        const index = visible.findIndex((m) => m.id === current.id);
-        const next = visible[index + 1] ?? visible[index - 1];
-        ticker(`Transmission ${pad(current.id)} shredded`);
-        setMessages((list) => list.filter((m) => m.id !== current.id));
-        setSelected(next?.id ?? null);
-        setShredding(false);
-    };
+    const header = (
+        <PageHeader
+            title="Inbox"
+            description="Messages sent through your contact form."
+            actions={
+                messages && (
+                    <Segmented
+                        label="Filter"
+                        options={['All', 'Unread']}
+                        value={filter}
+                        onChange={setFilter}
+                        format={(v) => `${v} ${v === 'All' ? messages.length : unread}`}
+                    />
+                )
+            }
+        />
+    );
 
     if (!messages) {
-        return <div className="empty">Reading the queue…</div>;
+        return (
+            <>
+                {header}
+                <Loading />
+            </>
+        );
     }
 
     return (
-        <div className="inbox">
-            <section className="mod">
-                <ModLabel
-                    index="B1"
-                    aside={
-                        <span className="filters">
-                            <button className={`btn btn--sm ${filter === 'all' ? 'btn--dark' : ''}`} onClick={() => setFilter('all')}>
-                                All {messages.length}
-                            </button>
-                            <button className={`btn btn--sm ${filter === 'unread' ? 'btn--dark' : ''}`} onClick={() => setFilter('unread')}>
-                                New {unread}
-                            </button>
-                        </span>
-                    }
-                >
-                    Queue
-                </ModLabel>
-                <div className="queue-list">
+        <>
+            {header}
+            <div className="inbox card">
+                <ul className="list inbox-list">
                     {visible.map((m) => (
-                        <button
-                            key={m.id}
-                            className={`ticket ${m.id === selected ? 'ticket--active' : ''} ${m.read_at ? 'ticket--read' : ''}`}
-                            onClick={() => setSelected(m.id)}
-                        >
-                            <Led on={!m.read_at} color="orange" />
-                            <span className="ticket-name">{m.name}</span>
-                            <span className="ticket-time">{ago(m.created_at)}</span>
-                            <span className="ticket-snip">{m.message}</span>
-                        </button>
+                        <li key={m.id}>
+                            <button className={`list-item ${m.id === selected ? 'is-active' : ''}`} onClick={() => setSelected(m.id)}>
+                                <span className={`unread-dot ${m.read_at ? 'is-read' : ''}`} />
+                                <span className="list-main">
+                                    <span className="list-title">{m.name}</span>
+                                    <span className="list-snippet">{m.message}</span>
+                                </span>
+                                <span className="list-meta">{ago(m.created_at)}</span>
+                            </button>
+                        </li>
                     ))}
-                    {!visible.length && <div className="empty">{filter === 'unread' ? 'All caught up' : 'No transmissions yet'}</div>}
-                </div>
-            </section>
+                    {!visible.length && <li className="empty">{filter === 'Unread' ? 'You’re all caught up.' : 'No messages yet.'}</li>}
+                </ul>
 
-            <section className="mod printer">
-                <div className="printer-body">
-                    <div className="printer-top">
-                        <span>SM-01 THERMAL</span>
-                        <span style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                            {current ? 'PRINTING' : 'IDLE'} <Led on color={current ? 'green' : 'yellow'} blink={shredding} />
-                        </span>
-                    </div>
-                    <div className="slot" />
-                </div>
-                <div className="paper-out">
+                <article className="message">
                     {current ? (
-                        <Receipt key={current.id} message={current} shredding={shredding} onShredded={afterShred} />
+                        <>
+                            <header className="message-head">
+                                <div>
+                                    <h2>{current.name}</h2>
+                                    <a href={`mailto:${current.email}`}>{current.email}</a>
+                                </div>
+                                <time dateTime={current.created_at}>{stamp(current.created_at)}</time>
+                            </header>
+                            <dl className="meta">
+                                <div>
+                                    <dt>Company / role</dt>
+                                    <dd>{current.company || '—'}</dd>
+                                </div>
+                                {current.ip && (
+                                    <div>
+                                        <dt>IP address</dt>
+                                        <dd>{current.ip}</dd>
+                                    </div>
+                                )}
+                            </dl>
+                            <div className="message-body">{current.message}</div>
+                            <div className="row">
+                                <a className="btn btn-primary" href={replyLink(current)}>
+                                    <Icon name="reply" />
+                                    Reply
+                                </a>
+                                <button className="btn" onClick={() => setRead(current, !current.read_at)}>
+                                    <Icon name="mail" />
+                                    Mark as {current.read_at ? 'unread' : 'read'}
+                                </button>
+                                <button className="btn btn-ghost btn-danger-text" onClick={() => setConfirming(true)}>
+                                    <Icon name="trash" />
+                                    Delete
+                                </button>
+                            </div>
+                        </>
                     ) : (
-                        <div className="empty">Paper tray empty</div>
+                        <div className="empty">Select a message to read it.</div>
                     )}
-                </div>
-                {current && !shredding && (
-                    <div className="printer-actions">
-                        <a className="btn btn--blue" href={replyLink(current)}>
-                            ↩ Reply
-                        </a>
-                        <button className="btn" onClick={() => setRead(current, !current.read_at)}>
-                            Mark {current.read_at ? 'unread' : 'read'}
-                        </button>
-                        <HoldButton className="btn--orange" onConfirm={shred}>
-                            Hold to shred
-                        </HoldButton>
-                    </div>
-                )}
-            </section>
-        </div>
+                </article>
+            </div>
+
+            <ConfirmDialog
+                open={confirming}
+                title="Delete this message?"
+                confirmLabel="Delete"
+                danger
+                busy={deleting}
+                onConfirm={remove}
+                onCancel={() => setConfirming(false)}
+            >
+                The message from {current?.name} will be permanently deleted.
+            </ConfirmDialog>
+        </>
     );
 }

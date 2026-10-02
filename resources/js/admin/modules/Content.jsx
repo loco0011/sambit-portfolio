@@ -1,15 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { api } from '../api';
-import { ago, humanize, useTicker } from '../lib';
-import { Led, ModLabel } from '../ui/Hardware';
+import { ago, humanize, useToast } from '../lib';
+import { Loading, PageHeader, Spinner } from '../ui/Kit';
 import Field from './Fields';
 
-const STRIPES = ['var(--orange)', 'var(--blue)', 'var(--yellow)', 'var(--green)', '#f4f1ea'];
-
-const badge = (v) => (Array.isArray(v) ? `LIST·${v.length}` : v && typeof v === 'object' ? 'OBJ' : typeof v === 'number' ? 'NUM' : 'TXT');
-
 export default function Content() {
-    const ticker = useTicker();
+    const toast = useToast();
     const [saved, setSaved] = useState(null);
     const [draft, setDraft] = useState(null);
     const [section, setSection] = useState('profile');
@@ -21,7 +17,7 @@ export default function Content() {
                 setSaved(s);
                 setDraft(structuredClone(s.content));
             })
-            .catch((e) => ticker(e.message, 'warn'));
+            .catch((e) => toast(e.message, 'warn'));
     }, []);
 
     const dirty = useMemo(
@@ -29,27 +25,27 @@ export default function Content() {
         [draft, saved],
     );
 
-    const commit = async () => {
+    const save = async () => {
         if (!dirty.length || busy) return;
         setBusy(true);
         try {
             const s = await api('content', { method: 'PUT', body: { content: draft } });
             setSaved(s);
             setDraft(structuredClone(s.content));
-            ticker(`Committed ${dirty.length} section${dirty.length > 1 ? 's' : ''} · live on site`);
+            toast(`Saved ${dirty.length} section${dirty.length > 1 ? 's' : ''}. Changes are live.`);
         } catch (e) {
-            ticker(e.message, 'warn');
+            toast(e.message, 'warn');
         } finally {
             setBusy(false);
         }
     };
 
-    // Ctrl/Cmd+S commits; leaving with unsaved changes asks first.
+    // Ctrl/Cmd+S saves; leaving with unsaved changes asks first.
     useEffect(() => {
         const onKey = (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
                 e.preventDefault();
-                commit();
+                save();
             }
         };
         const onLeave = (e) => {
@@ -63,66 +59,58 @@ export default function Content() {
         };
     });
 
+    const header = (
+        <PageHeader
+            title="Content"
+            description={
+                !saved ? 'Edit the text shown on your site.' : saved.customized ? `Last saved ${ago(saved.updated_at)}.` : 'Using the defaults from config/portfolio.php.'
+            }
+        />
+    );
+
     if (!draft) {
-        return <div className="empty">Loading cartridges…</div>;
+        return (
+            <>
+                {header}
+                <Loading />
+            </>
+        );
     }
 
-    const value = draft[section];
-
     return (
-        <div className="editor">
-            <section className="mod">
-                <ModLabel index="C1">Cartridges</ModLabel>
-                <div className="carts">
-                    {Object.keys(draft).map((key, i) => (
-                        <button
-                            key={key}
-                            className={`cart ${key === section ? 'cart--active' : ''}`}
-                            style={{ '--stripe': STRIPES[i % STRIPES.length] }}
-                            onClick={() => setSection(key)}
-                        >
-                            <span className="cart-stripe" />
-                            <span className="cart-sticker">
-                                <span>{humanize(key)}</span>
-                                <span className="cart-badge">{badge(draft[key])}</span>
-                            </span>
-                            {dirty.includes(key) ? <Led on color="orange" blink /> : <span className="cart-notch" />}
+        <>
+            {header}
+            <div className="editor">
+                <nav className="subnav" aria-label="Sections">
+                    {Object.keys(draft).map((key) => (
+                        <button key={key} type="button" aria-current={key === section ? 'true' : undefined} onClick={() => setSection(key)}>
+                            {humanize(key)}
+                            {dirty.includes(key) && <span className="unread-dot" aria-label="Unsaved changes" />}
                         </button>
                     ))}
-                </div>
-            </section>
+                </nav>
 
-            <section className="mod">
-                <ModLabel
-                    index="C2"
-                    aside={saved.customized ? `Edited ${ago(saved.updated_at)}` : 'Factory default · config/portfolio.php'}
-                >
-                    Editor
-                </ModLabel>
-                <div className="panel-title">
-                    <h2>{humanize(section)}</h2>
-                    <span className="cart-badge">{badge(value)}</span>
-                </div>
-
-                <Field key={section} name={section} value={value} onChange={(v) => setDraft((d) => ({ ...d, [section]: v }))} bare />
-
-                <div className="commitbar">
-                    <div className="lcd">
-                        <Led on color={dirty.length ? 'orange' : 'green'} blink={dirty.length > 0} />
-                        {busy
-                            ? 'Writing…'
-                            : dirty.length
-                              ? `${dirty.length} unsaved · ${dirty.map(humanize).join(', ')}`
-                              : 'In sync with live site'}
+                <section className="card">
+                    <div className="card-header">
+                        <h2>{humanize(section)}</h2>
                     </div>
-                    <button className="btn" disabled={!dirty.length || busy} onClick={() => setDraft(structuredClone(saved.content))}>
-                        Revert
-                    </button>
-                    <button className="btn btn--orange" disabled={!dirty.length || busy} onClick={commit}>
-                        Commit ⌘S
-                    </button>
-                </div>
-            </section>
-        </div>
+                    <div className="card-body">
+                        <Field key={section} name={section} value={draft[section]} onChange={(v) => setDraft((d) => ({ ...d, [section]: v }))} bare />
+                    </div>
+                    <div className="card-footer">
+                        <span className="muted">
+                            {dirty.length ? `Unsaved changes in ${dirty.map(humanize).join(', ')}` : 'All changes saved'}
+                        </span>
+                        <button className="btn" disabled={!dirty.length || busy} onClick={() => setDraft(structuredClone(saved.content))}>
+                            Discard
+                        </button>
+                        <button className="btn btn-primary" disabled={!dirty.length || busy} onClick={save}>
+                            {busy && <Spinner />}
+                            Save changes
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </>
     );
 }

@@ -1,20 +1,20 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api, onSessionLost, setCsrf, subscribeActivity } from './api';
-import { Ticker } from './lib';
-import Lock from './Lock';
+import { Toast } from './lib';
+import Login from './Login';
 import Content from './modules/Content';
 import Dashboard from './modules/Dashboard';
 import Files from './modules/Files';
 import Inbox from './modules/Inbox';
 import System from './modules/System';
-import { Led, Screws } from './ui/Hardware';
+import { Icon } from './ui/Kit';
 
 const MODULES = [
-    { id: 'dash', label: 'Dashboard', glyph: '◴' },
-    { id: 'inbox', label: 'Inbox', glyph: '✉' },
-    { id: 'content', label: 'Content', glyph: '¶' },
-    { id: 'files', label: 'Résumé', glyph: '⏏' },
-    { id: 'system', label: 'System', glyph: '⚙' },
+    { id: 'dash', label: 'Dashboard', icon: 'dashboard' },
+    { id: 'inbox', label: 'Inbox', icon: 'inbox' },
+    { id: 'content', label: 'Content', icon: 'edit' },
+    { id: 'files', label: 'Résumé', icon: 'file' },
+    { id: 'system', label: 'Settings', icon: 'settings' },
 ];
 
 // #/inbox/12 → { id: 'inbox', focus: 12 }
@@ -23,31 +23,39 @@ function readHash() {
     return { id: MODULES.some((m) => m.id === id) ? id : 'dash', focus: focus ? Number(focus) : null };
 }
 
-function Clock() {
-    const [now, setNow] = useState(new Date());
-    useEffect(() => {
-        const t = setInterval(() => setNow(new Date()), 1000);
-        return () => clearInterval(t);
-    }, []);
-    const [h, m] = [now.getHours(), now.getMinutes()].map((n) => String(n).padStart(2, '0'));
+function Toaster({ toasts, onDismiss }) {
     return (
-        <span className="clock">
-            {h}
-            <span>:</span>
-            {m}
-        </span>
+        <div className="toaster" role="status" aria-live="polite">
+            {toasts.map((t) => (
+                <div key={t.id} className={`toast ${t.tone === 'warn' ? 'toast-warn' : ''}`}>
+                    <Icon name={t.tone === 'warn' ? 'alert' : 'check'} />
+                    <span>{t.text}</span>
+                    <button type="button" className="icon-btn" onClick={() => onDismiss(t.id)} aria-label="Dismiss">
+                        <Icon name="x" size={14} />
+                    </button>
+                </div>
+            ))}
+        </div>
     );
 }
 
-function Console({ user, site, onPowerOff }) {
+function Shell({ user, site, onSignOut }) {
     const [route, setRoute] = useState(readHash);
     const [unread, setUnread] = useState(0);
-    const [net, setNet] = useState(false);
-    const [ticker, setTicker] = useState({ text: `Ready · operator ${user.email}`, tone: 'ok' });
+    const [loading, setLoading] = useState(false);
+    const [toasts, setToasts] = useState([]);
 
-    const say = useCallback((text, tone = 'ok') => setTicker({ text, tone, at: Date.now() }), []);
+    const dismiss = useCallback((id) => setToasts((list) => list.filter((t) => t.id !== id)), []);
+    const toast = useCallback(
+        (text, tone = 'ok') => {
+            const id = Date.now() + Math.random();
+            setToasts((list) => [...list.slice(-2), { id, text, tone }]);
+            setTimeout(() => dismiss(id), 4000);
+        },
+        [dismiss],
+    );
 
-    useEffect(() => subscribeActivity(setNet), []);
+    useEffect(() => subscribeActivity(setLoading), []);
 
     useEffect(() => {
         const onHash = () => setRoute(readHash());
@@ -59,7 +67,7 @@ function Console({ user, site, onPowerOff }) {
         window.location.hash = focus ? `/${id}/${focus}` : `/${id}`;
     };
 
-    // Number keys 1–5 press the matching key, unless you're typing.
+    // Number keys 1–5 switch pages, unless you're typing.
     useEffect(() => {
         const onKey = (e) => {
             if (e.metaKey || e.ctrlKey || e.altKey || /input|textarea|select/i.test(e.target.tagName)) return;
@@ -70,7 +78,7 @@ function Console({ user, site, onPowerOff }) {
         return () => window.removeEventListener('keydown', onKey);
     }, []);
 
-    // Keep the unread LED honest even while you sit on another module.
+    // Keep the unread badge current while you're on another page.
     useEffect(() => {
         const poll = () => api('dashboard?days=7').then((d) => setUnread(d.messages.unread)).catch(() => {});
         poll();
@@ -78,91 +86,60 @@ function Console({ user, site, onPowerOff }) {
         return () => clearInterval(t);
     }, []);
 
-    const screens = {
+    const pages = {
         dash: <Dashboard go={go} onUnread={setUnread} />,
         inbox: <Inbox key={route.focus ?? 'inbox'} focusId={route.focus} onUnread={setUnread} />,
         content: <Content />,
         files: <Files />,
-        system: <System user={user} site={site} onPowerOff={onPowerOff} />,
+        system: <System user={user} site={site} onSignOut={onSignOut} />,
     };
 
     return (
-        <Ticker.Provider value={say}>
-            <div className="unit">
-                <Screws />
-                <header className="head">
+        <Toast.Provider value={toast}>
+            <div className={`progress ${loading ? 'is-active' : ''}`} aria-hidden />
+            <div className="shell">
+                <aside className="sidebar">
                     <div className="brand">
-                        <span className="brand-model">
-                            SM<i>-</i>01
-                        </span>
-                        <span className="brand-sub">
-                            Control unit
-                            <br />
-                            sambitmaity.com
+                        <span className="brand-mark">SM</span>
+                        <span>
+                            <strong>Sambit Maity</strong>
+                            <small>Admin</small>
                         </span>
                     </div>
 
-                    <div className="lcd head-lcd">
-                        <span key={ticker.at} className={`ticker lcd-flicker ${ticker.tone === 'warn' ? 'ticker--warn' : ''}`} role="status">
-                            {ticker.text}
-                        </span>
-                        <Clock />
-                    </div>
-
-                    <div className="leds">
-                        <span className="led-cell">
-                            <Led on />
-                            PWR
-                        </span>
-                        <span className="led-cell">
-                            <Led on={net} color="yellow" />
-                            NET
-                        </span>
-                        <span className="led-cell">
-                            <Led on={unread > 0} color="orange" blink />
-                            MSG
-                        </span>
-                    </div>
-
-                    <button className="power" onClick={onPowerOff} title="Power off (sign out)" aria-label="Sign out">
-                        ⏻
-                    </button>
-                </header>
-
-                <nav className="keys" aria-label="Modules">
-                    {MODULES.map((m, i) => (
-                        <button
-                            key={m.id}
-                            className={`key ${route.id === m.id ? 'key--active' : ''}`}
-                            onClick={() => go(m.id)}
-                            aria-current={route.id === m.id ? 'page' : undefined}
-                        >
-                            <span className="key-num">{String(i + 1).padStart(2, '0')}</span>
-                            <Led on={route.id === m.id} color="orange" />
-                            <span className="key-label">
-                                {m.label}
-                                {m.id === 'inbox' && unread > 0 && <span className="key-count">{unread}</span>}
-                            </span>
-                            <span className="key-glyph" aria-hidden>
-                                {m.glyph}
-                            </span>
-                        </button>
-                    ))}
-                </nav>
-
-                <main className="stage">{screens[route.id]}</main>
-
-                <footer className="foot">
-                    <span>SM-01 · Assembled in Kolkata</span>
-                    <span className="vents" aria-hidden>
-                        {Array.from({ length: 8 }, (_, i) => (
-                            <i key={i} />
+                    <nav className="nav" aria-label="Main">
+                        {MODULES.map((m) => (
+                            <a key={m.id} href={`#/${m.id}`} className="nav-item" aria-current={route.id === m.id ? 'page' : undefined}>
+                                <Icon name={m.icon} />
+                                <span>{m.label}</span>
+                                {m.id === 'inbox' && unread > 0 && <span className="count">{unread}</span>}
+                            </a>
                         ))}
-                    </span>
-                    <span>Keys 1–5 · ⌘S commits</span>
-                </footer>
+                    </nav>
+
+                    <div className="sidebar-foot">
+                        <a className="nav-item" href={site} target="_blank" rel="noreferrer">
+                            <Icon name="external" />
+                            <span>View site</span>
+                        </a>
+                        <div className="account">
+                            <span className="avatar" aria-hidden>
+                                {user.email[0].toUpperCase()}
+                            </span>
+                            <span className="account-email" title={user.email}>
+                                {user.email}
+                            </span>
+                            <button type="button" className="icon-btn" onClick={onSignOut} title="Sign out" aria-label="Sign out">
+                                <Icon name="logout" />
+                            </button>
+                        </div>
+                    </div>
+                </aside>
+
+                <main className="main">{pages[route.id]}</main>
             </div>
-        </Ticker.Provider>
+            <Toaster toasts={toasts} onDismiss={dismiss} />
+        </Toast.Provider>
     );
 }
 
@@ -171,7 +148,7 @@ export default function App({ boot }) {
 
     useEffect(() => onSessionLost(() => setUser(null)), []);
 
-    const powerOff = async () => {
+    const signOut = async () => {
         try {
             const res = await api('logout', { method: 'POST' });
             setCsrf(res.csrf);
@@ -180,5 +157,5 @@ export default function App({ boot }) {
         }
     };
 
-    return user ? <Console user={user} site={boot.site} onPowerOff={powerOff} /> : <Lock onUnlock={setUser} />;
+    return user ? <Shell user={user} site={boot.site} onSignOut={signOut} /> : <Login onSignIn={setUser} />;
 }

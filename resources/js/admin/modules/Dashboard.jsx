@@ -1,39 +1,55 @@
 import { useEffect, useRef, useState } from 'react';
 import { api } from '../api';
-import { ago, bytes, shortDay, useTicker } from '../lib';
-import { Knob, Led, ModLabel, Toggle } from '../ui/Hardware';
-import DotChart from '../ui/DotChart';
+import { ago, bytes, shortDay, useToast } from '../lib';
+import { Card, Icon, Loading, PageHeader, Segmented, Switch } from '../ui/Kit';
 import { useResume } from './Files';
 
-function ResumeQuick() {
+function BarChart({ series, hover, onHover }) {
+    const max = Math.max(1, ...series.map((d) => d.views));
+
+    return (
+        <div className="chart" onMouseLeave={() => onHover(null)} role="img" aria-label="Daily page views">
+            <div className="chart-bars">
+                {series.map((d, i) => (
+                    <div key={d.day} className={`chart-col ${hover === i ? 'is-hover' : ''}`} onMouseEnter={() => onHover(i)}>
+                        <div className="chart-bar" style={{ height: d.views ? `${Math.max(3, (d.views / max) * 100)}%` : 0 }} />
+                    </div>
+                ))}
+            </div>
+            <div className="chart-axis">
+                <span>{shortDay(series[0].day)}</span>
+                <span>Peak {max} / day</span>
+                <span>Today</span>
+            </div>
+        </div>
+    );
+}
+
+function ResumeCard() {
     const { info, busy, upload } = useResume();
     const input = useRef();
 
     return (
-        <section className="mod">
-            <ModLabel index="A9" aside={<><Led on={!!info?.exists} blink={busy} color={busy ? 'orange' : 'green'} /> PDF</>}>
-                Résumé
-            </ModLabel>
-            <p className="note">
-                {!info ? 'Checking drive…' : info.exists ? `Live · ${bytes(info.size)} · updated ${ago(info.updated_at)}` : 'No résumé uploaded yet.'}
-            </p>
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                <button className="btn btn--orange" disabled={busy} onClick={() => input.current.click()}>
-                    {busy ? 'Writing…' : info?.exists ? 'Replace PDF' : 'Upload PDF'}
+        <Card title="Résumé" description={!info ? 'Checking…' : info.exists ? `${bytes(info.size)} · updated ${ago(info.updated_at)}` : 'No résumé uploaded yet.'}>
+            <div className="row">
+                <button className="btn" disabled={busy} onClick={() => input.current.click()}>
+                    <Icon name="upload" />
+                    {busy ? 'Uploading…' : info?.exists ? 'Replace' : 'Upload PDF'}
                 </button>
                 {info?.exists && (
                     <a className="btn" href="/resume" target="_blank" rel="noreferrer">
-                        View ↗
+                        <Icon name="download" />
+                        Download
                     </a>
                 )}
             </div>
             <input ref={input} type="file" accept="application/pdf" hidden onChange={(e) => upload(e.target.files[0])} />
-        </section>
+        </Card>
     );
 }
 
 export default function Dashboard({ go, onUnread }) {
-    const ticker = useTicker();
+    const toast = useToast();
     const [days, setDays] = useState(30);
     const [data, setData] = useState(null);
     const [hover, setHover] = useState(null);
@@ -47,7 +63,7 @@ export default function Dashboard({ go, onUnread }) {
                 setData(d);
                 onUnread(d.messages.unread);
             })
-            .catch((e) => ticker(e.message, 'warn'));
+            .catch((e) => toast(e.message, 'warn'));
         return () => (live = false);
     }, [days]);
 
@@ -56,156 +72,158 @@ export default function Dashboard({ go, onUnread }) {
         setData((d) => ({ ...d, available }));
         try {
             await api('content/availability', { method: 'PATCH', body: { available } });
-            ticker(available ? 'Status: open to work · live on site' : 'Status: not available · live on site');
+            toast(available ? 'You now show as open to work' : 'You now show as not available');
         } catch (e) {
             setData((d) => ({ ...d, available: !available }));
-            ticker(e.message, 'warn');
+            toast(e.message, 'warn');
         } finally {
             setSwitching(false);
         }
     };
 
+    const header = (
+        <PageHeader
+            title="Dashboard"
+            description="Traffic and activity on your portfolio."
+            actions={<Segmented label="Date range" options={[7, 30, 90]} value={days} onChange={setDays} format={(v) => `${v} days`} />}
+        />
+    );
+
     if (!data) {
-        return <div className="empty">Warming up the display…</div>;
+        return (
+            <>
+                {header}
+                <Loading />
+            </>
+        );
     }
 
     const point = hover !== null ? data.series[hover] : null;
     const { totals, devices } = data;
     const deviceTotal = devices.desktop + devices.mobile;
+    const pct = (n) => (deviceTotal ? Math.round((n / deviceTotal) * 100) : 0);
     const topRef = Math.max(1, ...data.referrers.map((r) => r.count));
 
     return (
-        <div className="dash">
-            <section className="mod span-8">
-                <ModLabel index="A1" aside={<><Led on color="orange" blink /> Live</>}>
-                    Traffic · page views
-                </ModLabel>
-                <div className="lcd lcd-pad lcd-flicker" key={days}>
-                    <div className="lcd-line">
-                        <span>{point ? shortDay(point.day) : `Last ${days} days`}</span>
-                        <span className="lcd-dim">{point ? `${point.visitors} unique` : `${totals.visitors} unique visitors`}</span>
-                    </div>
-                    <div className="lcd-big" style={{ marginTop: 10 }}>
-                        {point ? point.views : totals.views}
-                    </div>
-                    <div className="chart">
-                        <DotChart series={data.series} hover={hover} onHover={setHover} />
-                    </div>
-                    <div className="chart-axis lcd-dim">
-                        <span>{shortDay(data.series[0].day)}</span>
-                        <span>Peak {Math.max(...data.series.map((d) => d.views))}/day</span>
-                        <span>Today</span>
-                    </div>
-                </div>
-            </section>
+        <>
+            {header}
 
-            <div className="span-4 stack">
-                <section className="mod">
-                    <ModLabel index="A2">Range · days</ModLabel>
-                    <Knob options={[7, 30, 90]} value={days} onChange={setDays} format={(v) => `${v}D`} />
-                </section>
-                <section className="mod">
-                    <ModLabel index="A3">Broadcast</ModLabel>
-                    <Toggle
-                        on={data.available}
-                        busy={switching}
-                        onChange={setAvailable}
-                        title={data.available ? 'Open to work' : 'Not available'}
-                        sub="Flips the availability badge on your site instantly."
-                    />
-                </section>
-                <ResumeQuick />
+            <div className="stats">
+                {[
+                    ['Page views', totals.views],
+                    ['Unique visitors', totals.visitors],
+                    ['Views today', totals.today],
+                    ['Résumé downloads', totals.resume],
+                ].map(([label, value]) => (
+                    <div className="card stat" key={label}>
+                        <span className="stat-label">{label}</span>
+                        <span className="stat-value">{value.toLocaleString()}</span>
+                    </div>
+                ))}
             </div>
 
-            <section className="mod span-12">
-                <ModLabel index="A4">Readouts · last {days} days</ModLabel>
-                <div className="readouts">
-                    {[
-                        ['Page views', totals.views],
-                        ['Unique visitors', totals.visitors],
-                        ['Views today', totals.today],
-                        ['Résumé downloads', totals.resume],
-                    ].map(([label, value]) => (
-                        <div className="lcd readout" key={label}>
-                            <div className="lcd-line lcd-dim">{label}</div>
-                            <div className="readout-val">{String(value).padStart(3, '0')}</div>
-                        </div>
-                    ))}
-                </div>
-            </section>
+            <div className="grid">
+                <Card
+                    className="span-8"
+                    title="Page views"
+                    description={point ? `${shortDay(point.day)} · ${point.views} views · ${point.visitors} unique` : `Last ${days} days · ${totals.views} views`}
+                >
+                    <BarChart series={data.series} hover={hover} onHover={setHover} />
+                </Card>
 
-            <section className="mod span-5">
-                <ModLabel index="A5">Referrers</ModLabel>
-                <div className="lcd lcd-pad" style={{ minHeight: 190 }}>
+                <div className="span-4 stack">
+                    <Card title="Availability" description="Shows the “open to work” badge on your site.">
+                        <div className="setting">
+                            <span>{data.available ? 'Open to work' : 'Not available'}</span>
+                            <Switch label="Open to work" checked={data.available} disabled={switching} onChange={setAvailable} />
+                        </div>
+                    </Card>
+                    <ResumeCard />
+                </div>
+
+                <Card className="span-5" title="Top referrers">
                     {data.referrers.length ? (
-                        <div className="reflist">
+                        <ul className="bars-list">
                             {data.referrers.map((r) => (
-                                <div className="ref" key={r.host}>
+                                <li key={r.host}>
+                                    <span className="bars-fill" style={{ width: `${(r.count / topRef) * 100}%` }} />
                                     <span>{r.host}</span>
-                                    <span>{r.count}</span>
-                                    <div className="ref-track">
-                                        <div className="ref-bar" style={{ width: `${(r.count / topRef) * 100}%` }} />
-                                    </div>
-                                </div>
+                                    <span className="num">{r.count}</span>
+                                </li>
                             ))}
-                        </div>
+                        </ul>
                     ) : (
-                        <div className="lcd-line lcd-dim">No referrers yet — direct traffic only</div>
+                        <p className="muted">No referrers yet. All traffic is direct.</p>
                     )}
-                </div>
-            </section>
+                </Card>
 
-            <section className="mod span-3">
-                <ModLabel index="A6">Devices</ModLabel>
-                <div className="devbar">
-                    <div style={{ flexGrow: devices.desktop || 1, background: 'var(--blue)' }} />
-                    <div style={{ flexGrow: devices.mobile || 1, background: 'var(--orange)' }} />
-                </div>
-                <div className="devbar-legend">
-                    <span>
-                        <i className="swatch" style={{ background: 'var(--blue)' }} />
-                        Desk {deviceTotal ? Math.round((devices.desktop / deviceTotal) * 100) : 0}%
-                    </span>
-                    <span>
-                        <i className="swatch" style={{ background: 'var(--orange)' }} />
-                        Mob {deviceTotal ? Math.round((devices.mobile / deviceTotal) * 100) : 0}%
-                    </span>
-                </div>
-            </section>
+                <Card className="span-3" title="Devices">
+                    <div className="split" aria-hidden>
+                        <span style={{ flexGrow: devices.desktop || 1 }} />
+                        <span style={{ flexGrow: devices.mobile || 1 }} />
+                    </div>
+                    <dl className="legend">
+                        <div>
+                            <dt>
+                                <i className="dot dot-1" />
+                                Desktop
+                            </dt>
+                            <dd>{pct(devices.desktop)}%</dd>
+                        </div>
+                        <div>
+                            <dt>
+                                <i className="dot dot-2" />
+                                Mobile
+                            </dt>
+                            <dd>{pct(devices.mobile)}%</dd>
+                        </div>
+                    </dl>
+                </Card>
 
-            <section className="mod span-4">
-                <ModLabel index="A7" aside={<button className="btn btn--sm" onClick={() => go('inbox')}>Open inbox →</button>}>
-                    Messages
-                </ModLabel>
-                <div className="lcd lcd-pad">
-                    <div className="lcd-line lcd-dim">
-                        <span>Unread</span>
-                        <span>Total</span>
-                    </div>
-                    <div className="lcd-line" style={{ alignItems: 'baseline' }}>
-                        <span className="lcd-big" style={{ fontSize: 52 }}>{data.messages.unread}</span>
-                        <span className="readout-val" style={{ fontSize: 28 }}>{data.messages.total}</span>
-                    </div>
-                </div>
-            </section>
+                <Card
+                    className="span-4"
+                    title="Messages"
+                    actions={
+                        <button className="btn btn-ghost btn-sm" onClick={() => go('inbox')}>
+                            Open inbox
+                            <Icon name="chevron" size={14} />
+                        </button>
+                    }
+                >
+                    <dl className="legend legend-lg">
+                        <div>
+                            <dt>Unread</dt>
+                            <dd>{data.messages.unread}</dd>
+                        </div>
+                        <div>
+                            <dt>Total</dt>
+                            <dd>{data.messages.total}</dd>
+                        </div>
+                    </dl>
+                </Card>
 
-            {data.messages.recent.length > 0 && (
-                <section className="mod span-12">
-                    <ModLabel index="A8">Latest transmissions</ModLabel>
-                    <div className="minis">
-                        {data.messages.recent.map((m) => (
-                            <button key={m.id} className="mini" onClick={() => go('inbox', m.id)}>
-                                <span className="mini-name">
-                                    <Led on={!m.read_at} color="orange" />
-                                    {m.name}
-                                </span>
-                                <span>{m.company || 'No company'} · {ago(m.created_at)}</span>
-                                <p>{m.message}</p>
-                            </button>
-                        ))}
-                    </div>
-                </section>
-            )}
-        </div>
+                {data.messages.recent.length > 0 && (
+                    <Card className="span-12" title="Recent messages" flush>
+                        <ul className="list">
+                            {data.messages.recent.map((m) => (
+                                <li key={m.id}>
+                                    <button className="list-item" onClick={() => go('inbox', m.id)}>
+                                        <span className={`unread-dot ${m.read_at ? 'is-read' : ''}`} aria-label={m.read_at ? undefined : 'Unread'} />
+                                        <span className="list-main">
+                                            <span className="list-title">
+                                                {m.name}
+                                                {m.company && <span className="muted"> · {m.company}</span>}
+                                            </span>
+                                            <span className="list-snippet">{m.message}</span>
+                                        </span>
+                                        <span className="list-meta">{ago(m.created_at)}</span>
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </Card>
+                )}
+            </div>
+        </>
     );
 }
