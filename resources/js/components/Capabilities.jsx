@@ -96,7 +96,7 @@ const HUBS = ['n8n', 'Laravel'];
 const TARGETS = [
     { name: 'Claude', by: 'Anthropic' },
     { name: 'GPT', by: 'OpenAI' },
-    { name: 'DALL·E', by: 'OpenAI' },
+    { name: 'OpenAI image generation', by: 'OpenAI' },
     { name: 'Chat agent', by: 'company data' },
 ];
 // [request, hub index, target index]

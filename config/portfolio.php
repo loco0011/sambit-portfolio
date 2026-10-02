@@ -19,12 +19,11 @@ return [
         'email' => 'official.sambitmaity@gmail.com',
         'phone' => '+91 74781 23847',
         'available' => true,
-        'availability' => 'Open to senior full-stack & founding-engineer roles',
-        'current' => ['title' => 'Technical Lead', 'company' => 'Collabmate'],
+        'availability' => 'Open to full-stack & backend engineering roles, remote or on-site',
+        'current' => ['title' => 'Software Developer', 'company' => 'Collabmate'],
         'links' => [
             ['label' => 'GitHub', 'handle' => 'loco0011', 'url' => 'https://github.com/loco0011'],
             ['label' => 'LinkedIn', 'handle' => 'in/sambitmaity', 'url' => 'https://www.linkedin.com/in/sambitmaity/'],
-            ['label' => 'Website', 'handle' => 'sambitmaity.fun', 'url' => 'https://sambitmaity.fun/'],
         ],
     ],
 
@@ -38,7 +37,7 @@ return [
 
     'stack' => [
         'PHP', 'Laravel', 'Node.js', 'BullMQ', 'TypeScript', 'React', 'Vue.js', 'Flutter', 'PostgreSQL', 'MySQL', 'MongoDB',
-        'Supabase', 'Docker', 'Nginx', 'Linux', 'CI/CD', 'n8n', 'Claude API', 'OpenAI', 'Stripe', 'Razorpay', 'Twilio', 'MSG91', 'Pusher', 'Tailwind CSS', 'ZoneMTA',
+        'Supabase', 'Docker', 'Nginx', 'Linux', 'CI/CD', 'n8n', 'Anthropic API (Claude)', 'OpenAI', 'Stripe', 'Razorpay', 'Twilio', 'MSG91', 'Pusher', 'Tailwind CSS', 'ZoneMTA',
     ],
 
     /*
@@ -53,12 +52,12 @@ return [
         ['group' => 'Data & Services', 'items' => ['*MySQL', '*PostgreSQL', 'MongoDB', 'Supabase', 'Stripe|payments', 'Razorpay|payments', 'Twilio', 'MSG91|real-time OTP', 'Pusher|realtime', 'Brevo|SMTP']],
         ['group' => 'Cloud & DevOps', 'items' => ['*VPS administration|5+ instances', '*Linux', '*Nginx', '*Docker', 'CI/CD', 'SSH deployments', 'Monitoring']],
         ['group' => 'Security', 'items' => ['HMAC signing|requests & webhooks', '2FA', 'OTP verification', 'Role-based access']],
-        ['group' => 'AI & Automation', 'items' => ['*Claude API|Anthropic', 'OpenAI API', 'DALL·E', '*n8n|self-hosted', 'AI chat agents|on company data', 'Multi-model workflows']],
+        ['group' => 'AI & Automation', 'items' => ['*Anthropic API (Claude)', 'OpenAI API', '*n8n|self-hosted', 'AI chat agents|on company data', 'Multi-model workflows']],
     ],
 
     'experience' => [
         [
-            'role' => 'Software Developer (Technical Lead)',
+            'role' => 'Software Developer',
             'company' => 'Collabmate',
             'location' => 'Kolkata, India',
             'period' => 'Jun 2026 — Present',
@@ -72,7 +71,7 @@ return [
                 'Automated bulk email campaigns through Brevo SMTP, wired into n8n workflows.',
                 'Designed and shipped web applications and Flutter apps end to end, from architecture to production.',
             ],
-            'tags' => ['DevOps', 'VPS', 'Docker', 'Linux', 'Nginx', 'CI/CD', 'Self-hosted n8n', 'Claude API', 'AI agents', 'Monitoring'],
+            'tags' => ['DevOps', 'VPS', 'Docker', 'Linux', 'Nginx', 'CI/CD', 'Self-hosted n8n', 'Anthropic API (Claude)', 'AI agents', 'Monitoring'],
         ],
         [
             'role' => 'Software Developer',
@@ -120,9 +119,9 @@ return [
             'name' => 'Wonati.ai',
             'kind' => 'AI content platform',
             'role' => 'Full-Stack Developer',
-            'blurb' => 'A multi-model AI content platform that routes work across GPT-4, Claude and DALL·E — with billing, real-time events and role-based workflows built in.',
+            'blurb' => 'A multi-model AI content platform that routes work across OpenAI and Anthropic models — with billing, real-time events and role-based workflows built in.',
             'highlights' => [
-                'Model-routing layer over GPT-4, Claude and DALL·E behind one interface',
+                'Model-routing layer over OpenAI and Anthropic APIs behind one interface',
                 'Stripe subscriptions and usage-based payments',
                 'Real-time generation status streamed over Pusher',
                 'Role-based workflows for teams and reviewers',
@@ -132,8 +131,8 @@ return [
                 'nodes' => [
                     ['id' => 'ui', 'label' => 'React · TS', 'x' => 12, 'y' => 50],
                     ['id' => 'api', 'label' => 'Laravel API', 'x' => 42, 'y' => 50, 'core' => true],
-                    ['id' => 'llm', 'label' => 'GPT-4 / Claude', 'x' => 78, 'y' => 18],
-                    ['id' => 'img', 'label' => 'DALL·E', 'x' => 84, 'y' => 44],
+                    ['id' => 'llm', 'label' => 'Anthropic API', 'x' => 78, 'y' => 18],
+                    ['id' => 'img', 'label' => 'OpenAI API', 'x' => 84, 'y' => 44],
                     ['id' => 'db', 'label' => 'PostgreSQL', 'x' => 76, 'y' => 82],
                     ['id' => 'pay', 'label' => 'Stripe', 'x' => 42, 'y' => 88],
                     ['id' => 'rt', 'label' => 'Pusher', 'x' => 24, 'y' => 14],
@@ -208,7 +207,7 @@ return [
     | The first 8 show, the rest sit behind a "Show all" button.
     */
     'archive' => [
-        ['name' => 'Company AI chat agent', 'card' => 'chat', 'kind' => 'AI agent on company data', 'year' => '2026', 'org' => 'Collabmate', 'stack' => ['n8n', 'Claude API', 'OpenAI']],
+        ['name' => 'Company AI chat agent', 'card' => 'chat', 'kind' => 'AI agent on company data', 'year' => '2026', 'org' => 'Collabmate', 'stack' => ['n8n', 'Anthropic API (Claude)', 'OpenAI']],
         ['name' => 'Primary website rebuild', 'kind' => 'Performance ~80 → 95+', 'year' => '2026', 'org' => 'Collabmate', 'stack' => ['Laravel', 'Tailwind', 'Nginx']],
         ['name' => 'Self-hosted infra & automation', 'card' => 'infra', 'kind' => '5+ VPS, self-hosted n8n, CI/CD', 'year' => '2026', 'org' => 'Collabmate', 'stack' => ['Docker', 'Nginx', 'n8n', 'Linux']],
         ['name' => 'Bulk email automation', 'kind' => 'Campaign pipeline', 'year' => '2026', 'org' => 'Collabmate', 'stack' => ['n8n', 'Brevo SMTP']],

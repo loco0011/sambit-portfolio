@@ -118,7 +118,7 @@ export default function Contact({ profile }) {
                     <div className="min-w-0 lg:col-span-5">
                         <FadeUp>
                             <p className="max-w-sm text-[16px] leading-relaxed text-mute">
-                                Hiring for a senior full-stack or founding-engineer role? I usually reply within a day.
+                                Hiring for a full-stack or backend engineering role? I usually reply within a day.
                             </p>
 
                             <Magnetic strength={0.2} className="mt-8 w-full max-w-md sm:mt-10">

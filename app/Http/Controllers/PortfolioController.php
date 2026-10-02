@@ -49,6 +49,6 @@ class PortfolioController extends Controller
     {
         abort_unless(Storage::disk('local')->exists('resume.pdf'), 404);
 
-        return Storage::disk('local')->download('resume.pdf', 'Sambit_Maity_Resume.pdf');
+        return Storage::disk('local')->download('resume.pdf', 'Sambit_Maity_Full_Stack_Software_Engineer_Resume.pdf');
     }
 }

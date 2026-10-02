@@ -79,7 +79,7 @@ Top to bottom:
   - It hides when you scroll down and reappears when you scroll up.
   - Once scrolled, a **progressive blur** sits behind it: four layers of increasing blur fading out below the bar, plus a dark tint.
   - A lime **scroll-progress line** runs along the top edge of the screen.
-- **Command palette (⌘K / Ctrl+K, or "Menu" on phones):** download résumé, copy email, send email, call, jump to any section, open GitHub/LinkedIn/Website. It's keyboard-navigable (↑ ↓ ↵ Esc).
+- **Command palette (⌘K / Ctrl+K, or "Menu" on phones):** download résumé, copy email, send email, call, jump to any section, open GitHub/LinkedIn. It's keyboard-navigable (↑ ↓ ↵ Esc).
 
 ### Hero
 - An interactive **dot field** (Canvas) that breathes and bends away from the cursor, with lime highlights.
@@ -130,7 +130,7 @@ Seven bento tiles, each with a live mini-visual:
 |---|---|
 | Architecture, end to end | 5 layers (Client → Infrastructure) highlighting in turn |
 | Servers I provision and run | deploy terminal typing out commands, incl. self-hosted n8n |
-| Multi-model AI, orchestrated | requests routed **via n8n or Laravel** to Claude (Anthropic), GPT, DALL·E (OpenAI) or the company chat agent |
+| Multi-model AI, orchestrated | requests routed **via n8n or Laravel** to OpenAI and Anthropic models or the company chat agent |
 | Fast by default | gauge fills **red to 80**, shakes ("needs work"), then climbs through orange/yellow to **lime 95+**; the legend shows "before ~80" crossed out and "▲ +15 pts" |
 | Money and messages | live event feed: Stripe, Razorpay, MSG91 OTP, Twilio, Pusher, BullMQ, HMAC |
 | Workflows that remove toil | n8n-style flow: Webhook → Filter → Transform → Notify → Log |
@@ -146,7 +146,7 @@ Below the tiles is the **Toolbox**: "45 tools, 7 disciplines."
 
 ### 06 Contact
 - Heading *"Let's build **what's next.**"*
-- Copy-email button (magnetic, shows ✓), plus phone, GitHub, LinkedIn and Website links.
+- Copy-email button (magnetic, shows ✓), plus phone, GitHub and LinkedIn links.
 - **Form:** Name, Email, Company/role (optional), Message.
   - Placeholders are faded (15% opacity, 10% while focused).
   - When the form scrolls into view, the **Name field invites input**: a blinking lime caret, a lime label, and a lime underline sweep twice. This stops as soon as the visitor clicks or types. It never auto-focuses.
@@ -255,7 +255,7 @@ The number shown as "25+" in the About stat, hero info strip and Work intro. Upd
 | Route | Controller | Purpose |
 |---|---|---|
 | `GET /` | `PortfolioController@index` | renders the page with `config('portfolio')` |
-| `GET /resume` | `PortfolioController@resume` | downloads `storage/app/private/resume.pdf` as `Sambit_Maity_Resume.pdf` |
+| `GET /resume` | `PortfolioController@resume` | downloads `storage/app/private/resume.pdf` as `Sambit_Maity_Full_Stack_Software_Engineer_Resume.pdf` |
 | `POST /contact` | `ContactController@store` | validates and saves a message |
 
 **Contact form protection**

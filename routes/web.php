@@ -12,8 +12,8 @@ Route::middleware(TrackPageView::class)->group(function () {
     Route::get('/resume', [PortfolioController::class, 'resume'])->name('resume');
 });
 
-Route::get('/robots.txt', [SeoController::class, 'robots']);
-Route::get('/sitemap.xml', [SeoController::class, 'sitemap']);
+Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])
+    ->withoutMiddleware([\Illuminate\Session\Middleware\StartSession::class, \Illuminate\View\Middleware\ShareErrorsFromSession::class, \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
 Route::post('/contact', [ContactController::class, 'store'])
     ->middleware('throttle:5,10')

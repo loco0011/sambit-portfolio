@@ -67,7 +67,7 @@ export default function Experience({ items }) {
                 label="Experience"
                 title="Three years,"
                 accent="four teams, full ownership."
-                aside="From client sites in Core PHP to being the sole technical owner of a company. Each role widened the surface area I'm responsible for."
+                aside="From client sites in Core PHP to owning the technical foundation end to end. Each role widened the surface area I'm responsible for."
             />
 
             <div ref={list} className="relative mt-10 sm:mt-12">

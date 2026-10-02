@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /contact
+
+Sitemap: https://sambitmaity.com/sitemap.xml

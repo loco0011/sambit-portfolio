@@ -97,7 +97,7 @@ export default function Files() {
                     </div>
                 </div>
                 <p className="note" style={{ marginTop: 22 }}>
-                    Visitors download it as <b>Sambit_Maity_Resume.pdf</b>. Uploading replaces the old file instantly.
+                    Visitors download it as <b>Sambit_Maity_Full_Stack_Software_Engineer_Resume.pdf</b>. Uploading replaces the old file instantly.
                 </p>
                 <a className="btn btn--dark" href="/resume" target="_blank" rel="noreferrer" aria-disabled={!info?.exists}>
                     Test download ↗

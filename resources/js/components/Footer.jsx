@@ -16,7 +16,7 @@ function Presence({ timeZone }) {
                 {online && <span className="absolute inset-0 rounded-full bg-acid" style={{ animation: 'pulse-ring 2s ease-out infinite' }} />}
                 <span className={`relative h-1.5 w-1.5 rounded-full ${online ? 'bg-acid' : 'bg-dim'}`} />
             </span>
-            {online ? 'Online now, replies within hours' : 'Offline, replies within a day'}
+            {online ? 'I usually reply within a day' : 'Offline, replies within a day'}
         </span>
     );
 }

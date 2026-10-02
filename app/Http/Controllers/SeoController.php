@@ -6,19 +6,10 @@ use App\Support\PortfolioContent;
 use Illuminate\Http\Response;
 
 /**
- * robots.txt and sitemap.xml, generated so every URL follows APP_URL.
+ * sitemap.xml, generated so every URL follows APP_URL.
  */
 class SeoController extends Controller
 {
-    public function robots(): Response
-    {
-        $lines = app()->isProduction()
-            ? ['User-agent: *', 'Allow: /', 'Disallow: /admin', 'Disallow: /contact', '', 'Sitemap: '.url('sitemap.xml')]
-            : ['User-agent: *', 'Disallow: /'];
-
-        return response(implode("\n", $lines)."\n")->header('Content-Type', 'text/plain; charset=UTF-8');
-    }
-
     public function sitemap(): Response
     {
         $updated = (PortfolioContent::override()?->updated_at ?? now())->toAtomString();
