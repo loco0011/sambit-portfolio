@@ -3,6 +3,7 @@ import { AnimatePresence, animate, motion, useInView } from 'motion/react';
 import SectionHead from '../ui/SectionHead';
 import { FadeUp, ease } from '../ui/Reveal';
 import { spotlight } from '../lib/hooks';
+import { PALETTE, rgba, useTheme } from '../lib/theme';
 
 function Tile({ className = '', title, kicker, body, children, delay = 0 }) {
     return (
@@ -96,7 +97,7 @@ const HUBS = ['n8n', 'Laravel'];
 const TARGETS = [
     { name: 'Claude', by: 'Anthropic' },
     { name: 'GPT', by: 'OpenAI' },
-    { name: 'OpenAI image generation', by: 'OpenAI' },
+    { name: 'Image gen', by: 'OpenAI' },
     { name: 'Chat agent', by: 'company data' },
 ];
 // [request, hub index, target index]
@@ -158,16 +159,16 @@ function Router() {
                     </motion.span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-1.5">
+                <div className="grid min-w-0 grid-cols-2 gap-1.5">
                     {TARGETS.map((t, ti) => (
                         <div
                             key={t.name}
-                            className={`rounded-md border px-2 py-1 transition-colors duration-500 ${
+                            className={`min-w-0 rounded-md border px-2 py-1 transition-colors duration-500 ${
                                 target === ti ? 'border-acid/60 bg-acid/10' : 'border-line'
                             }`}
                         >
-                            <p className={`whitespace-nowrap font-mono text-[10.5px] leading-tight ${target === ti ? 'text-acid' : 'text-mute'}`}>{t.name}</p>
-                            <p className="whitespace-nowrap font-mono text-[8.5px] leading-tight text-dim">{t.by}</p>
+                            <p className={`truncate font-mono text-[10.5px] leading-tight ${target === ti ? 'text-acid' : 'text-mute'}`}>{t.name}</p>
+                            <p className="truncate font-mono text-[8.5px] leading-tight text-dim">{t.by}</p>
                         </div>
                     ))}
                 </div>
@@ -178,13 +179,10 @@ function Router() {
 
 const BEFORE = 80;
 const AFTER = 95;
-const RED = [255, 84, 84];
-const LIME = [212, 255, 79];
-
 /** Ring colour for a score: red up to the old score, then blends to lime at the new one. */
-function scoreColor(v) {
+function scoreColor(v, { bad, acid }) {
     const t = Math.min(1, Math.max(0, (v - BEFORE) / (AFTER - BEFORE)));
-    const c = RED.map((r, k) => Math.round(r + (LIME[k] - r) * t));
+    const c = bad.map((r, k) => Math.round(r + (acid[k] - r) * t));
     return `rgb(${c[0]},${c[1]},${c[2]})`;
 }
 
@@ -223,7 +221,8 @@ function Gauge() {
 
     const R = 52;
     const C = 2 * Math.PI * R;
-    const color = scoreColor(v);
+    const pal = PALETTE[useTheme()];
+    const color = scoreColor(v, pal);
     const improved = phase === 'after' || phase === 'done';
     const done = phase === 'done';
     // Tick marking where the old site scored.
@@ -239,20 +238,20 @@ function Gauge() {
                 <motion.div
                     aria-hidden
                     className="absolute inset-3 rounded-full"
-                    style={{ background: 'radial-gradient(closest-side, rgba(255,84,84,0.28), transparent)' }}
+                    style={{ background: 'radial-gradient(closest-side, color-mix(in srgb, var(--color-bad) 28%, transparent), transparent)' }}
                     animate={{ opacity: phase === 'hold' ? [0, 1, 0.3, 1, 0] : 0 }}
                     transition={{ duration: 0.9, ease: 'easeInOut' }}
                 />
                 <motion.div
                     aria-hidden
                     className="absolute inset-3 rounded-full"
-                    style={{ background: 'radial-gradient(closest-side, rgba(212,255,79,0.22), transparent)' }}
+                    style={{ background: 'radial-gradient(closest-side, color-mix(in srgb, var(--color-acid) 22%, transparent), transparent)' }}
                     animate={{ opacity: done ? 1 : 0, scale: done ? [0.85, 1.05, 1] : 0.85 }}
                     transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 />
 
                 <svg width="140" height="140" viewBox="0 0 140 140" className="relative -rotate-90">
-                    <circle cx="70" cy="70" r={R} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="6" />
+                    <circle cx="70" cy="70" r={R} fill="none" stroke={rgba(pal.tint, 0.07)} strokeWidth="6" />
                     <circle
                         cx="70"
                         cy="70"
@@ -263,7 +262,7 @@ function Gauge() {
                         strokeLinecap="round"
                         strokeDasharray={`${(C * v) / 100} ${C}`}
                     />
-                    <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" />
+                    <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={rgba(pal.tint, 0.5)} strokeWidth="1.5" />
                 </svg>
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -276,15 +275,15 @@ function Gauge() {
                         {v}
                         {done && '+'}
                     </motion.span>
-                    <span className="mt-1.5 font-mono text-[9px] uppercase tracking-widest" style={{ color: improved ? 'rgba(212,255,79,0.85)' : 'rgba(255,120,120,0.85)' }}>
+                    <span className="mt-1.5 font-mono text-[9px] uppercase tracking-widest" style={{ color: improved ? rgba(pal.acid, 0.85) : rgba(pal.bad2, 0.85) }}>
                         {improved ? 'after rebuild' : phase === 'hold' ? 'needs work' : 'before'}
                     </span>
                 </div>
             </div>
 
             <div className="space-y-2 font-mono text-[11px]">
-                <p className={`flex items-center gap-2 transition-colors duration-500 ${improved ? 'text-mute line-through decoration-[#ff5454]/70' : 'text-[#ff7878]'}`}>
-                    <span className="h-1.5 w-3 rounded-full bg-[#ff5454]" /> before · ~{BEFORE}
+                <p className={`flex items-center gap-2 transition-colors duration-500 ${improved ? 'text-mute line-through decoration-bad/70' : 'text-bad-2'}`}>
+                    <span className="h-1.5 w-3 rounded-full bg-bad" /> before · ~{BEFORE}
                 </p>
                 <p className={`flex items-center gap-2 transition-colors duration-500 ${improved ? 'text-acid' : 'text-dim'}`}>
                     <span className="h-1.5 w-3 rounded-full bg-acid" /> after · {AFTER}+
@@ -377,8 +376,8 @@ const pop = { hidden: { opacity: 0, scale: 0.6 }, show: { opacity: 1, scale: 1 }
 function OtpScreen() {
     return (
         <div>
-            <div className="h-1.5 w-2/3 rounded bg-white/15" />
-            <div className="mt-1 h-1 w-1/2 rounded bg-white/[0.07]" />
+            <div className="h-1.5 w-2/3 rounded bg-tint/15" />
+            <div className="mt-1 h-1 w-1/2 rounded bg-tint/[0.07]" />
             <motion.div className="mt-3 grid grid-cols-4 gap-1" initial="hidden" animate="show" transition={{ staggerChildren: 0.18, delayChildren: 0.15 }}>
                 {['4', '8', '1', '7'].map((d) => (
                     <div key={d} className="grid h-5 place-items-center rounded border border-line-2">
@@ -389,7 +388,7 @@ function OtpScreen() {
                 ))}
             </motion.div>
             <motion.div
-                className="mt-3 h-4 rounded bg-acid text-center font-mono text-[7px] leading-4 text-ink"
+                className="mt-3 h-4 rounded bg-lime text-center font-mono text-[7px] leading-4 text-on-lime"
                 initial={{ opacity: 0.25 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.95, duration: 0.3 }}
@@ -405,13 +404,13 @@ function DashboardScreen() {
         <div>
             <div className="grid grid-cols-2 gap-1">
                 <div className="h-5 rounded bg-acid/15" />
-                <div className="h-5 rounded bg-white/[0.06]" />
+                <div className="h-5 rounded bg-tint/[0.06]" />
             </div>
             <motion.div className="mt-2 flex h-[42px] items-end gap-1" initial="hidden" animate="show" transition={{ staggerChildren: 0.08 }}>
                 {[0.45, 0.7, 0.55, 0.9, 0.75].map((h, k) => (
                     <motion.div
                         key={k}
-                        className={`flex-1 origin-bottom rounded-sm ${k === 3 ? 'bg-acid' : 'bg-white/20'}`}
+                        className={`flex-1 origin-bottom rounded-sm ${k === 3 ? 'bg-acid' : 'bg-tint/20'}`}
                         style={{ height: `${h * 100}%` }}
                         variants={{ hidden: { scaleY: 0 }, show: { scaleY: 1, transition: { duration: 0.6, ease } } }}
                     />
@@ -423,9 +422,9 @@ function DashboardScreen() {
 
 function ChatScreen() {
     const bubbles = [
-        ['self-start bg-white/10', 'w-3/4'],
+        ['self-start bg-tint/10', 'w-3/4'],
         ['self-end bg-acid/80', 'w-2/3'],
-        ['self-start bg-white/10', 'w-1/2'],
+        ['self-start bg-tint/10', 'w-1/2'],
     ];
     return (
         <motion.div className="flex flex-col gap-1.5" initial="hidden" animate="show" transition={{ staggerChildren: 0.3, delayChildren: 0.1 }}>
@@ -452,15 +451,15 @@ function Mobile() {
             {/* Web client */}
             <div className="min-w-0 flex-1 overflow-hidden rounded-lg border border-line-2 bg-ink">
                 <div className="flex items-center gap-1 border-b hairline px-2 py-1.5">
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/10" />
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/10" />
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/10" />
-                    <span className="ml-1.5 h-2 flex-1 rounded-sm bg-white/[0.05]" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-tint/10" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-tint/10" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-tint/10" />
+                    <span className="ml-1.5 h-2 flex-1 rounded-sm bg-tint/[0.05]" />
                 </div>
                 <div className="flex gap-2 p-2">
                     <div className="w-1/4 space-y-1">
                         {SCREENS.map((name, k) => (
-                            <div key={name} className={`h-1.5 rounded-sm transition-colors duration-500 ${k === s ? 'bg-acid/80' : 'bg-white/10'}`} />
+                            <div key={name} className={`h-1.5 rounded-sm transition-colors duration-500 ${k === s ? 'bg-acid/80' : 'bg-tint/10'}`} />
                         ))}
                     </div>
                     <div className="min-w-0 flex-1">
@@ -476,9 +475,9 @@ function Mobile() {
                                 {SCREENS[s]}
                             </motion.p>
                         </AnimatePresence>
-                        <div className="mt-1.5 h-1.5 w-full rounded bg-white/[0.07]" />
-                        <div className="mt-1 h-1.5 w-2/3 rounded bg-white/[0.07]" />
-                        <div className="mt-1 h-1.5 w-4/5 rounded bg-white/[0.07]" />
+                        <div className="mt-1.5 h-1.5 w-full rounded bg-tint/[0.07]" />
+                        <div className="mt-1 h-1.5 w-2/3 rounded bg-tint/[0.07]" />
+                        <div className="mt-1 h-1.5 w-4/5 rounded bg-tint/[0.07]" />
                     </div>
                 </div>
                 <p className="px-2 pb-1.5 font-mono text-[8px] text-dim">web · React</p>
@@ -496,7 +495,7 @@ function Mobile() {
                 </div>
                 <motion.div
                     key={`api${s}`}
-                    className="absolute top-1/2 -translate-y-1/2 rounded-md border border-acid/50 bg-[#141a08] px-1.5 py-0.5 font-mono text-[8.5px] text-acid"
+                    className="absolute top-1/2 -translate-y-1/2 rounded-md border border-acid/50 bg-acid-bg px-1.5 py-0.5 font-mono text-[8.5px] text-acid"
                     initial={{ scale: 1.15 }}
                     animate={{ scale: 1 }}
                     transition={{ duration: 0.4, ease }}
@@ -508,7 +507,7 @@ function Mobile() {
             {/* Flutter app */}
             <div className="flex shrink-0 flex-col items-center">
                 <div className="relative h-[146px] w-[74px] overflow-hidden rounded-[16px] border border-line-2 bg-ink px-2 pb-2 pt-4">
-                    <span className="absolute left-1/2 top-1.5 h-1 w-5 -translate-x-1/2 rounded-full bg-white/15" />
+                    <span className="absolute left-1/2 top-1.5 h-1 w-5 -translate-x-1/2 rounded-full bg-tint/15" />
                     <AnimatePresence mode="wait">
                         <motion.p
                             key={`t${s}`}
@@ -534,7 +533,7 @@ function Mobile() {
                     </AnimatePresence>
                     <div className="absolute inset-x-2 bottom-2 flex justify-around">
                         {SCREENS.map((name, k) => (
-                            <span key={name} className={`h-1 w-1 rounded-full transition-colors duration-500 ${k === s ? 'bg-acid' : 'bg-white/15'}`} />
+                            <span key={name} className={`h-1 w-1 rounded-full transition-colors duration-500 ${k === s ? 'bg-acid' : 'bg-tint/15'}`} />
                         ))}
                     </div>
                 </div>
@@ -601,7 +600,7 @@ function SkillRow({ group, items, index }) {
     const skills = items.map(parseSkill);
     return (
         <motion.div
-            className="group grid grid-cols-1 gap-3 border-b hairline py-4 transition-colors duration-500 hover:bg-white/[0.015] md:grid-cols-12 md:gap-6 md:py-5"
+            className="group grid grid-cols-1 gap-3 border-b hairline py-4 transition-colors duration-500 hover:bg-tint/[0.015] md:grid-cols-12 md:gap-6 md:py-5"
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, margin: '-8% 0px' }}
@@ -624,7 +623,7 @@ function SkillRow({ group, items, index }) {
                         key={s.name}
                         variants={{ hidden: { opacity: 0, y: 8, scale: 0.96 }, show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease } } }}
                         className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-[13.5px] transition-[border-color,background-color,transform] duration-300 group-hover:-translate-y-px hover:border-acid/50 ${
-                            s.core ? 'border-line-2 bg-white/[0.035] text-fg' : 'border-line bg-transparent text-fg/75'
+                            s.core ? 'border-line-2 bg-tint/[0.035] text-fg' : 'border-line bg-transparent text-fg/75'
                         }`}
                     >
                         {s.core && <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-acid" />}

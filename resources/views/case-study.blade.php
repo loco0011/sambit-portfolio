@@ -11,7 +11,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#07070a">
+    @include('partials.theme-head')
 
     @include('partials.google-head')
 
@@ -59,6 +59,20 @@
         <nav class="flex items-center gap-2 text-[13px]" aria-label="Page">
             <a href="{{ url('/') }}#work" class="rounded-full px-3.5 py-2 text-mute transition-colors hover:text-fg">← All work</a>
             <a href="{{ url('/') }}#contact" class="rounded-full border hairline px-3.5 py-2 text-fg transition-colors hover:border-acid/50">Contact</a>
+            <button type="button" id="theme-toggle" aria-label="Toggle light and dark mode" class="grid aspect-square self-stretch place-items-center rounded-full border hairline text-mute transition-colors hover:border-line-2 hover:text-fg">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <g class="light:hidden"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" /></g>
+                    <path class="hidden light:inline" d="M20.5 14.1A8.5 8.5 0 0 1 9.9 3.5a8.5 8.5 0 1 0 10.6 10.6Z" />
+                </svg>
+            </button>
+            <script>
+                document.getElementById('theme-toggle').addEventListener('click', function () {
+                    var t = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+                    document.documentElement.dataset.theme = t;
+                    document.querySelector('meta[name=theme-color]').content = t === 'light' ? '#f3f3f0' : '#07070a';
+                    try { localStorage.setItem('sm:theme', t); } catch (e) {}
+                });
+            </script>
         </nav>
     </header>
 
@@ -92,7 +106,7 @@
                 <div class="mt-8 flex flex-wrap gap-3">
                     @foreach ($project['links'] as $i => $link)
                         <a href="{{ $link['url'] }}" target="_blank" rel="noopener"
-                           class="{{ $i === 0 ? 'bg-fg text-ink hover:bg-acid' : 'border hairline text-fg hover:border-acid/50' }} inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-[14px] font-medium transition-colors">
+                           class="{{ $i === 0 ? 'bg-fg text-ink hover:bg-lime hover:text-on-lime' : 'border hairline text-fg hover:border-acid/50' }} inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-[14px] font-medium transition-colors">
                             {{ $link['label'] }} <span aria-hidden="true">↗</span>
                         </a>
                     @endforeach
@@ -105,18 +119,18 @@
             @php($nodes = collect($project['diagram']['nodes'])->keyBy('id'))
             <section class="container-x pb-16">
                 <figure>
-                    <div class="relative aspect-[4/3] w-full overflow-hidden rounded-[22px] border hairline bg-panel sm:aspect-[16/9] sm:rounded-[28px] lg:aspect-[21/9]"
+                    <div class="relative aspect-[4/3] w-full overflow-hidden rounded-[22px] elev border hairline bg-panel sm:aspect-[16/9] sm:rounded-[28px] lg:aspect-[21/9]"
                          role="img" aria-label="Architecture of {{ $project['name'] }}: {{ $nodes->pluck('label')->implode(', ') }}">
                         <svg class="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
                             @foreach ($project['diagram']['edges'] ?? [] as [$from, $to])
                                 @if (isset($nodes[$from], $nodes[$to]))
                                     <line x1="{{ $at($nodes[$from]['x'], 'x') }}" y1="{{ $at($nodes[$from]['y'], 'y') }}" x2="{{ $at($nodes[$to]['x'], 'x') }}" y2="{{ $at($nodes[$to]['y'], 'y') }}"
-                                          stroke="rgb(255 255 255 / 0.16)" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke" />
+                                          class="stroke-tint/16" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke" />
                                 @endif
                             @endforeach
                         </svg>
                         @foreach ($nodes as $node)
-                            <span class="{{ ! empty($node['core']) ? 'border-acid/60 bg-acid text-ink' : 'hairline bg-ink-2 text-fg/85' }} absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full border px-2.5 py-1 font-mono text-[10px] sm:px-3.5 sm:py-1.5 sm:text-[12px]"
+                            <span class="{{ ! empty($node['core']) ? 'border-lime bg-lime text-on-lime' : 'hairline bg-ink-2 text-fg/85' }} absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full border px-2.5 py-1 font-mono text-[10px] sm:px-3.5 sm:py-1.5 sm:text-[12px]"
                                   style="left: {{ $at($node['x'], 'x') }}%; top: {{ $at($node['y'], 'y') }}%">{{ $node['label'] }}</span>
                         @endforeach
                     </div>
@@ -152,7 +166,7 @@
             <h2 class="display mt-5 text-[clamp(2.2rem,6vw,4.75rem)]">Building something <span class="serif-i text-acid">similar?</span></h2>
             <p class="mt-5 max-w-xl text-[16px] leading-relaxed text-mute">{{ $p['availability'] }}. I usually reply within a day.</p>
             <div class="mt-8 flex flex-wrap gap-3">
-                <a href="mailto:{{ $p['email'] }}" class="inline-flex items-center gap-2 rounded-full bg-fg px-5 py-2.5 text-[14px] font-medium text-ink transition-colors hover:bg-acid">Email {{ $p['email'] }}</a>
+                <a href="mailto:{{ $p['email'] }}" class="inline-flex items-center gap-2 rounded-full bg-fg px-5 py-2.5 text-[14px] font-medium text-ink transition-colors hover:bg-lime hover:text-on-lime">Email {{ $p['email'] }}</a>
                 <a href="{{ route('resume') }}" class="inline-flex items-center gap-2 rounded-full border hairline px-5 py-2.5 text-[14px] text-fg transition-colors hover:border-acid/50">Download résumé ↓</a>
             </div>
         </section>
@@ -163,7 +177,7 @@
                 <h2 class="eyebrow text-mute">More case studies</h2>
                 <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     @foreach ($others as $other)
-                        <a href="{{ route('work.show', $other['slug']) }}" class="group rounded-[22px] border hairline bg-ink-2 p-6 transition-colors hover:border-acid/40">
+                        <a href="{{ route('work.show', $other['slug']) }}" class="elev group rounded-[22px] border hairline bg-ink-2 p-6 transition-colors hover:border-acid/40">
                             <span class="eyebrow text-mute">{{ $other['kind'] }}</span>
                             <span class="mt-3 block text-[1.6rem] font-medium tracking-tight">{{ $other['name'] }}</span>
                             <span class="mt-3 block text-[14px] leading-relaxed text-mute">{{ \Illuminate\Support\Str::limit($other['blurb'], 120) }}</span>

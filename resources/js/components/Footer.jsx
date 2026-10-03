@@ -84,7 +84,7 @@ export default function Footer({ profile }) {
                     {/* Brand */}
                     <FadeUp className="md:col-span-5">
                         <div className="flex items-center gap-3">
-                            <span className="grid h-10 w-10 place-items-center rounded-xl border hairline bg-ink-2">
+                            <span className="grid h-10 w-10 place-items-center rounded-xl border hairline bg-ink-2 light:border-transparent light:bg-[#0c0c10]">
                                 <img src="/images/brand/logo-mark.png" alt="" width="30" height="30" className="h-[30px] w-[30px]" />
                             </span>
                             <div className="leading-tight">
@@ -143,7 +143,7 @@ export default function Footer({ profile }) {
                                 <a
                                     href="/resume"
                                     data-cursor="PDF"
-                                    className="inline-flex items-center gap-2 rounded-full bg-acid px-4 py-2 text-[13px] font-medium text-ink transition-shadow hover:shadow-[0_0_30px_-4px_rgba(212,255,79,0.6)]"
+                                    className="inline-flex items-center gap-2 rounded-full bg-lime px-4 py-2 text-[13px] font-medium text-on-lime transition-shadow hover:shadow-[0_0_30px_-4px_color-mix(in_srgb,var(--color-lime)_60%,transparent)]"
                                 >
                                     Résumé <span>↓</span>
                                 </a>
@@ -164,7 +164,7 @@ export default function Footer({ profile }) {
                             className="group flex items-center gap-3 font-mono text-[11.5px] text-mute transition-colors hover:text-fg"
                         >
                             Back to top
-                            <span className="grid h-9 w-9 place-items-center rounded-full border border-line-2 text-fg transition-all duration-500 group-hover:border-acid group-hover:bg-acid group-hover:text-ink">
+                            <span className="grid h-9 w-9 place-items-center rounded-full border border-line-2 text-fg transition-all duration-500 group-hover:border-lime group-hover:bg-lime group-hover:text-on-lime">
                                 ↑
                             </span>
                         </button>

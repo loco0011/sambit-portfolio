@@ -10,6 +10,8 @@ import { motion, useInView } from 'motion/react';
  * Edges are static dashed lines (animating SVG strokes forces a repaint every
  * frame), and everything animated pauses while the diagram is off-screen.
  */
+const mix = (token, pct) => `color-mix(in srgb, var(--color-${token}) ${pct}%, transparent)`;
+
 export default function SystemDiagram({ diagram, name }) {
     const ref = useRef(null);
     const active = useInView(ref, { margin: '0px 0px -10% 0px' });
@@ -21,9 +23,9 @@ export default function SystemDiagram({ diagram, name }) {
         <div ref={ref} className="relative flex h-full min-h-[280px] flex-col overflow-hidden rounded-2xl border hairline bg-ink sm:min-h-[320px]">
             <div className="flex items-center justify-between gap-3 border-b hairline px-4 py-3">
                 <div className="flex items-center gap-1.5">
-                    <span className="h-2 w-2 rounded-full bg-white/10" />
-                    <span className="h-2 w-2 rounded-full bg-white/10" />
-                    <span className="h-2 w-2 rounded-full bg-white/10" />
+                    <span className="h-2 w-2 rounded-full bg-tint/10" />
+                    <span className="h-2 w-2 rounded-full bg-tint/10" />
+                    <span className="h-2 w-2 rounded-full bg-tint/10" />
                 </div>
                 <span className="truncate font-mono text-[10px] text-dim">system.map — {name.toLowerCase()}</span>
                 <span className="flex items-center gap-1.5 font-mono text-[10px] text-acid">
@@ -34,7 +36,7 @@ export default function SystemDiagram({ diagram, name }) {
             <div
                 className="relative flex-1"
                 style={{
-                    backgroundImage: 'radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px)',
+                    backgroundImage: 'radial-gradient(color-mix(in srgb, var(--color-tint) 6%, transparent) 1px, transparent 1px)',
                     backgroundSize: '18px 18px',
                 }}
             >
@@ -51,7 +53,7 @@ export default function SystemDiagram({ diagram, name }) {
                                     strokeWidth={1}
                                     strokeDasharray="3 3"
                                     style={{
-                                        stroke: touches(e) ? (focus ? 'rgba(212,255,79,0.8)' : 'rgba(255,255,255,0.3)') : 'rgba(255,255,255,0.05)',
+                                        stroke: touches(e) ? (focus ? mix('acid', 80) : mix('tint', 30)) : mix('tint', 5),
                                         opacity: active ? 1 : 0,
                                         transition: `stroke .35s, opacity 1s ${0.3 + i * 0.1}s`,
                                     }}
@@ -77,7 +79,7 @@ export default function SystemDiagram({ diagram, name }) {
                                     }}
                                     transition={{ duration: 2.2, repeat: Infinity, delay: 0.8 + i * 0.45, ease: 'easeInOut', repeatDelay: 0.8 }}
                                 >
-                                    <span className="absolute left-0 top-0 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-acid shadow-[0_0_10px_2px_rgba(212,255,79,0.6)]" />
+                                    <span className="absolute left-0 top-0 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-acid shadow-[0_0_10px_2px_color-mix(in_srgb,var(--color-acid)_60%,transparent)]" />
                                 </motion.div>
                             );
                         })}
@@ -92,7 +94,7 @@ export default function SystemDiagram({ diagram, name }) {
                             onBlur={() => setFocus(null)}
                             className={`absolute whitespace-nowrap rounded-md border px-1.5 py-1 font-mono text-[9px] sm:text-[10px] md:rounded-lg md:px-2.5 md:py-1.5 md:text-[11px] ${
                                 n.core
-                                    ? 'border-acid/60 bg-[#141a08] text-acid shadow-[0_0_30px_-6px_rgba(212,255,79,0.5)]'
+                                    ? 'border-acid/60 bg-acid-bg text-acid shadow-[0_0_30px_-6px_color-mix(in_srgb,var(--color-acid)_50%,transparent)]'
                                     : focus === n.id
                                       ? 'border-fg/60 bg-panel text-fg'
                                       : 'border-line-2 bg-panel text-mute'

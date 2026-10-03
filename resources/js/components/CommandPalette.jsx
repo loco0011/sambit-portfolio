@@ -3,12 +3,14 @@ import { AnimatePresence, motion } from 'motion/react';
 import { lockScroll, scrollTo } from '../lib/scroll';
 import { copyText } from '../lib/hooks';
 import { SECTIONS } from './Nav';
+import { toggleTheme, useTheme } from '../lib/theme';
 
 export default function CommandPalette({ open, onClose, profile }) {
     const [q, setQ] = useState('');
     const [i, setI] = useState(0);
     const [toast, setToast] = useState(null);
     const input = useRef(null);
+    const theme = useTheme();
 
     const actions = useMemo(
         () => [
@@ -25,9 +27,18 @@ export default function CommandPalette({ open, onClose, profile }) {
             { group: 'Recruiter', label: 'Send an email', hint: '↗', run: () => (window.location.href = `mailto:${profile.email}`) },
             { group: 'Recruiter', label: `Call ${profile.phone}`, hint: '☎', run: () => (window.location.href = `tel:${profile.phone.replace(/\s/g, '')}`) },
             ...SECTIONS.map((s) => ({ group: 'Navigate', label: `Go to ${s.label}`, hint: '→', run: () => scrollTo(`#${s.id}`) })),
+            {
+                group: 'Display',
+                label: theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode',
+                hint: theme === 'light' ? '☾' : '☀',
+                run: () => {
+                    toggleTheme();
+                    return 'keep';
+                },
+            },
             ...profile.links.map((l) => ({ group: 'Elsewhere', label: `${l.label} — ${l.handle}`, hint: '↗', run: () => window.open(l.url, '_blank', 'noopener') })),
         ],
-        [profile],
+        [profile, theme],
     );
 
     const filtered = actions.filter((a) => a.label.toLowerCase().includes(q.toLowerCase()));
@@ -81,7 +92,7 @@ export default function CommandPalette({ open, onClose, profile }) {
                     <motion.div
                         role="dialog"
                         aria-label="Command menu"
-                        className="w-full max-w-[560px] overflow-hidden rounded-2xl border border-line-2 bg-panel shadow-[0_40px_120px_-20px_rgba(0,0,0,0.8),0_0_0_1px_rgba(212,255,79,0.06)]"
+                        className="w-full max-w-[560px] overflow-hidden rounded-2xl border border-line-2 bg-panel shadow-[0_40px_120px_-20px_var(--shadow),0_0_0_1px_var(--color-acid-dim)]"
                         initial={{ opacity: 0, y: -12, scale: 0.97 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -8, scale: 0.98 }}
@@ -116,7 +127,7 @@ export default function CommandPalette({ open, onClose, profile }) {
                                                 idx === i ? 'text-fg' : 'text-mute'
                                             }`}
                                         >
-                                            {idx === i && <motion.span layoutId="cmd-hl" className="absolute inset-0 rounded-lg bg-white/[0.05]" transition={{ type: 'spring', stiffness: 500, damping: 40 }} />}
+                                            {idx === i && <motion.span layoutId="cmd-hl" className="absolute inset-0 rounded-lg bg-tint/[0.05]" transition={{ type: 'spring', stiffness: 500, damping: 40 }} />}
                                             <span className="relative">{a.label}</span>
                                             <span className={`relative font-mono text-[12px] ${idx === i ? 'text-acid' : 'text-dim'}`}>{a.hint}</span>
                                         </button>

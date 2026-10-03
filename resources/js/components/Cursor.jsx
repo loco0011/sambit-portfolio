@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useMotionValue, useSpring } from 'motion/react';
+import { PALETTE, rgba, useTheme } from '../lib/theme';
 
 /**
  * Two-part cursor: a precise dot plus a trailing ring. Any element with
@@ -11,6 +12,7 @@ export default function Cursor() {
     const [label, setLabel] = useState(null);
     const [hovering, setHovering] = useState(false);
     const [down, setDown] = useState(false);
+    const c = PALETTE[useTheme()];
 
     const x = useMotionValue(-100);
     const y = useMotionValue(-100);
@@ -55,8 +57,8 @@ export default function Cursor() {
                     width: size,
                     height: size,
                     scale: down ? 0.85 : 1,
-                    backgroundColor: label ? 'rgba(212,255,79,1)' : 'rgba(212,255,79,0)',
-                    borderColor: label ? 'rgba(212,255,79,1)' : hovering ? 'rgba(212,255,79,0.7)' : 'rgba(255,255,255,0.28)',
+                    backgroundColor: rgba(c.lime, label ? 1 : 0),
+                    borderColor: label ? rgba(c.lime) : hovering ? rgba(c.acid, 0.7) : rgba(c.tint, 0.28),
                 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 24 }}
             >
@@ -67,7 +69,7 @@ export default function Cursor() {
                             initial={{ opacity: 0, scale: 0.6 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.6 }}
-                            className="font-mono text-[10px] font-medium uppercase tracking-widest text-ink"
+                            className="font-mono text-[10px] font-medium uppercase tracking-widest text-on-lime"
                         >
                             {label}
                         </motion.span>

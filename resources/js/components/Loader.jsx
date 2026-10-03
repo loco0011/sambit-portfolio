@@ -152,7 +152,8 @@ export default function Loader({ play, name, role, onReveal }) {
             await sleep(160);
             if (!alive()) return;
             reveal();
-            r.animate([{ backgroundColor: 'rgb(7 7 10)' }, { backgroundColor: 'rgb(7 7 10 / 0)' }], { duration: 900, delay: 120, easing: 'ease-out', fill: 'forwards' });
+            const bg = getComputedStyle(r).backgroundColor;
+            r.animate([{ backgroundColor: bg }, { backgroundColor: 'transparent' }], { duration: 900, delay: 120, easing: 'ease-out', fill: 'forwards' });
 
             if (landable) {
                 fig.style.transformOrigin = '0 0';

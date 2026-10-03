@@ -39,7 +39,7 @@ function ChatVisual() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -8 }}
                     transition={{ duration: 0.4, ease }}
-                    className="max-w-[82%] self-end rounded-2xl rounded-br-md bg-white/[0.08] px-3 py-2 text-[12px] text-fg/90"
+                    className="max-w-[82%] self-end rounded-2xl rounded-br-md bg-tint/[0.08] px-3 py-2 text-[12px] text-fg/90"
                 >
                     {QA[q][0]}
                 </motion.div>
@@ -93,10 +93,10 @@ function InfraVisual() {
                         }`}
                     >
                         <span className="flex items-center gap-2">
-                            <span className={`h-1.5 w-1.5 rounded-full transition-colors duration-300 ${busy ? 'bg-amber-300' : 'bg-acid'}`} />
+                            <span className={`h-1.5 w-1.5 rounded-full transition-colors duration-300 ${busy ? 'bg-amber-300 light:bg-amber-500' : 'bg-acid'}`} />
                             {s}
                         </span>
-                        <span className={busy ? 'text-amber-200/90' : 'text-dim'}>{busy ? 'deploying…' : 'healthy'}</span>
+                        <span className={busy ? 'text-amber-200/90 light:text-amber-700' : 'text-dim'}>{busy ? 'deploying…' : 'healthy'}</span>
                     </div>
                 );
             })}
@@ -110,7 +110,7 @@ function MusicVisual() {
     return (
         <div ref={ref} className="flex h-full items-center gap-4 p-4">
             <div className="grid h-20 w-20 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-acid/40 via-acid/10 to-transparent">
-                <span className="text-[26px] text-ink/80">♪</span>
+                <span className="text-[26px] text-ink/80 light:text-acid">♪</span>
             </div>
             <div className="min-w-0 flex-1">
                 <p className="truncate text-[13px] text-fg">Now playing</p>
@@ -128,7 +128,7 @@ function MusicVisual() {
                         />
                     ))}
                 </div>
-                <div className="mt-2 h-[3px] overflow-hidden rounded-full bg-white/10">
+                <div className="mt-2 h-[3px] overflow-hidden rounded-full bg-tint/10">
                     <div className="h-full w-full origin-left bg-fg/70" style={{ animation: 'progress 8s linear infinite', animationPlayState: active ? 'running' : 'paused' }} />
                 </div>
                 <p className="mt-2 font-mono text-[10px] text-mute">
@@ -152,9 +152,9 @@ function CrmVisual() {
     return (
         <div ref={ref} className="grid h-full grid-cols-3 gap-2 p-4">
             {STAGES.map((name, i) => (
-                <div key={name} className="flex flex-col gap-1.5 rounded-lg border border-line bg-white/[0.015] p-2">
+                <div key={name} className="flex flex-col gap-1.5 rounded-lg border border-line bg-tint/[0.015] p-2">
                     <p className="font-mono text-[9.5px] uppercase tracking-widest text-dim">{name}</p>
-                    <div className="h-4 rounded bg-white/[0.06]" />
+                    <div className="h-4 rounded bg-tint/[0.06]" />
                     {i === stage && (
                         <motion.div
                             layoutId="crm-deal"
@@ -164,7 +164,7 @@ function CrmVisual() {
                             {i === 2 ? 'Deal ✓' : 'Deal'}
                         </motion.div>
                     )}
-                    <div className="h-4 rounded bg-white/[0.04]" />
+                    <div className="h-4 rounded bg-tint/[0.04]" />
                 </div>
             ))}
         </div>
@@ -183,18 +183,18 @@ function EarningVisual() {
     return (
         <div ref={ref} className="flex h-full items-center justify-center p-4">
             <div className="relative w-[128px] rounded-[18px] border border-line-2 bg-ink px-3 pb-3 pt-4">
-                <span className="absolute left-1/2 top-1.5 h-1 w-6 -translate-x-1/2 rounded-full bg-white/15" />
+                <span className="absolute left-1/2 top-1.5 h-1 w-6 -translate-x-1/2 rounded-full bg-tint/15" />
                 <p className="font-mono text-[9px] text-dim">wallet</p>
                 <p className="mt-0.5 flex items-baseline gap-1 text-[20px] font-medium tabular-nums tracking-tight text-fg">
                     {balance.toLocaleString('en-IN')}
                     <span className="text-[10px] text-acid">coins</span>
                 </p>
-                <div className="mt-2 h-1 overflow-hidden rounded-full bg-white/10">
+                <div className="mt-2 h-1 overflow-hidden rounded-full bg-tint/10">
                     <div className="h-full origin-left rounded-full bg-acid transition-transform duration-700" style={{ transform: `scaleX(${goal})` }} />
                 </div>
                 <p className="mt-1 font-mono text-[8.5px] text-dim">next payout</p>
                 <div className="mt-2 grid grid-cols-2 gap-1">
-                    <div className="h-5 rounded bg-white/[0.06]" />
+                    <div className="h-5 rounded bg-tint/[0.06]" />
                     <div className="h-5 rounded bg-acid/15" />
                 </div>
                 <AnimatePresence>

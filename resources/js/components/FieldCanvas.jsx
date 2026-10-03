@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
+import { PALETTE, getTheme, onThemeChange, rgba } from '../lib/theme';
 
 const BUCKETS = 10;
-const NEUTRAL = Array.from({ length: BUCKETS }, (_, i) => `rgba(237,237,239,${((i + 1) / BUCKETS) * 0.26})`);
-const LIT = Array.from({ length: BUCKETS }, (_, i) => `rgba(212,255,79,${(i + 1) / BUCKETS})`);
+const buckets = (rgb, max) => Array.from({ length: BUCKETS }, (_, i) => rgba(rgb, ((i + 1) / BUCKETS) * max));
 
 /**
  * A living dot-matrix. Points breathe on a slow wave and are displaced
@@ -23,6 +23,13 @@ export default function FieldCanvas({ className = '' }) {
         const mouse = { x: -9999, y: -9999, tx: -9999, ty: -9999 };
         let w, h, points, frame, radius;
         let visible = true;
+        let NEUTRAL, LIT;
+        const paint = () => {
+            const c = PALETTE[getTheme()];
+            NEUTRAL = buckets(c.fg, c.dots);
+            LIT = buckets(c.acid, 1);
+        };
+        paint();
 
         function resize() {
             w = canvas.clientWidth;
@@ -133,6 +140,10 @@ export default function FieldCanvas({ className = '' }) {
         resize();
         start();
         io.observe(canvas);
+        const offTheme = onThemeChange(() => {
+            paint();
+            start();
+        });
         window.addEventListener('resize', onResize);
         document.addEventListener('visibilitychange', start);
         if (window.matchMedia('(hover: hover)').matches) {
@@ -143,6 +154,7 @@ export default function FieldCanvas({ className = '' }) {
         return () => {
             cancelAnimationFrame(frame);
             clearTimeout(resizeTimer);
+            offTheme();
             io.disconnect();
             window.removeEventListener('resize', onResize);
             document.removeEventListener('visibilitychange', start);

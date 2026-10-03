@@ -6,6 +6,9 @@
 /* Desktop with enough height for the sticky stacked project cards */
 @custom-variant stack (@media (min-width: 1024px) and (min-height: 640px));
 
+/* light:… styles apply only in the light theme */
+@custom-variant light (&:where([data-theme='light'], [data-theme='light'] *));
+
 @theme {
     --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
     --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, monospace;
@@ -21,14 +24,58 @@
     --color-line-2: rgb(255 255 255 / 0.14);
     --color-acid: #d4ff4f;
     --color-acid-dim: rgb(212 255 79 / 0.14);
+    --color-acid-bg: #141a08; /* opaque acid-tinted surface */
+    --color-lime: #d4ff4f; /* solid accent fills (buttons, badges) */
+    --color-on-lime: #07070a; /* text on a lime fill */
+    --color-tint: #ffffff; /* overlay tints: white on dark, ink on light */
+    --color-bad: #ff5454;
+    --color-bad-2: #ff7878;
 
     --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Light theme. Same layout and hierarchy, designed as its own theme rather
+   than an inversion: a soft neutral page, white cards lifted by layered
+   shadows (dark mode separates surfaces by tone; light mode by elevation),
+   the brand lime kept for solid fills with dark text on top, and a deep
+   lime-green for accent text and lines so they stay legible. */
+:root {
+    color-scheme: dark;
+    --scrollbar: #26262c;
+    --shadow: rgb(0 0 0 / 0.8);
+    --elev: none;
+    --elev-hover: none;
+    --glow: color-mix(in srgb, var(--color-acid) 9%, transparent);
+}
+:root[data-theme='light'] {
+    color-scheme: light;
+    --color-ink: #f3f3f0;
+    --color-ink-2: #ffffff;
+    --color-panel: #ffffff;
+    --color-fg: #0d0d11;
+    --color-mute: #55555e;
+    --color-dim: #8c8c95;
+    --color-line: rgb(13 13 17 / 0.08);
+    --color-line-2: rgb(13 13 17 / 0.15);
+    --color-acid: #437300;
+    --color-acid-dim: rgb(67 115 0 / 0.1);
+    --color-acid-bg: #f1f8dc;
+    --color-lime: #ccf545;
+    --color-on-lime: #0d0d11;
+    --color-tint: #0d0d11;
+    --color-bad: #d92d2d;
+    --color-bad-2: #c42727;
+    --scrollbar: #c9c9ce;
+    --shadow: rgb(13 13 17 / 0.16);
+    --elev: 0 1px 2px rgb(13 13 17 / 0.04), 0 4px 12px -4px rgb(13 13 17 / 0.05), 0 24px 48px -28px rgb(13 13 17 / 0.12);
+    --elev-hover: 0 1px 2px rgb(13 13 17 / 0.05), 0 8px 20px -6px rgb(13 13 17 / 0.08), 0 32px 64px -28px rgb(13 13 17 / 0.18);
+    --glow: color-mix(in srgb, var(--color-lime) 26%, transparent);
 }
 
 @layer base {
     html {
         scrollbar-width: thin;
-        scrollbar-color: #26262c transparent;
+        scrollbar-color: var(--scrollbar) transparent;
         -webkit-text-size-adjust: 100%;
     }
     html.lenis, html.lenis body { height: auto; }
@@ -38,7 +85,7 @@
         font-feature-settings: 'ss01', 'cv11';
         overflow-x: clip;
     }
-    ::selection { background: var(--color-acid); color: var(--color-ink); }
+    ::selection { background: var(--color-lime); color: var(--color-on-lime); }
 
     :focus-visible {
         outline: 1px solid var(--color-acid);
@@ -89,7 +136,7 @@
         font-family: var(--font-mono);
         font-size: 11px;
         color: var(--color-mute);
-        background: rgb(255 255 255 / 0.02);
+        background: color-mix(in srgb, var(--color-tint) 2%, transparent);
         white-space: nowrap;
     }
 
@@ -106,7 +153,7 @@
         inset: -1px;
         border-radius: inherit;
         padding: 1px;
-        background: radial-gradient(420px circle at var(--mx, -999px) var(--my, -999px), rgb(212 255 79 / 0.55), transparent 40%);
+        background: radial-gradient(420px circle at var(--mx, -999px) var(--my, -999px), color-mix(in srgb, var(--color-acid) 55%, transparent), transparent 40%);
         -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
         -webkit-mask-composite: xor;
         mask-composite: exclude;
@@ -118,7 +165,7 @@
         position: absolute;
         inset: 0;
         border-radius: inherit;
-        background: radial-gradient(600px circle at var(--mx, -999px) var(--my, -999px), rgb(255 255 255 / 0.035), transparent 40%);
+        background: radial-gradient(600px circle at var(--mx, -999px) var(--my, -999px), color-mix(in srgb, var(--color-tint) 3.5%, transparent), transparent 40%);
         pointer-events: none;
         z-index: -1;
     }
@@ -132,6 +179,12 @@
         opacity: 0.05;
         background-size: 160px 160px;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* Light theme surfaces: elevation instead of tone */
+    .elev {
+        box-shadow: var(--elev);
+        transition: box-shadow 0.5s var(--ease-out-expo), border-color 0.3s;
     }
 
     .link-u {
@@ -163,11 +216,16 @@
         backdrop-filter: blur(20px) saturate(140%);
         mask-image: linear-gradient(to bottom, #000 0%, #000 35%, transparent 58%);
     }
-    /* Soft dark tint on top so nav text always stays readable */
+    /* Soft page-colour tint on top so nav text always stays readable */
     .progressive-blur > span {
         position: absolute;
         inset: 0;
-        background: linear-gradient(to bottom, rgb(7 7 10 / 0.72) 0%, rgb(7 7 10 / 0.45) 45%, transparent 100%);
+        background: linear-gradient(
+            to bottom,
+            color-mix(in srgb, var(--color-ink) 72%, transparent) 0%,
+            color-mix(in srgb, var(--color-ink) 45%, transparent) 45%,
+            transparent 100%
+        );
     }
 
     /* Footer wordmark: outlined letters; a lime spotlight fills them under the
@@ -175,11 +233,11 @@
        animated box) share one continuous spotlight. */
     .wordmark span {
         color: transparent;
-        -webkit-text-stroke: 1px rgb(255 255 255 / 0.1);
+        -webkit-text-stroke: 1px color-mix(in srgb, var(--color-tint) 10%, transparent);
         background-image: radial-gradient(
             280px circle at var(--mx, -999px) var(--my, -999px),
-            rgb(212 255 79 / 0.95),
-            rgb(212 255 79 / 0.25) 38%,
+            color-mix(in srgb, var(--color-acid) 95%, transparent),
+            color-mix(in srgb, var(--color-acid) 25%, transparent) 38%,
             transparent 62%
         );
         background-attachment: fixed;
@@ -189,7 +247,7 @@
 
     /* Cheap replacement for huge blur() glows */
     .glow {
-        background: radial-gradient(closest-side, rgb(212 255 79 / 0.09), transparent);
+        background: radial-gradient(closest-side, var(--glow), transparent);
         pointer-events: none;
     }
 
@@ -215,7 +273,7 @@
     .boot-glint {
         height: 1.1%;
         border-radius: 4px;
-        box-shadow: 0 0 14px 3px rgb(212 255 79 / 0.7), 0 0 40px 8px rgb(212 255 79 / 0.25);
+        box-shadow: 0 0 14px 3px color-mix(in srgb, var(--color-acid) 70%, transparent), 0 0 40px 8px color-mix(in srgb, var(--color-acid) 25%, transparent);
     }
     .boot-scan {
         position: absolute;
@@ -224,7 +282,7 @@
         height: 2px;
         opacity: 0;
         background: linear-gradient(90deg, transparent, var(--color-acid) 20%, var(--color-acid) 80%, transparent);
-        box-shadow: 0 0 24px 4px rgb(212 255 79 / 0.5);
+        box-shadow: 0 0 24px 4px color-mix(in srgb, var(--color-acid) 50%, transparent);
     }
     .boot-shine {
         position: absolute;
@@ -285,5 +343,22 @@
         animation-duration: 0.001ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.001ms !important;
+    }
+}
+
+/* Light-only surface rules sit outside the layers so they beat utilities like bg-ink/55 */
+:root[data-theme='light'] {
+    .spotlight {
+        box-shadow: var(--elev);
+        transition: box-shadow 0.5s var(--ease-out-expo);
+    }
+    .spotlight:hover,
+    .elev:hover { box-shadow: var(--elev-hover); }
+    .chip { background: var(--color-panel); }
+    .grain { opacity: 0.02; }
+    /* Frosted bar: white glass with a hairline shadow */
+    .glass {
+        background: rgb(255 255 255 / 0.72);
+        box-shadow: 0 1px 2px rgb(13 13 17 / 0.04), 0 6px 20px -8px rgb(13 13 17 / 0.1);
     }
 }

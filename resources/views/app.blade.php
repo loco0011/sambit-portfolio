@@ -10,7 +10,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="theme-color" content="#07070a">
+    @include('partials.theme-head')
     {{-- With JS on, the app replaces the crawlable copy in #root; hide it until then so it never flashes --}}
     <script>document.documentElement.classList.add('js')</script>
     <style>.js #root > .static-copy { display: none }</style>

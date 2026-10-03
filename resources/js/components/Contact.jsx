@@ -21,7 +21,7 @@ function Field({ label, name, error, textarea, invite = false, ...rest }) {
         <label ref={ref} className="group block">
             <span className="eyebrow flex justify-between">
                 <span className={`transition-colors duration-500 ${inviting ? 'text-acid' : ''}`}>{label}</span>
-                {error && <span className="normal-case tracking-normal text-red-400">{error}</span>}
+                {error && <span className="normal-case tracking-normal text-red-400 light:text-red-600">{error}</span>}
             </span>
             <span className="relative mt-2 block">
                 <Tag
@@ -125,13 +125,13 @@ export default function Contact({ profile }) {
                                 <button
                                     onClick={copy}
                                     data-cursor={copied ? 'Copied' : 'Copy'}
-                                    className="group flex w-full items-center justify-between gap-4 rounded-2xl border border-line-2 bg-ink-2 py-4 pl-5 pr-4 text-left transition-colors hover:border-acid/50"
+                                    className="group flex w-full items-center justify-between gap-4 elev rounded-2xl border border-line-2 bg-ink-2 py-4 pl-5 pr-4 text-left transition-colors hover:border-acid/50"
                                 >
                                     <span className="min-w-0">
                                         <span className="eyebrow block !text-[10px]">Email</span>
                                         <span className="mt-1 block break-all text-[clamp(0.9rem,1.4vw,1.1rem)]">{profile.email}</span>
                                     </span>
-                                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white/[0.04] font-mono text-[12px] text-acid">
+                                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-tint/[0.04] font-mono text-[12px] text-acid">
                                         <AnimatePresence mode="wait">
                                             <motion.span key={copied ? 'y' : 'n'} initial={{ opacity: 0, scale: 0.6 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.6 }}>
                                                 {copied ? '✓' : '⧉'}
@@ -155,11 +155,11 @@ export default function Contact({ profile }) {
                     </div>
 
                     <FadeUp delay={0.15} className="min-w-0 lg:col-span-7">
-                        <div className="relative rounded-3xl border hairline bg-ink-2 p-5 sm:p-6 md:p-9">
+                        <div className="elev relative rounded-3xl border hairline bg-ink-2 p-5 sm:p-6 md:p-9">
                             <AnimatePresence mode="wait">
                                 {status === 'sent' ? (
                                     <motion.div key="sent" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease }} className="flex min-h-[340px] flex-col items-start justify-center">
-                                        <span className="grid h-12 w-12 place-items-center rounded-full bg-acid text-ink">✓</span>
+                                        <span className="grid h-12 w-12 place-items-center rounded-full bg-lime text-on-lime">✓</span>
                                         <p className="display mt-8 text-[clamp(2rem,4vw,3rem)]">Message received.</p>
                                         <p className="mt-4 text-mute">Thanks for reaching out. I'll get back to you shortly.</p>
                                     </motion.div>
@@ -179,7 +179,7 @@ export default function Contact({ profile }) {
                                                 type="submit"
                                                 disabled={status === 'sending'}
                                                 data-cursor="Send"
-                                                className="group flex items-center gap-3 rounded-full bg-fg py-3 pl-6 pr-3 text-[14px] font-medium text-ink transition-colors hover:bg-acid disabled:opacity-60"
+                                                className="group flex items-center gap-3 rounded-full bg-fg py-3 pl-6 pr-3 text-[14px] font-medium text-ink transition-colors hover:bg-lime hover:text-on-lime disabled:opacity-60"
                                             >
                                                 {status === 'sending' ? 'Sending…' : 'Send message'}
                                                 <span className="grid h-7 w-7 place-items-center rounded-full bg-ink text-fg transition-transform duration-500 group-hover:translate-x-0.5 group-hover:rotate-[-45deg]">→</span>
