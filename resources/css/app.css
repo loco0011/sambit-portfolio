@@ -27,6 +27,7 @@
     --color-acid-bg: #141a08; /* opaque acid-tinted surface */
     --color-lime: #d4ff4f; /* solid accent fills (buttons, badges) */
     --color-on-lime: #07070a; /* text on a lime fill */
+    --color-forest: #ededef; /* strong solid surfaces (active pill, primary button); deep green in light */
     --color-tint: #ffffff; /* overlay tints: white on dark, ink on light */
     --color-bad: #ff5454;
     --color-bad-2: #ff7878;
@@ -35,10 +36,12 @@
 }
 
 /* Light theme. Same layout and hierarchy, designed as its own theme rather
-   than an inversion: a soft neutral page, white cards lifted by layered
+   than an inversion: a sage-tinted page, white cards lifted by layered
    shadows (dark mode separates surfaces by tone; light mode by elevation),
-   the brand lime kept for solid fills with dark text on top, and a deep
-   lime-green for accent text and lines so they stay legible. */
+   the brand lime kept for solid fills with dark text on top, a deep
+   lime-green for accent text, and forest green for strong solid surfaces.
+   Every neutral (text, lines, shadows) carries a slight green undertone so
+   the whole palette reads as one family. */
 :root {
     color-scheme: dark;
     --scrollbar: #26262c;
@@ -49,26 +52,27 @@
 }
 :root[data-theme='light'] {
     color-scheme: light;
-    --color-ink: #f3f3f0;
+    --color-ink: #f1f4ea;
     --color-ink-2: #ffffff;
     --color-panel: #ffffff;
-    --color-fg: #0d0d11;
-    --color-mute: #55555e;
-    --color-dim: #8c8c95;
-    --color-line: rgb(13 13 17 / 0.08);
-    --color-line-2: rgb(13 13 17 / 0.15);
-    --color-acid: #437300;
-    --color-acid-dim: rgb(67 115 0 / 0.1);
-    --color-acid-bg: #f1f8dc;
+    --color-fg: #111a0c;
+    --color-mute: #4f5a47;
+    --color-dim: #879180;
+    --color-line: rgb(38 66 12 / 0.1);
+    --color-line-2: rgb(38 66 12 / 0.18);
+    --color-acid: #3d7000;
+    --color-acid-dim: rgb(61 112 0 / 0.1);
+    --color-acid-bg: #eef7d6;
     --color-lime: #ccf545;
-    --color-on-lime: #0d0d11;
-    --color-tint: #0d0d11;
+    --color-on-lime: #111a0c;
+    --color-forest: #1d3a0b;
+    --color-tint: #24400f;
     --color-bad: #d92d2d;
     --color-bad-2: #c42727;
-    --scrollbar: #c9c9ce;
-    --shadow: rgb(13 13 17 / 0.16);
-    --elev: 0 1px 2px rgb(13 13 17 / 0.04), 0 4px 12px -4px rgb(13 13 17 / 0.05), 0 24px 48px -28px rgb(13 13 17 / 0.12);
-    --elev-hover: 0 1px 2px rgb(13 13 17 / 0.05), 0 8px 20px -6px rgb(13 13 17 / 0.08), 0 32px 64px -28px rgb(13 13 17 / 0.18);
+    --scrollbar: #c3cbb8;
+    --shadow: rgb(26 46 10 / 0.18);
+    --elev: 0 1px 2px rgb(26 46 10 / 0.05), 0 4px 12px -4px rgb(26 46 10 / 0.06), 0 24px 48px -28px rgb(26 46 10 / 0.16);
+    --elev-hover: 0 1px 2px rgb(26 46 10 / 0.06), 0 8px 20px -6px rgb(26 46 10 / 0.1), 0 32px 64px -28px rgb(26 46 10 / 0.22);
     --glow: color-mix(in srgb, var(--color-lime) 26%, transparent);
 }
 
@@ -359,6 +363,6 @@
     /* Frosted bar: white glass with a hairline shadow */
     .glass {
         background: rgb(255 255 255 / 0.72);
-        box-shadow: 0 1px 2px rgb(13 13 17 / 0.04), 0 6px 20px -8px rgb(13 13 17 / 0.1);
+        box-shadow: 0 1px 2px rgb(26 46 10 / 0.05), 0 6px 20px -8px rgb(26 46 10 / 0.12);
     }
 }

@@ -83,7 +83,7 @@ export default function Nav({ profile, onPalette }) {
                             className={`relative rounded-full px-3 py-1.5 text-[13px] transition-colors lg:px-4 ${active === s.id ? 'text-ink' : 'text-mute hover:text-fg'}`}
                         >
                             {active === s.id && (
-                                <motion.span layoutId="nav-pill" className="absolute inset-0 rounded-full bg-fg" transition={{ type: 'spring', stiffness: 400, damping: 34 }} />
+                                <motion.span layoutId="nav-pill" className="absolute inset-0 rounded-full bg-forest" transition={{ type: 'spring', stiffness: 400, damping: 34 }} />
                             )}
                             <span className="relative">{s.label}</span>
                         </button>

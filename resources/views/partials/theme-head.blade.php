@@ -5,6 +5,6 @@
         var t = 'dark';
         try { t = localStorage.getItem('sm:theme') === 'light' ? 'light' : 'dark'; } catch (e) {}
         document.documentElement.dataset.theme = t;
-        document.querySelector('meta[name=theme-color]').content = t === 'light' ? '#f3f3f0' : '#07070a';
+        document.querySelector('meta[name=theme-color]').content = t === 'light' ? '#f1f4ea' : '#07070a';
     })();
 </script>

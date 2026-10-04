@@ -179,7 +179,7 @@ export default function Contact({ profile }) {
                                                 type="submit"
                                                 disabled={status === 'sending'}
                                                 data-cursor="Send"
-                                                className="group flex items-center gap-3 rounded-full bg-fg py-3 pl-6 pr-3 text-[14px] font-medium text-ink transition-colors hover:bg-lime hover:text-on-lime disabled:opacity-60"
+                                                className="group flex items-center gap-3 rounded-full bg-forest py-3 pl-6 pr-3 text-[14px] font-medium text-ink transition-colors hover:bg-lime hover:text-on-lime disabled:opacity-60"
                                             >
                                                 {status === 'sending' ? 'Sending…' : 'Send message'}
                                                 <span className="grid h-7 w-7 place-items-center rounded-full bg-ink text-fg transition-transform duration-500 group-hover:translate-x-0.5 group-hover:rotate-[-45deg]">→</span>

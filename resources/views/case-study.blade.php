@@ -69,7 +69,7 @@
                 document.getElementById('theme-toggle').addEventListener('click', function () {
                     var t = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
                     document.documentElement.dataset.theme = t;
-                    document.querySelector('meta[name=theme-color]').content = t === 'light' ? '#f3f3f0' : '#07070a';
+                    document.querySelector('meta[name=theme-color]').content = t === 'light' ? '#f1f4ea' : '#07070a';
                     try { localStorage.setItem('sm:theme', t); } catch (e) {}
                 });
             </script>
@@ -106,7 +106,7 @@
                 <div class="mt-8 flex flex-wrap gap-3">
                     @foreach ($project['links'] as $i => $link)
                         <a href="{{ $link['url'] }}" target="_blank" rel="noopener"
-                           class="{{ $i === 0 ? 'bg-fg text-ink hover:bg-lime hover:text-on-lime' : 'border hairline text-fg hover:border-acid/50' }} inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-[14px] font-medium transition-colors">
+                           class="{{ $i === 0 ? 'bg-forest text-ink hover:bg-lime hover:text-on-lime' : 'border hairline text-fg hover:border-acid/50' }} inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-[14px] font-medium transition-colors">
                             {{ $link['label'] }} <span aria-hidden="true">↗</span>
                         </a>
                     @endforeach
@@ -166,7 +166,7 @@
             <h2 class="display mt-5 text-[clamp(2.2rem,6vw,4.75rem)]">Building something <span class="serif-i text-acid">similar?</span></h2>
             <p class="mt-5 max-w-xl text-[16px] leading-relaxed text-mute">{{ $p['availability'] }}. I usually reply within a day.</p>
             <div class="mt-8 flex flex-wrap gap-3">
-                <a href="mailto:{{ $p['email'] }}" class="inline-flex items-center gap-2 rounded-full bg-fg px-5 py-2.5 text-[14px] font-medium text-ink transition-colors hover:bg-lime hover:text-on-lime">Email {{ $p['email'] }}</a>
+                <a href="mailto:{{ $p['email'] }}" class="inline-flex items-center gap-2 rounded-full bg-forest px-5 py-2.5 text-[14px] font-medium text-ink transition-colors hover:bg-lime hover:text-on-lime">Email {{ $p['email'] }}</a>
                 <a href="{{ route('resume') }}" class="inline-flex items-center gap-2 rounded-full border hairline px-5 py-2.5 text-[14px] text-fg transition-colors hover:border-acid/50">Download résumé ↓</a>
             </div>
         </section>

@@ -134,7 +134,7 @@ export default function Hero({ profile, ready, handoff = false }) {
                             <button
                                 onClick={() => scrollTo('#work')}
                                 data-cursor="View"
-                                className="group flex items-center gap-3 rounded-full bg-lime py-3 pl-6 pr-3 text-[14px] font-medium text-on-lime transition-shadow hover:shadow-[0_0_40px_-4px_color-mix(in_srgb,var(--color-lime)_60%,transparent)] light:shadow-[0_1px_2px_rgb(13_13_17/0.08),0_8px_24px_-10px_color-mix(in_srgb,var(--color-acid)_45%,transparent)]"
+                                className="group flex items-center gap-3 rounded-full bg-lime py-3 pl-6 pr-3 text-[14px] font-medium text-on-lime transition-shadow hover:shadow-[0_0_40px_-4px_color-mix(in_srgb,var(--color-lime)_60%,transparent)] light:shadow-[0_1px_2px_rgb(26_46_10/0.08),0_8px_24px_-10px_color-mix(in_srgb,var(--color-acid)_45%,transparent)]"
                             >
                                 See selected work
                                 <span className="grid h-7 w-7 place-items-center rounded-full bg-on-lime text-lime transition-transform duration-500 group-hover:rotate-[-45deg]">→</span>
@@ -144,7 +144,7 @@ export default function Hero({ profile, ready, handoff = false }) {
                             <a
                                 href="/resume"
                                 data-cursor="PDF"
-                                className="flex items-center gap-2 rounded-full border border-line-2 px-6 py-3 text-[14px] text-fg transition-colors hover:border-fg light:bg-panel light:shadow-[0_1px_2px_rgb(13_13_17/0.05)]"
+                                className="flex items-center gap-2 rounded-full border border-line-2 px-6 py-3 text-[14px] text-fg transition-colors hover:border-fg light:bg-panel light:shadow-[0_1px_2px_rgb(26_46_10/0.05)]"
                             >
                                 Résumé <span className="text-mute">↓</span>
                             </a>

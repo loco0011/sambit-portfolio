@@ -1,12 +1,12 @@
 import { useSyncExternalStore } from 'react';
 
 const KEY = 'sm:theme';
-const META = { dark: '#07070a', light: '#f3f3f0' };
+const META = { dark: '#07070a', light: '#f1f4ea' };
 
 /** RGB triplets for colours JS builds itself (canvas, motion-animated values), mirroring app.css. */
 export const PALETTE = {
     dark: { fg: [237, 237, 239], acid: [212, 255, 79], lime: [212, 255, 79], tint: [255, 255, 255], bad: [255, 84, 84], bad2: [255, 120, 120], dots: 0.26 },
-    light: { fg: [13, 13, 17], acid: [67, 115, 0], lime: [204, 245, 69], tint: [13, 13, 17], bad: [217, 45, 45], bad2: [196, 39, 39], dots: 0.17 },
+    light: { fg: [17, 26, 12], acid: [61, 112, 0], lime: [204, 245, 69], tint: [36, 64, 15], bad: [217, 45, 45], bad2: [196, 39, 39], dots: 0.17 },
 };
 
 export const rgba = ([r, g, b], a = 1) => `rgba(${r},${g},${b},${a})`;
