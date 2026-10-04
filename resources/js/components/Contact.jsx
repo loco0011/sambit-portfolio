@@ -56,6 +56,22 @@ function Field({ label, name, error, textarea, invite = false, ...rest }) {
     );
 }
 
+/** Non-sensitive context sent with a message: where they came from, language, timezone, screen and campaign tags. */
+function senderContext() {
+    const utm = new URLSearchParams(window.location.search);
+    let timezone;
+    try {
+        timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    } catch {}
+    return {
+        referrer: document.referrer || undefined,
+        language: navigator.language,
+        timezone,
+        screen: `${window.screen.width}x${window.screen.height}`,
+        utm: { source: utm.get('utm_source') || undefined, medium: utm.get('utm_medium') || undefined, campaign: utm.get('utm_campaign') || undefined },
+    };
+}
+
 export default function Contact({ profile }) {
     const [copied, setCopied] = useState(false);
     const [status, setStatus] = useState('idle'); // idle | sending | sent | error
@@ -72,7 +88,7 @@ export default function Contact({ profile }) {
         e.preventDefault();
         setStatus('sending');
         setErrors({});
-        const body = Object.fromEntries(new FormData(e.currentTarget));
+        const body = { ...Object.fromEntries(new FormData(e.currentTarget)), meta: senderContext() };
 
         try {
             const res = await fetch('/contact', {

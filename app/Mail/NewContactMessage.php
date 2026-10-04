@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\ContactMessage;
+use App\Support\PortfolioContent;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
@@ -24,6 +25,16 @@ class NewContactMessage extends Mailable
 
     public function content(): Content
     {
-        return new Content(text: 'mail.contact-message');
+        $profile = PortfolioContent::get()['profile'];
+
+        return new Content(
+            html: 'mail.contact-message',
+            text: 'mail.contact-message-text',
+            with: [
+                'profile' => $profile,
+                'inboxUrl' => url('/admin/inbox/'.$this->contact->id),
+                'receivedAt' => ($this->contact->created_at ?? now())->timezone($profile['timezone'] ?? config('app.timezone'))->format('j M Y, H:i T'),
+            ],
+        );
     }
 }

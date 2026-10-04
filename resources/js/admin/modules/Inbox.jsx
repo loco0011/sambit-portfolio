@@ -132,12 +132,12 @@ export default function Inbox({ focusId, onUnread }) {
                                     <dt>Company / role</dt>
                                     <dd>{current.company || '—'}</dd>
                                 </div>
-                                {current.ip && (
-                                    <div>
-                                        <dt>IP address</dt>
-                                        <dd>{current.ip}</dd>
+                                {Object.entries(current.details ?? {}).map(([label, value]) => (
+                                    <div key={label}>
+                                        <dt>{label}</dt>
+                                        <dd>{value}</dd>
                                     </div>
-                                )}
+                                ))}
                             </dl>
                             <div className="message-body">{current.message}</div>
                             <div className="row">

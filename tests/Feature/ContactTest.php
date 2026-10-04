@@ -42,6 +42,48 @@ class ContactTest extends TestCase
         $mail->assertSeeInText('It landed safely.');
     }
 
+    public function test_sender_context_is_captured_and_cleaned(): void
+    {
+        Mail::fake();
+
+        $this->withHeaders([
+            'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36',
+            'CF-IPCountry' => 'NZ',
+        ])->postJson('/contact', $this->form + ['meta' => [
+            'referrer' => 'https://www.linkedin.com/feed/',
+            'language' => 'en-NZ',
+            'timezone' => 'Pacific/Auckland',
+            'screen' => '1920x1080',
+            'utm' => ['source' => 'linkedin', 'campaign' => '<b>profile</b>'],
+            'junk' => 'ignored',
+        ]])->assertOk();
+
+        $message = ContactMessage::first();
+        $this->assertArrayNotHasKey('junk', $message->meta);
+        $this->assertSame([
+            'Country' => 'NZ',
+            'Device' => 'Chrome 141 on Windows · Desktop',
+            'Language' => 'en-NZ',
+            'Timezone' => 'Pacific/Auckland',
+            'Screen' => '1920x1080',
+            'Came from' => 'linkedin.com',
+            'Campaign' => 'linkedin / profile',
+            'IP address' => '127.0.0.1',
+        ], $message->details);
+    }
+
+    public function test_bad_client_context_is_dropped(): void
+    {
+        Mail::fake();
+
+        $this->postJson('/contact', $this->form + ['meta' => ['referrer' => 'javascript:alert(1)', 'screen' => 'huge', 'language' => ['x']]])->assertOk();
+
+        $meta = ContactMessage::first()->meta;
+        $this->assertArrayNotHasKey('referrer', $meta);
+        $this->assertArrayNotHasKey('screen', $meta);
+        $this->assertArrayNotHasKey('language', $meta);
+    }
+
     public function test_honeypot_submissions_send_nothing(): void
     {
         Mail::fake();

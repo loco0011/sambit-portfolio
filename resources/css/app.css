@@ -356,8 +356,10 @@
         box-shadow: var(--elev);
         transition: box-shadow 0.5s var(--ease-out-expo);
     }
+    /* Only things you can click lift on hover */
     .spotlight:hover,
-    .elev:hover { box-shadow: var(--elev-hover); }
+    a.elev:hover,
+    button.elev:hover { box-shadow: var(--elev-hover); }
     .chip { background: var(--color-panel); }
     .grain { opacity: 0.02; }
     /* Frosted bar: white glass with a hairline shadow */

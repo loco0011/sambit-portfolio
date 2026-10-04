@@ -5,13 +5,15 @@ import { PALETTE, rgba, useTheme } from '../lib/theme';
 /**
  * Two-part cursor: a precise dot plus a trailing ring. Any element with
  * data-cursor="Label" grows the ring and shows the label inside it.
- * Only mounts on devices with a fine pointer.
+ * Only mounts on devices with a fine pointer. Over text fields it steps aside
+ * for the native I-beam, so typing and selecting feel normal.
  */
 export default function Cursor() {
     const [enabled, setEnabled] = useState(false);
     const [label, setLabel] = useState(null);
     const [hovering, setHovering] = useState(false);
     const [down, setDown] = useState(false);
+    const [native, setNative] = useState(false);
     const c = PALETTE[useTheme()];
 
     const x = useMotionValue(-100);
@@ -26,7 +28,9 @@ export default function Cursor() {
         const move = (e) => {
             x.set(e.clientX);
             y.set(e.clientY);
-            const t = e.target.closest?.('[data-cursor], a, button, input, textarea');
+            const field = !!e.target.closest?.('input, textarea, select, [contenteditable="true"]');
+            const t = field ? null : e.target.closest?.('[data-cursor], a, button');
+            setNative(field);
             setHovering(!!t);
             setLabel(t?.dataset?.cursor || null);
         };
@@ -56,7 +60,8 @@ export default function Cursor() {
                 animate={{
                     width: size,
                     height: size,
-                    scale: down ? 0.85 : 1,
+                    scale: down ? 0.85 : native ? 0.4 : 1,
+                    opacity: native ? 0 : 1,
                     backgroundColor: rgba(c.lime, label ? 1 : 0),
                     borderColor: label ? rgba(c.lime) : hovering ? rgba(c.acid, 0.7) : rgba(c.tint, 0.28),
                 }}
@@ -80,7 +85,7 @@ export default function Cursor() {
                 aria-hidden
                 className="pointer-events-none fixed left-0 top-0 z-[91] h-1.5 w-1.5 rounded-full bg-acid"
                 style={{ x, y, translateX: '-50%', translateY: '-50%' }}
-                animate={{ opacity: label ? 0 : 1 }}
+                animate={{ opacity: label || native ? 0 : 1 }}
             />
         </>
     );
