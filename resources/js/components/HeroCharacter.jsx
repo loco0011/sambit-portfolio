@@ -10,7 +10,7 @@ const POSES = [
     { src: '/images/hero/dev-5.webp', label: 'Bug fix fuel' },
     { src: '/images/hero/dev-6.webp', label: 'Plan · code · deploy · repeat' },
 ];
-const INTERVAL = 4500;
+const INTERVAL = 3200;
 
 // The poses have transparent backgrounds; only soften where the body is cut by the frame (bottom and sides).
 const MASK = 'linear-gradient(to bottom, #000 82%, transparent 99%), linear-gradient(to right, transparent 0%, #000 5%, #000 95%, transparent 100%)';
@@ -88,13 +88,14 @@ export default function HeroCharacter({ ready, handoff = false }) {
                                 height={936}
                                 draggable={false}
                                 decoding="async"
-                                className="absolute inset-0 h-full w-full select-none object-contain will-change-[opacity,transform]"
+                                className="absolute inset-0 h-full w-full select-none object-contain will-change-[opacity,transform,filter]"
                                 style={HERO_IMAGE_MASK}
-                                // Outgoing pose clears quickly; the next one settles in a beat later, so the
-                                // two never sit on top of each other at full strength.
-                                initial={{ opacity: 0, scale: 0.985, y: 10 }}
-                                animate={{ opacity: 1, scale: 1, y: 0, transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: 0.18 } }}
-                                exit={{ opacity: 0, scale: 1.01, y: -6, transition: { duration: 0.55, ease: [0.4, 0, 0.2, 1] } }}
+                                // Soft blur-dissolve in place: no vertical travel, so the figure never jumps.
+                                // The two overlap briefly while blurred, which reads as one morph rather than
+                                // two see-through poses stacked on each other.
+                                initial={{ opacity: 0, scale: 1.015, filter: 'blur(8px)' }}
+                                animate={{ opacity: 1, scale: 1, filter: 'blur(0px)', transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1], delay: 0.08 } }}
+                                exit={{ opacity: 0, scale: 0.99, filter: 'blur(6px)', transition: { duration: 0.45, ease: [0.4, 0, 0.6, 1] } }}
                             />
                         </AnimatePresence>
                     </motion.div>

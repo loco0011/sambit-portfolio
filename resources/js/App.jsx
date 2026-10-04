@@ -14,6 +14,7 @@ import Capabilities from './components/Capabilities';
 import Principles from './components/Principles';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import ThemeToggle from './ui/ThemeToggle';
 
 export default function App({ data }) {
     const [ready, setReady] = useState(false);
@@ -53,6 +54,7 @@ export default function App({ data }) {
                 <Contact profile={data.profile} />
             </main>
             <Footer profile={data.profile} />
+            <ThemeToggle />
         </MotionConfig>
     );
 }

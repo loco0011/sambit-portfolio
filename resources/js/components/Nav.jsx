@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion, useMotionValueEvent, useScroll } from 'motion/react';
 import { scrollTo } from '../lib/scroll';
-import Clock from '../ui/Clock';
-import ThemeToggle from '../ui/ThemeToggle';
 
 // Shortcut label for the palette: ⌘ on Apple devices, Ctrl elsewhere (Windows fonts also lack a clean ⌘ glyph).
 const MOD = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent) ? '⌘' : 'Ctrl';
@@ -92,27 +90,18 @@ export default function Nav({ profile, onPalette }) {
                     ))}
                 </nav>
 
-                <div className="flex items-center gap-3">
-                    <span className="hidden font-mono text-[11px] text-mute lg:block">
-                        KOL <Clock timeZone={profile.timezone} className="text-fg" /> IST
-                    </span>
-                    {/* Toggle stretches to the menu button height so the pair lines up */}
-                    <div className="flex items-stretch gap-2">
-                        <ThemeToggle className="w-[34px] max-md:w-[30px]" />
-                        <button
-                            onClick={onPalette}
-                            className="glass flex items-center gap-2 rounded-full border hairline bg-ink/55 px-3 py-1.5 text-[12px] text-mute transition-colors hover:border-line-2 hover:text-fg"
-                            aria-label="Open command menu"
-                        >
-                            <span className="lg:hidden">Menu</span>
-                            <span className="hidden lg:inline">Quick actions</span>
-                            <kbd className="hidden items-center gap-[3px] rounded-md border hairline px-1.5 py-0.5 font-mono text-[10px] leading-none md:inline-flex">
-                                <span>{MOD}</span>
-                                <span>K</span>
-                            </kbd>
-                        </button>
-                    </div>
-                </div>
+                <button
+                    onClick={onPalette}
+                    className="glass flex items-center gap-2 rounded-full border hairline bg-ink/55 px-3 py-1.5 text-[12px] text-mute transition-colors hover:border-line-2 hover:text-fg"
+                    aria-label="Open command menu"
+                >
+                    <span className="lg:hidden">Menu</span>
+                    <span className="hidden lg:inline">Quick actions</span>
+                    <kbd className="hidden items-center gap-[3px] rounded-md border hairline px-1.5 py-0.5 font-mono text-[10px] leading-none md:inline-flex">
+                        <span>{MOD}</span>
+                        <span>K</span>
+                    </kbd>
+                </button>
             </div>
             <motion.div className="absolute inset-x-0 top-0 h-[2px] origin-left bg-acid/80" style={{ scaleX: scrollYProgress }} />
         </motion.header>

@@ -59,8 +59,8 @@
         <nav class="flex items-center gap-2 text-[13px]" aria-label="Page">
             <a href="{{ url('/') }}#work" class="rounded-full px-3.5 py-2 text-mute transition-colors hover:text-fg">← All work</a>
             <a href="{{ url('/') }}#contact" class="rounded-full border hairline px-3.5 py-2 text-fg transition-colors hover:border-acid/50">Contact</a>
-            <button type="button" id="theme-toggle" aria-label="Toggle light and dark mode" class="grid aspect-square self-stretch place-items-center rounded-full border hairline text-mute transition-colors hover:border-line-2 hover:text-fg">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <button type="button" id="theme-toggle" aria-label="Toggle light and dark mode" class="glass fixed bottom-5 right-5 z-[70] grid h-11 w-11 place-items-center rounded-full border border-line-2 bg-ink/70 text-mute shadow-[0_8px_30px_-10px_var(--shadow)] backdrop-blur-md transition-[color,border-color,transform] duration-300 hover:scale-105 hover:border-acid/50 hover:text-fg sm:bottom-6 sm:right-6">
+                <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <g class="light:hidden"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" /></g>
                     <path class="hidden light:inline" d="M20.5 14.1A8.5 8.5 0 0 1 9.9 3.5a8.5 8.5 0 1 0 10.6 10.6Z" />
                 </svg>
