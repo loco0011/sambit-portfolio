@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ContactReceived;
 use App\Mail\NewContactMessage;
 use App\Models\ContactMessage;
 use Illuminate\Http\JsonResponse;
@@ -37,6 +38,13 @@ class ContactController extends Controller
             } catch (Throwable $e) {
                 Log::error('Contact notification email failed', ['id' => $message->id, 'error' => $e->getMessage()]);
             }
+        }
+
+        // Confirmation back to the sender, so they know it arrived.
+        try {
+            Mail::to($message->email, $message->name)->send(new ContactReceived($message));
+        } catch (Throwable $e) {
+            Log::error('Contact auto-reply email failed', ['id' => $message->id, 'error' => $e->getMessage()]);
         }
 
         return response()->json(['ok' => true]);
