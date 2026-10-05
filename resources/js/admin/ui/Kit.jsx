@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { toggleTheme, useTheme } from '../../lib/theme';
 
 // Stroke icons (Lucide shapes), 24×24 grid.
 const ICONS = {
@@ -44,6 +45,13 @@ const ICONS = {
             <line x1="21" x2="9" y1="12" y2="12" />
         </>
     ),
+    sun: (
+        <>
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+        </>
+    ),
+    moon: <path d="M20.5 14.1A8.5 8.5 0 0 1 9.9 3.5a8.5 8.5 0 1 0 10.6 10.6Z" />,
     external: (
         <>
             <path d="M15 3h6v6" />
@@ -138,6 +146,16 @@ export function Icon({ name, size = 16 }) {
         <svg className="icon" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             {ICONS[name]}
         </svg>
+    );
+}
+
+/** Sun / moon switch, shared with the public site's theme choice. */
+export function ThemeButton({ className = 'icon-btn' }) {
+    const light = useTheme() === 'light';
+    return (
+        <button type="button" className={className} onClick={toggleTheme} title={light ? 'Dark mode' : 'Light mode'} aria-label={light ? 'Switch to dark mode' : 'Switch to light mode'}>
+            <Icon name={light ? 'moon' : 'sun'} />
+        </button>
     );
 }
 

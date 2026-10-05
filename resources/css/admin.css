@@ -1,69 +1,81 @@
 /* ==========================================================================
    Admin panel
-   Neutral, standard admin UI. Follows the system light/dark setting.
+   Uses the portfolio's palette (resources/css/app.css): ink surfaces with the
+   acid-lime accent in dark, the sage / forest-green family in light. Shares
+   the site's theme choice (data-theme on <html>, saved as sm:theme).
    ========================================================================== */
 
 :root {
-    color-scheme: light;
-    --bg: #fafafa;
-    --surface: #ffffff;
-    --surface-2: #f4f4f5;
-    --hover: #f4f4f5;
-    --border: #e4e4e7;
-    --border-strong: #d4d4d8;
-    --text: #18181b;
-    --text-2: #52525b;
-    --text-3: #71717a;
-    --primary: #18181b;
-    --primary-hover: #27272a;
-    --primary-fg: #fafafa;
-    --accent: #2563eb;
-    --accent-2: #93c5fd;
-    --accent-soft: #eff6ff;
-    --danger: #dc2626;
-    --danger-hover: #b91c1c;
-    --danger-soft: #fef2f2;
-    --danger-border: #fecaca;
-    --success: #15803d;
-    --success-soft: #f0fdf4;
-    --ring: rgba(37, 99, 235, 0.35);
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.06);
+    color-scheme: dark;
+    --bg: #07070a;
+    --surface: #0c0c10;
+    --surface-2: #101015;
+    --hover: rgb(255 255 255 / 0.045);
+    --border: rgb(255 255 255 / 0.08);
+    --border-strong: rgb(255 255 255 / 0.14);
+    --text: #ededef;
+    --text-2: #b0b0b8;
+    --text-3: #8b8b95;
+    --primary: #ededef; /* site "forest": strong solid surface */
+    --primary-fg: #07070a;
+    --primary-hover: #d4ff4f; /* hovers to the brand lime, like the site's CTAs */
+    --primary-hover-fg: #07070a;
+    --lime: #d4ff4f;
+    --on-lime: #07070a;
+    --accent: #d4ff4f;
+    --accent-2: #4f5e1d;
+    --accent-soft: rgb(212 255 79 / 0.1);
+    --danger: #ff5454;
+    --danger-hover: #ff7878;
+    --danger-fg: #07070a;
+    --danger-soft: rgb(255 84 84 / 0.1);
+    --danger-border: rgb(255 84 84 / 0.3);
+    --success: #d4ff4f;
+    --success-soft: rgb(212 255 79 / 0.1);
+    --knob: #ededef;
+    --ring: rgb(212 255 79 / 0.3);
+    --shadow: none;
+    --shadow-lg: 0 20px 50px -12px rgb(0 0 0 / 0.8);
+    --scrollbar: #26262c;
 
-    --font: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-    --mono: ui-monospace, 'SF Mono', 'Cascadia Code', Consolas, monospace;
-    --radius: 10px;
-    --radius-sm: 7px;
+    --font: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Cascadia Code', Consolas, monospace;
+    --radius: 12px;
+    --radius-sm: 8px;
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        color-scheme: dark;
-        --bg: #09090b;
-        --surface: #111113;
-        --surface-2: #18181b;
-        --hover: #1c1c1f;
-        --border: #27272a;
-        --border-strong: #3f3f46;
-        --text: #fafafa;
-        --text-2: #a1a1aa;
-        --text-3: #8b8b94;
-        --primary: #fafafa;
-        --primary-hover: #e4e4e7;
-        --primary-fg: #09090b;
-        --accent: #60a5fa;
-        --accent-2: #1e40af;
-        --accent-soft: rgba(96, 165, 250, 0.12);
-        --danger: #f87171;
-        --danger-hover: #ef4444;
-        --danger-soft: rgba(248, 113, 113, 0.1);
-        --danger-border: rgba(248, 113, 113, 0.3);
-        --success: #4ade80;
-        --success-soft: rgba(74, 222, 128, 0.12);
-        --ring: rgba(96, 165, 250, 0.4);
-        --shadow: none;
-        --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
+:root[data-theme='light'] {
+    color-scheme: light;
+    --bg: #f1f4ea;
+    --surface: #ffffff;
+    --surface-2: #f6f8f1;
+    --hover: rgb(38 66 12 / 0.05);
+    --border: rgb(38 66 12 / 0.1);
+    --border-strong: rgb(38 66 12 / 0.18);
+    --text: #111a0c;
+    --text-2: #4f5a47;
+    --text-3: #6b7562;
+    --primary: #1d3a0b;
+    --primary-fg: #f1f4ea;
+    --primary-hover: #ccf545;
+    --primary-hover-fg: #111a0c;
+    --lime: #ccf545;
+    --on-lime: #111a0c;
+    --accent: #3d7000;
+    --accent-2: #b9dc7c;
+    --accent-soft: rgb(61 112 0 / 0.1);
+    --danger: #d92d2d;
+    --danger-hover: #c42727;
+    --danger-fg: #ffffff;
+    --danger-soft: rgb(217 45 45 / 0.07);
+    --danger-border: rgb(217 45 45 / 0.25);
+    --success: #3d7000;
+    --success-soft: rgb(61 112 0 / 0.1);
+    --knob: #ffffff;
+    --ring: rgb(61 112 0 / 0.25);
+    --shadow: 0 1px 2px rgb(26 46 10 / 0.05), 0 4px 12px -4px rgb(26 46 10 / 0.06);
+    --shadow-lg: 0 1px 2px rgb(26 46 10 / 0.06), 0 8px 20px -6px rgb(26 46 10 / 0.1), 0 32px 64px -28px rgb(26 46 10 / 0.22);
+    --scrollbar: #c3cbb8;
 }
 
 *,
@@ -81,7 +93,17 @@ body {
     font-size: 14px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-    font-feature-settings: 'cv11', 'ss01';
+    font-feature-settings: 'ss01', 'cv11';
+}
+
+html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar) transparent;
+}
+
+::selection {
+    background: var(--lime);
+    color: var(--on-lime);
 }
 
 h1,
@@ -187,7 +209,10 @@ code {
 
 .brand small {
     color: var(--text-3);
-    font-size: 12px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
 }
 
 .brand-mark {
@@ -198,6 +223,7 @@ code {
     flex-shrink: 0;
     border-radius: 8px;
     background: #0c0c10; /* the logo tile, same in both themes */
+    border: 1px solid var(--border);
 }
 
 .brand-mark img {
@@ -241,8 +267,8 @@ code {
 }
 
 .nav-item[aria-current='page'] {
-    background: var(--surface-2);
-    color: var(--text);
+    background: var(--accent-soft);
+    color: var(--accent);
 }
 
 .count {
@@ -250,8 +276,9 @@ code {
     min-width: 20px;
     padding: 0 6px;
     border-radius: 999px;
-    background: var(--accent);
-    color: #fff;
+    background: var(--lime);
+    color: var(--on-lime);
+    font-family: var(--mono);
     font-size: 11px;
     font-weight: 600;
     line-height: 20px;
@@ -460,16 +487,19 @@ code {
 
 .btn-primary:hover {
     background: var(--primary-hover);
+    border-color: var(--primary-hover);
+    color: var(--primary-hover-fg);
 }
 
 .btn-danger {
     background: var(--danger);
     border-color: var(--danger);
-    color: #fff;
+    color: var(--danger-fg);
 }
 
 .btn-danger:hover {
     background: var(--danger-hover);
+    border-color: var(--danger-hover);
 }
 
 .btn-ghost {
@@ -612,13 +642,17 @@ textarea.input {
     width: 16px;
     height: 16px;
     border-radius: 999px;
-    background: #fff;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    background: var(--knob);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
     transition: transform 0.2s;
 }
 
 .switch[aria-checked='true'] {
-    background: var(--accent);
+    background: var(--lime);
+}
+
+.switch[aria-checked='true'] span {
+    background: var(--on-lime);
 }
 
 .switch[aria-checked='true'] span {
@@ -659,7 +693,7 @@ textarea.input {
 .segmented button[aria-pressed='true'] {
     background: var(--surface);
     color: var(--text);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.08), 0 0 0 1px var(--border);
 }
 
 .setting {
@@ -793,7 +827,8 @@ textarea.input {
 }
 
 .dialog::backdrop {
-    background: rgba(0, 0, 0, 0.45);
+    background: rgb(0 0 0 / 0.55);
+    backdrop-filter: blur(3px);
 }
 
 .dialog h2 {
@@ -1431,6 +1466,15 @@ textarea.input {
     display: grid;
     place-items: center;
     padding: 24px 16px;
+}
+
+.login-theme {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border);
 }
 
 .login-card {

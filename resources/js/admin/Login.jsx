@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { api, setCsrf } from './api';
-import { Icon, Spinner } from './ui/Kit';
+import { Icon, Spinner, ThemeButton } from './ui/Kit';
 
 export default function Login({ onSignIn }) {
     const [form, setForm] = useState({ email: '', password: '' });
@@ -27,6 +27,7 @@ export default function Login({ onSignIn }) {
 
     return (
         <div className="login">
+            <ThemeButton className="icon-btn login-theme" />
             <form className="login-card" onSubmit={submit}>
                 <span className="brand-mark"><img src="/images/brand/logo-mark.png" alt="" /></span>
                 <h1>Sign in</h1>

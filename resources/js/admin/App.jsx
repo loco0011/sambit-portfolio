@@ -7,7 +7,7 @@ import Dashboard from './modules/Dashboard';
 import Files from './modules/Files';
 import Inbox from './modules/Inbox';
 import System from './modules/System';
-import { Icon } from './ui/Kit';
+import { Icon, ThemeButton } from './ui/Kit';
 
 const MODULES = [
     { id: 'dash', label: 'Dashboard', icon: 'dashboard' },
@@ -129,6 +129,7 @@ function Shell({ user, site, onSignOut }) {
                             <span className="account-email" title={user.email}>
                                 {user.email}
                             </span>
+                            <ThemeButton />
                             <button type="button" className="icon-btn" onClick={onSignOut} title="Sign out" aria-label="Sign out">
                                 <Icon name="logout" />
                             </button>
