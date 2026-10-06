@@ -71,10 +71,9 @@ export default function Nav({ profile, onPalette }) {
                 </button>
 
                 <nav
-                    className={`hidden items-center gap-1 rounded-full border p-1 transition-colors duration-500 md:flex ${
+                    className={`hidden items-center gap-1 rounded-full border p-2 transition-colors duration-500 md:flex ${
                         scrolled ? 'border-line-2 bg-ink/55' : 'border-line bg-ink/50'
-                    } glass
-                    }`}
+                    } glass`}
                 >
                     {SECTIONS.map((s) => (
                         <button
