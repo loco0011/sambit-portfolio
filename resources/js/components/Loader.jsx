@@ -111,28 +111,28 @@ export default function Loader({ play, name, role, onReveal }) {
             const glints = qa('[data-glint]');
             await img.decode().catch(() => {});
 
-            await sleep(150);
+            await sleep(80);
             if (!alive()) return;
             st.textContent = 'power';
-            leds.forEach((l, i) => l.animate({ opacity: [0, 1, 0, 1, 0.2, 1] }, { duration: 700, delay: i * 120, easing: 'steps(1)', fill: 'forwards' }));
+            leds.forEach((l, i) => l.animate({ opacity: [0, 1, 0, 1, 0.2, 1] }, { duration: 450, delay: i * 80, easing: 'steps(1)', fill: 'forwards' }));
 
-            await sleep(550);
+            await sleep(320);
             if (!alive()) return;
             st.textContent = 'optics';
-            glints.forEach((g, i) => g.animate({ opacity: [0, 1, 0.1, 0.9, 0.3, 1] }, { duration: 650, delay: i * 90, easing: 'steps(1)', fill: 'forwards' }));
+            glints.forEach((g, i) => g.animate({ opacity: [0, 1, 0.1, 0.9, 0.3, 1] }, { duration: 400, delay: i * 60, easing: 'steps(1)', fill: 'forwards' }));
 
-            await sleep(650);
+            await sleep(360);
             if (!alive()) return;
             st.textContent = 'scanning';
             const scanEase = 'cubic-bezier(.65,0,.35,1)';
-            img.animate([{ clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)' }], { duration: 950, easing: scanEase, fill: 'forwards' });
+            img.animate([{ clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)' }], { duration: 650, easing: scanEase, fill: 'forwards' });
             q('[data-scan]').animate(
                 [{ top: '0%', opacity: 1 }, { top: '96%', opacity: 1, offset: 0.92 }, { top: '100%', opacity: 0 }],
-                { duration: 950, easing: scanEase, fill: 'forwards' },
+                { duration: 650, easing: scanEase, fill: 'forwards' },
             );
-            leds.concat(glints).forEach((g) => g.animate([{ opacity: 1 }, { opacity: 0.35 }], { duration: 600, delay: 600, fill: 'forwards' }));
+            leds.concat(glints).forEach((g) => g.animate([{ opacity: 1 }, { opacity: 0.35 }], { duration: 450, delay: 400, fill: 'forwards' }));
 
-            await sleep(1000);
+            await sleep(700);
             if (!alive()) return;
             q('[data-shine] i').animate([{ left: '-40%' }, { left: '130%' }], { duration: 750, easing: 'cubic-bezier(.6,0,.3,1)' });
             st.innerHTML = '<span class="text-acid">code mode on</span>';
