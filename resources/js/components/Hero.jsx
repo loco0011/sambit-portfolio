@@ -63,11 +63,13 @@ export default function Hero({ profile, ready, handoff = false }) {
             <div className="glow absolute -right-60 -top-60 h-[900px] w-[900px]" />
             <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-ink" />
 
+            {/* Headline, character and meta strip share one parallax layer so they never drift into each other */}
             <motion.div
                 ref={content}
                 style={{ y, opacity, maskImage: mask, WebkitMaskImage: mask }}
-                className="container-x relative grid flex-1 content-center items-center gap-10 lg:grid-cols-12 lg:gap-8"
+                className="relative flex flex-1 flex-col"
             >
+            <div className="container-x relative grid flex-1 content-center items-center gap-10 lg:grid-cols-12 lg:gap-8">
                 <div className="lg:col-span-7">
                 <motion.div
                     initial={{ opacity: 0, y: 12 }}
@@ -156,7 +158,7 @@ export default function Hero({ profile, ready, handoff = false }) {
                 <div className="lg:col-span-5">
                     <HeroCharacter ready={ready} handoff={handoff} />
                 </div>
-            </motion.div>
+            </div>
 
             {/* Meta strip */}
             <motion.div
@@ -178,6 +180,7 @@ export default function Hero({ profile, ready, handoff = false }) {
                         </div>
                     ))}
                 </dl>
+            </motion.div>
             </motion.div>
         </section>
     );
