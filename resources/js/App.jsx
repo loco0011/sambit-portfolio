@@ -15,6 +15,7 @@ import Principles from './components/Principles';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import ThemeToggle from './ui/ThemeToggle';
+import SocialRail from './components/SocialRail';
 
 export default function App({ data }) {
     const [ready, setReady] = useState(false);
@@ -54,6 +55,7 @@ export default function App({ data }) {
                 <Contact profile={data.profile} />
             </main>
             <Footer profile={data.profile} />
+            <SocialRail profile={data.profile} ready={ready} />
             <ThemeToggle />
         </MotionConfig>
     );

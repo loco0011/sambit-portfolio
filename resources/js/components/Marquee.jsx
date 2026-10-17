@@ -22,7 +22,7 @@ function Row({ items, reverse = false, serif = false }) {
 export default function Marquee({ items }) {
     const half = Math.ceil(items.length / 2);
     return (
-        <section aria-label="Technology stack" className="relative space-y-2 border-y hairline py-6 sm:space-y-3 sm:py-8">
+        <section aria-label="Technology stack" data-rail-hide className="relative space-y-2 border-y hairline py-6 sm:space-y-3 sm:py-8">
             <Row items={items.slice(0, half)} />
             <Row items={items.slice(half)} reverse serif />
         </section>
