@@ -549,7 +549,7 @@ export default function Capabilities({ skills }) {
     return (
         <section id="capabilities" className="container-x py-[clamp(3.5rem,6.5vw,6rem)]">
             <SectionHead
-                index="04"
+                index="05"
                 label="Capabilities"
                 title="One engineer,"
                 accent="every layer."

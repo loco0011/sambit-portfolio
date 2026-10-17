@@ -1,19 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion, useInView } from 'motion/react';
+import { useState } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
 import { FadeUp, ease } from '../ui/Reveal';
-import { spotlight } from '../lib/hooks';
-
-/** Runs `tick` every `ms` only while the returned ref is on screen. */
-function useTicker(ms, tick) {
-    const ref = useRef(null);
-    const active = useInView(ref, { margin: '-5% 0px' });
-    useEffect(() => {
-        if (!active) return;
-        const id = setInterval(tick, ms);
-        return () => clearInterval(id);
-    }, [active, ms]);
-    return [ref, active];
-}
+import { spotlight, useTicker } from '../lib/hooks';
 
 /* ——— Visuals ——————————————————————————————————————————— */
 

@@ -342,6 +342,11 @@
     to { transform: scaleX(1); }
 }
 
+/* After hours: a price row still loading */
+@keyframes shimmer {
+    to { background-position: -200% 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.001ms !important;

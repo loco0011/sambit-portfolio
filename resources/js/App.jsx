@@ -10,6 +10,7 @@ import Marquee from './components/Marquee';
 import About from './components/About';
 import Experience from './components/Experience';
 import Work from './components/Work';
+import AfterHours from './components/AfterHours';
 import Capabilities from './components/Capabilities';
 import Principles from './components/Principles';
 import Contact from './components/Contact';
@@ -50,6 +51,7 @@ export default function App({ data }) {
                 <About manifesto={data.manifesto} stats={data.stats} />
                 <Experience items={data.experience} />
                 <Work projects={data.projects} archive={data.archive ?? []} total={data.projects_total} />
+                <AfterHours items={data.side_projects ?? []} />
                 <Capabilities skills={data.skills} />
                 <Principles principles={data.principles} education={data.education} />
                 <Contact profile={data.profile} />

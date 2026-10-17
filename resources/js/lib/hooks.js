@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useInView } from 'motion/react';
 
 /** Live wall-clock time in a given IANA timezone, e.g. "21:42:07". */
 export function useLocalTime(timeZone, withSeconds = false) {
@@ -57,4 +58,16 @@ export function useMediaQuery(query) {
     }, [query]);
 
     return match;
+}
+
+/** Runs `tick` every `ms` only while the returned ref is on screen. */
+export function useTicker(ms, tick) {
+    const ref = useRef(null);
+    const active = useInView(ref, { margin: '-5% 0px' });
+    useEffect(() => {
+        if (!active) return;
+        const id = setInterval(tick, ms);
+        return () => clearInterval(id);
+    }, [active, ms]);
+    return [ref, active];
 }

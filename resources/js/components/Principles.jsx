@@ -5,7 +5,7 @@ import { spotlight } from '../lib/hooks';
 export default function Principles({ principles, education }) {
     return (
         <section className="container-x py-[clamp(3.5rem,6.5vw,6rem)]">
-            <SectionHead index="05" label="How I work" title="Principles" accent="I engineer by." />
+            <SectionHead index="06" label="How I work" title="Principles" accent="I engineer by." />
 
             <div className="mt-10 grid gap-10 sm:mt-12 lg:grid-cols-12 lg:gap-12">
                 <ol className="lg:col-span-8">

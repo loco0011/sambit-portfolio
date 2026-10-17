@@ -275,6 +275,142 @@ return [
         ['name' => 'Open-source contributions', 'kind' => 'Contributions to public projects', 'url' => 'https://github.com/loco0011'],
     ],
 
+    /*
+    | "After hours": products built on my own time, shown one at a time on a live
+    | stage beside their system map. `visual` picks the animated mini-UI
+    | (hiringmap|savr|xypher|kashew|klyro); `diagram` has the same shape as a
+    | featured project's. `icon` is a path under public/.
+    */
+    'side_projects' => [
+        [
+            'slug' => 'kolkata-hiring-map',
+            'name' => 'Kolkata Hiring Map',
+            'tag' => 'hiring map',
+            'meta' => 'Personal · web · launch-ready',
+            'icon' => '/apps/kolkata-hiring-map.svg',
+            'visual' => 'hiringmap',
+            'kind' => 'A public map of who is hiring in Kolkata, where, and at what pay. A discovery layer, not a job portal: every role links out to where it was actually posted.',
+            'highlights' => [
+                'A Django fetcher reads nine job-board systems (Greenhouse, Lever, Keka, Darwinbox and more), keeps the Kolkata roles and queues them for review',
+                'A nightly link check re-confirms every posting and closes dead ones, so nothing stale stays on the map',
+            ],
+            'stack' => ['Laravel', 'Inertia · React', 'Django', 'Leaflet', 'Docker'],
+            'diagram' => [
+                'nodes' => [
+                    ['id' => 'ats', 'label' => 'Job boards', 'x' => 8, 'y' => 16],
+                    ['id' => 'fetch', 'label' => 'Django fetcher', 'x' => 12, 'y' => 84],
+                    ['id' => 'api', 'label' => 'Laravel', 'x' => 48, 'y' => 50, 'core' => true],
+                    ['id' => 'cron', 'label' => 'Nightly link check', 'x' => 52, 'y' => 6],
+                    ['id' => 'map', 'label' => 'React · Leaflet', 'x' => 88, 'y' => 24],
+                    ['id' => 'mod', 'label' => 'Moderation', 'x' => 88, 'y' => 76],
+                    ['id' => 'db', 'label' => 'MariaDB', 'x' => 52, 'y' => 96],
+                ],
+                'edges' => [['ats', 'fetch'], ['fetch', 'api'], ['cron', 'api'], ['api', 'map'], ['mod', 'api'], ['api', 'db']],
+            ],
+        ],
+        [
+            'slug' => 'savr',
+            'name' => 'Savr',
+            'tag' => 'price comparison',
+            'meta' => 'Personal · Android · in testing',
+            'icon' => '/apps/savr.png',
+            'visual' => 'savr',
+            'kind' => 'Which app is cheapest for this, right now? Compares what you would actually pay across quick commerce, grocery, shopping, food and ride apps.',
+            'highlights' => [
+                'No public price APIs, and plain requests get bot-blocked, so it reads each platform\'s own search page in a hidden WebView on the phone',
+                'Blinkit, Zepto and Instamart fetched in parallel in about 5 s, with no server',
+            ],
+            'stack' => ['Flutter', 'Dart', 'WebView', 'Share intents'],
+            'diagram' => [
+                'nodes' => [
+                    ['id' => 'ui', 'label' => 'Search · Share', 'x' => 8, 'y' => 50],
+                    ['id' => 'core', 'label' => 'Price engine', 'x' => 42, 'y' => 50, 'core' => true],
+                    ['id' => 'bl', 'label' => 'Blinkit', 'x' => 86, 'y' => 8],
+                    ['id' => 'ze', 'label' => 'Zepto', 'x' => 92, 'y' => 40],
+                    ['id' => 'in', 'label' => 'Instamart', 'x' => 86, 'y' => 72],
+                    ['id' => 'ride', 'label' => 'Ride estimator', 'x' => 26, 'y' => 96],
+                    ['id' => 'srv', 'label' => 'Price server', 'x' => 62, 'y' => 96],
+                ],
+                'edges' => [['ui', 'core'], ['core', 'bl'], ['core', 'ze'], ['core', 'in'], ['core', 'ride'], ['core', 'srv']],
+            ],
+        ],
+        [
+            'slug' => 'xypher',
+            'name' => 'Xypher',
+            'tag' => 'password manager',
+            'meta' => 'Personal · Android + web · v1.2',
+            'icon' => '/apps/xypher.png',
+            'visual' => 'xypher',
+            'kind' => 'A password vault that cannot read your passwords. Logins, cards and notes, with a built-in 2FA authenticator, offline by default.',
+            'highlights' => [
+                'Zero-knowledge: Argon2id (64 MiB) derives the key, AES-256-GCM seals the vault, and the server only ever stores ciphertext',
+                'The breach scan sends 5 characters of a hash, never the password',
+            ],
+            'stack' => ['Flutter', 'Argon2id', 'Keystore', 'PHP · MySQL'],
+            'diagram' => [
+                'nodes' => [
+                    ['id' => 'pw', 'label' => 'Master password', 'x' => 8, 'y' => 16],
+                    ['id' => 'kdf', 'label' => 'Argon2id', 'x' => 8, 'y' => 84],
+                    ['id' => 'vault', 'label' => 'AES-GCM vault', 'x' => 46, 'y' => 50, 'core' => true],
+                    ['id' => 'bio', 'label' => 'Keystore · biometric', 'x' => 48, 'y' => 4],
+                    ['id' => 'cloud', 'label' => 'Cloud (ciphertext)', 'x' => 88, 'y' => 24],
+                    ['id' => 'hibp', 'label' => 'HIBP k-anon', 'x' => 88, 'y' => 80],
+                ],
+                'edges' => [['pw', 'kdf'], ['kdf', 'vault'], ['bio', 'vault'], ['vault', 'cloud'], ['vault', 'hibp']],
+            ],
+        ],
+        [
+            'slug' => 'kashew',
+            'name' => 'Kashew',
+            'tag' => 'expense tracker',
+            'meta' => 'Personal · Android · v1.1',
+            'icon' => '/apps/kashew.svg',
+            'visual' => 'kashew',
+            'kind' => 'An expense tracker that logs itself. Bank and UPI payments are read from SMS, and cash takes one tap or a sentence like "50 chai".',
+            'highlights' => [
+                'Parses messages from about 45 banks and skips OTPs, mandates, collect requests and failed payments',
+                'Removes duplicates by UPI reference, and treats card-bill payments as transfers so nothing counts twice',
+            ],
+            'stack' => ['Flutter', 'SMS parsing', 'Voice entry', 'On-device'],
+            'diagram' => [
+                'nodes' => [
+                    ['id' => 'sms', 'label' => 'Bank SMS', 'x' => 8, 'y' => 16],
+                    ['id' => 'voice', 'label' => 'Voice · tap', 'x' => 8, 'y' => 84],
+                    ['id' => 'parse', 'label' => 'Parser', 'x' => 42, 'y' => 50, 'core' => true],
+                    ['id' => 'filter', 'label' => 'Skip + dedupe', 'x' => 44, 'y' => 4],
+                    ['id' => 'rules', 'label' => 'Category rules', 'x' => 84, 'y' => 20],
+                    ['id' => 'db', 'label' => 'Local ledger', 'x' => 86, 'y' => 84],
+                ],
+                'edges' => [['sms', 'parse'], ['voice', 'parse'], ['parse', 'filter'], ['parse', 'rules'], ['rules', 'db'], ['parse', 'db']],
+            ],
+        ],
+        [
+            'slug' => 'klyro',
+            'name' => 'Klyro',
+            'tag' => 'interview prep',
+            'meta' => 'Personal · cross-platform · in progress',
+            'icon' => '/apps/klyro.png',
+            'visual' => 'klyro',
+            'kind' => 'Prepare for the interview you are actually going to face. It reads your CV and the job description, then quizzes you on what you claim.',
+            'highlights' => [
+                'Claude returns structured JSON that scores every answer on accuracy, completeness, relevance and clarity',
+                'Mock interviews follow up on your answers and end with a debrief',
+            ],
+            'stack' => ['Flutter', 'Claude API', 'PDF · DOCX'],
+            'diagram' => [
+                'nodes' => [
+                    ['id' => 'cv', 'label' => 'CV · JD', 'x' => 8, 'y' => 18],
+                    ['id' => 'ans', 'label' => 'Your answer', 'x' => 8, 'y' => 82],
+                    ['id' => 'ai', 'label' => 'AI service', 'x' => 44, 'y' => 50, 'core' => true],
+                    ['id' => 'claude', 'label' => 'Claude API', 'x' => 88, 'y' => 14],
+                    ['id' => 'plan', 'label' => 'Planner', 'x' => 88, 'y' => 60],
+                    ['id' => 'store', 'label' => 'Local store', 'x' => 60, 'y' => 96],
+                ],
+                'edges' => [['cv', 'ai'], ['ans', 'ai'], ['ai', 'claude'], ['ai', 'plan'], ['plan', 'store']],
+            ],
+        ],
+    ],
+
     'principles' => [
         ['title' => 'Own the whole system', 'body' => 'Schema, API, UI, server, deploy, alerts. Owning every layer is how you find the bug nobody else can.'],
         ['title' => 'Performance is a feature', 'body' => 'Speed shapes how a product feels. I measure it, budget it and treat regressions like bugs.'],
