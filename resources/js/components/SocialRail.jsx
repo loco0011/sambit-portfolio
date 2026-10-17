@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { motion } from 'motion/react';
+import { useEffect, useRef } from 'react';
+import { motion, useMotionValue } from 'motion/react';
 import { ease } from '../ui/Reveal';
 
 const ICONS = {
@@ -9,38 +9,50 @@ const ICONS = {
 
 /**
  * Fixed rail on the left edge: name set vertically, ringed social icons, a hairline down to the bottom. xl+ only.
- * Full-bleed bands marked `data-rail-hide` (the stack marquee) would run underneath it, so it fades out while one
- * crosses the lower part of the screen where the rail sits.
+ * Full-bleed bands marked `data-rail-hide` (the stack marquee) slide over it: a mask cuts out just the slice of
+ * the rail the band is crossing, with a soft edge, so the rest stays visible.
  */
+const FEATHER = 14;
+const OPEN = 'none';
+
+// Opaque everywhere except the band (from–to px, measured from the rail's top), with feathered edges.
+const cutout = (from, to) =>
+    `linear-gradient(to bottom, #000 ${from - FEATHER}px, transparent ${from}px, transparent ${to}px, #000 ${to + FEATHER}px)`;
+
 export default function SocialRail({ profile, ready }) {
     const links = profile.links.filter((l) => ICONS[l.label.toLowerCase()]);
-    const [covered, setCovered] = useState(false);
-    const revealed = useRef(false);
+    const ref = useRef(null);
+    const mask = useMotionValue(OPEN);
 
     useEffect(() => {
-        const bands = document.querySelectorAll('[data-rail-hide]');
+        const bands = [...document.querySelectorAll('[data-rail-hide]')];
         if (!bands.length) return;
-        const inside = new Set();
-        const io = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((e) => (e.isIntersecting ? inside.add(e.target) : inside.delete(e.target)));
-                setCovered(inside.size > 0);
-            },
-            { rootMargin: '-50% 0px 0px 0px' },
-        );
-        bands.forEach((b) => io.observe(b));
-        return () => io.disconnect();
+        let frame = 0;
+        const measure = () => {
+            frame = 0;
+            const rail = ref.current?.getBoundingClientRect();
+            if (!rail?.height) return;
+            const band = bands.map((b) => b.getBoundingClientRect()).find((b) => b.bottom > rail.top && b.top < rail.bottom);
+            mask.set(band ? cutout(band.top - rail.top, band.bottom - rail.top) : OPEN);
+        };
+        const schedule = () => (frame ||= requestAnimationFrame(measure));
+        measure();
+        window.addEventListener('scroll', schedule, { passive: true });
+        window.addEventListener('resize', schedule);
+        return () => {
+            cancelAnimationFrame(frame);
+            window.removeEventListener('scroll', schedule);
+            window.removeEventListener('resize', schedule);
+        };
     }, []);
 
     return (
         <motion.aside
+            ref={ref}
             initial={{ opacity: 0, y: 24 }}
-            animate={ready ? { opacity: covered ? 0 : 1, y: 0 } : {}}
-            // First appearance waits for the hero to settle; later fades are quick.
-            transition={covered ? { duration: 0.3 } : { duration: revealed.current ? 0.6 : 1.2, ease, delay: revealed.current ? 0.05 : 1.2 }}
-            onAnimationComplete={() => ready && (revealed.current = true)}
-            aria-hidden={covered || undefined}
-            inert={covered || undefined}
+            animate={ready ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1.2, ease, delay: 1.2 }}
+            style={{ maskImage: mask, WebkitMaskImage: mask }}
             className="fixed bottom-0 left-5 z-40 hidden flex-col items-center gap-4 xl:flex 2xl:left-8"
             aria-label="Elsewhere"
         >
