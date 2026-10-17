@@ -21,7 +21,6 @@ const LINES = [
 const HIDE_UNTIL = 104; // screen y fully hidden above, once engaged
 const FADE_BAND = 56;
 const ENGAGE = 120;
-const PARALLAX = 0.2;
 
 const bandTop = (s) => {
     const t = Math.min(1, Math.max(0, s / ENGAGE));
@@ -31,23 +30,9 @@ const bandTop = (s) => {
 export default function Hero({ profile, ready, handoff = false }) {
     const ref = useRef(null);
     const content = useRef(null);
-    const { scrollY, scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
-    // Parallax and scroll fade only where the whole hero fits one screen (lg+). On phones the
-    // meta strip sits below the fold, so fading it as you scroll would hide it before it's read.
-    const wide = useMotionValue(0);
-    useEffect(() => {
-        const mq = window.matchMedia('(min-width: 1024px)');
-        const sync = () => wide.set(mq.matches ? 1 : 0);
-        sync();
-        mq.addEventListener('change', sync);
-        return () => mq.removeEventListener('change', sync);
-    }, []);
-
-    const opacity = useTransform([scrollYProgress, wide], ([p, w]) => (w ? 1 - Math.min(1, p / 0.7) : 1));
-
-    // Parallax in px so we know exactly where the content sits on screen.
-    const shift = (s, w) => Math.max(0, s) * PARALLAX * w;
-    const y = useTransform([scrollY, wide], ([s, w]) => shift(s, w));
+    // No parallax or scroll fade: the hero scrolls with the page on every screen size, so the
+    // meta strip never lags behind and gets covered by the stack marquee coming up under it.
+    const { scrollY } = useScroll();
 
     // Where the content block starts, measured without transforms.
     const top0 = useMotionValue(0);
@@ -59,9 +44,9 @@ export default function Hero({ profile, ready, handoff = false }) {
     }, []);
 
     // Convert that screen band into the content's own coordinates, so the
-    // parallax headline and buttons dissolve before reaching the nav instead
-    // of lingering behind it.
-    const fadeStart = useTransform([scrollY, top0, wide], ([s, t, w]) => bandTop(s) - (t - s + shift(s, w)));
+    // headline and buttons dissolve before reaching the nav instead of
+    // lingering behind it.
+    const fadeStart = useTransform([scrollY, top0], ([s, t]) => bandTop(s) - (t - s));
     const fadeEnd = useTransform(fadeStart, (v) => v + FADE_BAND);
     const mask = useMotionTemplate`linear-gradient(to bottom, transparent ${fadeStart}px, #000 ${fadeEnd}px)`;
 
@@ -75,10 +60,10 @@ export default function Hero({ profile, ready, handoff = false }) {
             <div className="glow absolute -right-60 -top-60 h-[900px] w-[900px]" />
             <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-ink" />
 
-            {/* Headline, character and meta strip share one layer so the parallax never drifts them into each other */}
+            {/* Headline, character and meta strip share one layer under the nav fade */}
             <motion.div
                 ref={content}
-                style={{ y, opacity, maskImage: mask, WebkitMaskImage: mask }}
+                style={{ maskImage: mask, WebkitMaskImage: mask }}
                 className="relative flex flex-1 flex-col"
             >
             <div className="container-x relative grid flex-1 content-center items-center gap-10 lg:grid-cols-12 lg:gap-8">
