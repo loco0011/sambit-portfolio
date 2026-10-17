@@ -20,6 +20,8 @@ return [
         'phone' => '+91 74781 23847',
         'available' => true,
         'availability' => 'Open to full-stack & backend engineering roles, remote or on-site',
+        // The hero chip cycles through these: "Open to ___ roles, remote or on-site". Empty shows availability as is.
+        'open_to' => ['full-stack', 'backend', 'Laravel', 'Node.js', 'React'],
         // Where you work now. Leave company blank between jobs: the hero then shows "Open to new roles".
         'current' => ['title' => '', 'company' => ''],
         'links' => [

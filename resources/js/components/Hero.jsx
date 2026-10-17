@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { motion, useMotionTemplate, useMotionValue, useScroll, useTransform } from 'motion/react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion, useMotionTemplate, useMotionValue, useScroll, useTransform } from 'motion/react';
 import FieldCanvas from './FieldCanvas';
 import HeroCharacter from './HeroCharacter';
 import Magnetic from '../ui/Magnetic';
@@ -26,6 +26,58 @@ const bandTop = (s) => {
     const t = Math.min(1, Math.max(0, s / ENGAGE));
     return -FADE_BAND + t * (HIDE_UNTIL + FADE_BAND);
 };
+
+const ROTATE_MS = 2000;
+
+/**
+ * "Open to ___ roles, remote or on-site" with the blank cycling through `roles`
+ * every two seconds: the word rolls up and the chip eases to the new width.
+ * Screen readers get the full availability sentence instead.
+ */
+function OpenTo({ roles, full }) {
+    const [i, setI] = useState(0);
+    const [width, setWidth] = useState(null);
+    const word = useRef(null);
+
+    useEffect(() => {
+        if (roles.length < 2) return;
+        const id = setInterval(() => setI((v) => (v + 1) % roles.length), ROTATE_MS);
+        return () => clearInterval(id);
+    }, [roles.length]);
+
+    useLayoutEffect(() => {
+        if (word.current) setWidth(word.current.offsetWidth);
+    }, [i, roles]);
+
+    return (
+        <>
+            <span className="sr-only">{full}</span>
+            <span aria-hidden>
+                Open to{' '}
+                <motion.span
+                    className="relative inline-flex overflow-hidden align-top"
+                    animate={width == null ? undefined : { width }}
+                    transition={{ duration: 0.5, ease }}
+                >
+                    <AnimatePresence mode="popLayout" initial={false}>
+                        <motion.span
+                            key={roles[i]}
+                            ref={word}
+                            className="whitespace-nowrap text-acid"
+                            initial={{ y: '100%', opacity: 0 }}
+                            animate={{ y: '0%', opacity: 1 }}
+                            exit={{ y: '-100%', opacity: 0 }}
+                            transition={{ duration: 0.5, ease }}
+                        >
+                            {roles[i]}
+                        </motion.span>
+                    </AnimatePresence>
+                </motion.span>{' '}
+                roles, remote or on-site
+            </span>
+        </>
+    );
+}
 
 export default function Hero({ profile, ready, handoff = false }) {
     const ref = useRef(null);
@@ -80,7 +132,7 @@ export default function Hero({ profile, ready, handoff = false }) {
                                 <span className="absolute inset-0 rounded-full bg-acid" style={{ animation: 'pulse-ring 1.8s ease-out infinite' }} />
                                 <span className="relative h-1.5 w-1.5 rounded-full bg-acid" />
                             </span>
-                            {profile.availability}
+                            {profile.open_to?.length ? <OpenTo roles={profile.open_to} full={profile.availability} /> : profile.availability}
                         </span>
                     )}
                 </motion.div>
