@@ -56,7 +56,7 @@ class PortfolioController extends Controller
                     'jobTitle' => $p['role'],
                     'email' => 'mailto:'.$p['email'],
                     'address' => ['@type' => 'PostalAddress', 'addressLocality' => 'Kolkata', 'addressRegion' => 'West Bengal', 'addressCountry' => 'IN'],
-                    'worksFor' => ['@type' => 'Organization', 'name' => $p['current']['company']],
+                    ...(empty($p['current']['company']) ? [] : ['worksFor' => ['@type' => 'Organization', 'name' => $p['current']['company']]]),
                     'alumniOf' => ['@type' => 'CollegeOrUniversity', 'name' => $portfolio['education']['school']],
                     'knowsAbout' => $portfolio['stack'],
                     'sameAs' => array_column($p['links'], 'url'),

@@ -166,7 +166,7 @@ export default function Hero({ profile, ready, handoff = false }) {
             >
                 <dl className="grid grid-cols-2 gap-x-4 gap-y-5 border-t hairline pt-5 md:grid-cols-4">
                     {[
-                        ['Currently', `${profile.current.title} @ ${profile.current.company}`],
+                        ['Currently', profile.current?.company ? `${profile.current.title} @ ${profile.current.company}` : 'Open to new roles'],
                         ['Based in', <>Kolkata, IN · <Clock timeZone={profile.timezone} seconds /></>],
                         ['Core', 'Laravel · Node · React · Infra'],
                         ['Shipping since', `2023 — ${profile.projectsTotal}+ projects, 4 teams`],

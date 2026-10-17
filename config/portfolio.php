@@ -20,7 +20,8 @@ return [
         'phone' => '+91 74781 23847',
         'available' => true,
         'availability' => 'Open to full-stack & backend engineering roles, remote or on-site',
-        'current' => ['title' => 'Software Developer', 'company' => 'Collabmate'],
+        // Where you work now. Leave company blank between jobs: the hero then shows "Open to new roles".
+        'current' => ['title' => '', 'company' => ''],
         'links' => [
             ['label' => 'GitHub', 'handle' => 'loco0011', 'url' => 'https://github.com/loco0011'],
             ['label' => 'LinkedIn', 'handle' => 'in/sambitmaity', 'url' => 'https://www.linkedin.com/in/sambitmaity/'],
@@ -66,11 +67,11 @@ return [
             'role' => 'Software Developer',
             'company' => 'Collabmate',
             'location' => 'Kolkata, India',
-            'period' => 'Jun 2026 — Present',
-            'current' => true,
-            'summary' => 'Single-handedly own the technical foundation: architecture, infrastructure, automation and AI, across web and mobile.',
+            'period' => 'Jun 2026 — Oct 2026',
+            'current' => false,
+            'summary' => 'Single-handedly owned the technical foundation: architecture, infrastructure, automation and AI, across web and mobile.',
             'points' => [
-                'Provision, secure and run 5+ production VPS instances single-handedly, including a self-hosted n8n instance: Linux, Nginx, Docker, deployments and monitoring.',
+                'Provisioned, secured and ran 5+ production VPS instances single-handedly, including a self-hosted n8n instance: Linux, Nginx, Docker, deployments and monitoring.',
                 'Automated deployments with SSH-based CI/CD pipelines and self-hosted n8n workflows, removing manual release steps.',
                 'Rebuilt the primary website and raised its performance score from ~80 to 95+.',
                 'Built a company chat agent grounded in real company data, orchestrating Anthropic Claude and OpenAI models through n8n.',
