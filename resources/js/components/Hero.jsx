@@ -30,7 +30,7 @@ const bandTop = (s) => {
 const ROTATE_MS = 2000;
 
 /**
- * "Open to ___ roles, remote or on-site" with the blank cycling through `roles`
+ * "Open to ___ roles, on-site, hybrid or remote" with the blank cycling through `roles`
  * every two seconds: the word rolls up and the chip eases to the new width.
  * Screen readers get the full availability sentence instead.
  */
@@ -73,7 +73,7 @@ function OpenTo({ roles, full }) {
                         </motion.span>
                     </AnimatePresence>
                 </motion.span>{' '}
-                roles, remote or on-site
+                roles, on-site, hybrid or remote
             </span>
         </>
     );

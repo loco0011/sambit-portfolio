@@ -19,8 +19,8 @@ return [
         'email' => 'official.sambitmaity@gmail.com',
         'phone' => '+91 74781 23847',
         'available' => true,
-        'availability' => 'Open to full-stack & backend engineering roles, remote or on-site',
-        // The hero chip cycles through these: "Open to ___ roles, remote or on-site". Empty shows availability as is.
+        'availability' => 'Immediate joiner, open to full-stack & backend engineering roles: on-site, hybrid or remote',
+        // The hero chip cycles through these: "Open to ___ roles, on-site, hybrid or remote". Empty shows availability as is.
         'open_to' => ['full-stack', 'backend', 'Laravel', 'Node.js', 'React'],
         // Where you work now. Leave company blank between jobs: the hero then shows "Open to new roles".
         'current' => ['title' => '', 'company' => ''],
@@ -45,8 +45,8 @@ return [
     ],
 
     'stack' => [
-        'PHP', 'Laravel', 'Node.js', 'BullMQ', 'TypeScript', 'React', 'Vue.js', 'Flutter', 'PostgreSQL', 'MySQL', 'MongoDB',
-        'Supabase', 'Docker', 'Nginx', 'Linux', 'CI/CD', 'n8n', 'Anthropic API (Claude)', 'OpenAI', 'Stripe', 'Razorpay', 'Twilio', 'MSG91', 'Pusher', 'Tailwind CSS', 'ZoneMTA',
+        'PHP', 'Laravel', 'Node.js', 'BullMQ', 'TypeScript', 'React', 'Next.js', 'Vue.js', 'Flutter', 'PostgreSQL', 'MySQL', 'MongoDB', 'Redis',
+        'Supabase', 'Docker', 'Nginx', 'Caddy', 'AWS', 'Linux', 'CI/CD', 'n8n', 'Anthropic API (Claude)', 'OpenAI', 'Stripe', 'Razorpay', 'Twilio', 'MSG91', 'Pusher', 'Tailwind CSS', 'ZoneMTA',
     ],
 
     /*
@@ -56,31 +56,33 @@ return [
     */
     'skills' => [
         ['group' => 'Languages', 'items' => ['*PHP', '*JavaScript', '*TypeScript', 'Java', 'Dart']],
-        ['group' => 'Frontend', 'items' => ['*React.js', 'Vue.js', '*Flutter', '*Tailwind CSS', 'UI animation|motion & micro-interactions', 'Bootstrap', 'HTML/CSS']],
-        ['group' => 'Backend', 'items' => ['*Laravel|pairs with React & Vue', '*Node.js', '*REST APIs', 'BullMQ|job queues', 'HyperBase', 'ZoneMTA|mail transfer']],
-        ['group' => 'Data & Services', 'items' => ['*MySQL', '*PostgreSQL', 'MongoDB', 'Supabase', 'Stripe|payments', 'Razorpay|payments', 'Twilio', 'MSG91|real-time OTP', 'Pusher|realtime', 'Brevo|SMTP']],
-        ['group' => 'Cloud & DevOps', 'items' => ['*VPS administration|5+ instances', '*Linux', '*Nginx', '*Docker', 'CI/CD', 'SSH deployments', 'Monitoring']],
-        ['group' => 'Security', 'items' => ['HMAC signing|requests & webhooks', '2FA', 'OTP verification', 'Role-based access']],
+        ['group' => 'Frontend', 'items' => ['*React.js', 'Next.js', 'Vue.js', '*Flutter', '*Tailwind CSS', 'UI animation|motion & micro-interactions', 'Bootstrap', 'HTML/CSS']],
+        ['group' => 'Backend', 'items' => ['*Laravel|pairs with React & Vue', '*Node.js', '*REST APIs', 'BullMQ|job queues', 'HyperBase', 'ZoneMTA|mail transfer', 'OOP · MVC', 'Microservices', 'Webhooks', 'Third-party SDKs']],
+        ['group' => 'Data & Services', 'items' => ['*MySQL', '*PostgreSQL', 'MongoDB', 'Redis', 'Supabase', 'Stripe|payments', 'Razorpay|payments', 'Twilio', 'MSG91|real-time OTP', 'Pusher|realtime', 'Brevo|SMTP']],
+        ['group' => 'Cloud & DevOps', 'items' => ['*VPS administration|5+ instances', '*Linux', '*Nginx', '*Docker', 'CI/CD', 'SSH deployments', 'Monitoring', 'AWS', 'Apache', 'Caddy', 'Bash']],
+        ['group' => 'Testing', 'items' => ['PHPUnit', 'Jest', 'Vitest']],
+        ['group' => 'Security', 'items' => ['HMAC signing|requests & webhooks', '2FA / MFA', 'OTP verification', 'Role-based access', 'JWT / OAuth']],
         ['group' => 'AI & Automation', 'items' => ['*Anthropic API (Claude)', 'OpenAI API', '*n8n|self-hosted', 'AI chat agents|on company data', 'Multi-model workflows']],
+        ['group' => 'Practices', 'items' => ['System design|ERD & data modelling', 'Queues & jobs', 'Agile / SDLC']],
     ],
 
     'experience' => [
         [
             'role' => 'Software Developer',
             'company' => 'Collabmate',
-            'location' => 'Kolkata, India',
+            'location' => 'Salt Lake Sector V, Kolkata',
             'period' => 'Jun 2026 — Oct 2026',
             'current' => false,
-            'summary' => 'Single-handedly owned the technical foundation: architecture, infrastructure, automation and AI, across web and mobile.',
+            'summary' => 'Single-handedly owned the technical foundation: architecture, infrastructure, automation and AI, across web and mobile, until the company ceased operations in October 2026.',
             'points' => [
                 'Provisioned, secured and ran 5+ production VPS instances single-handedly, including a self-hosted n8n instance: Linux, Nginx, Docker, deployments and monitoring.',
                 'Automated deployments with SSH-based CI/CD pipelines and self-hosted n8n workflows, removing manual release steps.',
-                'Rebuilt the primary website and raised its performance score from ~80 to 95+.',
+                'Rebuilt the primary website and raised its performance score from ~80 to 95+ through caching, asset and image optimisation, and server tuning.',
                 'Built a company chat agent grounded in real company data, orchestrating Anthropic Claude and OpenAI models through n8n.',
                 'Automated bulk email campaigns through Brevo SMTP, wired into n8n workflows.',
-                'Designed and shipped web applications and Flutter apps end to end, from architecture to production.',
+                'Designed and shipped web applications and Flutter apps end to end, from architecture to production, and optimised the existing Flutter apps.',
             ],
-            'tags' => ['DevOps', 'VPS', 'Docker', 'Linux', 'Nginx', 'CI/CD', 'Self-hosted n8n', 'Anthropic API (Claude)', 'AI agents', 'Monitoring'],
+            'tags' => ['DevOps', 'VPS', 'Docker', 'Linux', 'Nginx', 'CI/CD', 'Self-hosted n8n', 'Anthropic API (Claude)', 'AI agents', 'Monitoring', 'Flutter', 'Brevo'],
         ],
         [
             'role' => 'Software Developer',
@@ -105,8 +107,10 @@ return [
                 'Built scalable full-stack features in Laravel and React, improving maintainability and delivery speed.',
                 'Designed REST APIs and reusable interface components; integrated AI services and third-party SDKs.',
                 'Worked across backend services, frontend workflows and production engineering practices.',
+                'Built features in Node.js and Next.js, integrating Strapi CMS and HubSpot CRM.',
+                'Owned end-to-end delivery of a key project following the SDLC: system design, ERD and database modelling, API and frontend development.',
             ],
-            'tags' => ['Laravel', 'React', 'REST', 'AI SDKs'],
+            'tags' => ['Laravel', 'React', 'Node.js', 'Next.js', 'Strapi', 'HubSpot', 'REST', 'AI SDKs'],
         ],
         [
             'role' => 'Web Developer',
@@ -135,7 +139,7 @@ return [
                 'Real-time generation status streamed over Pusher',
                 'Role-based workflows for teams and reviewers',
             ],
-            'stack' => ['React', 'TypeScript', 'Laravel', 'PostgreSQL', 'Stripe', 'Pusher'],
+            'stack' => ['React', 'TypeScript', 'Axios', 'Context API', 'Laravel', 'PostgreSQL', 'Stripe', 'Pusher'],
             'diagram' => [
                 'nodes' => [
                     ['id' => 'ui', 'label' => 'React · TS', 'x' => 12, 'y' => 50],
@@ -161,7 +165,7 @@ return [
                 'Stripe payments for listings and services',
                 'Twilio-powered communication workflows',
             ],
-            'stack' => ['Laravel', 'MySQL', 'Stripe', 'Twilio'],
+            'stack' => ['Laravel', 'MySQL', 'jQuery', 'Stripe', 'Twilio'],
             'diagram' => [
                 'nodes' => [
                     ['id' => 'cand', 'label' => 'Candidates', 'x' => 12, 'y' => 22],
@@ -187,7 +191,7 @@ return [
                 'Monitoring dashboards for delivery health',
                 'Containerised with Docker behind Nginx',
             ],
-            'stack' => ['React', 'TypeScript', 'Node.js', 'ZoneMTA', 'Docker', 'Nginx'],
+            'stack' => ['React', 'TypeScript', 'Node.js', 'ZoneMTA', 'Docker', 'Nginx', 'Sentry'],
             'diagram' => [
                 'nodes' => [
                     ['id' => 'dash', 'label' => 'React console', 'x' => 12, 'y' => 50],
