@@ -102,6 +102,16 @@
             </section>
 
             <section>
+                <h2>After hours</h2>
+                @foreach ($portfolio['side_projects'] ?? [] as $app)
+                    <article>
+                        <h3><a href="{{ route('apps.show', $app['slug']) }}">{{ $app['name'] }} — {{ $app['tag'] }}</a></h3>
+                        <p>{{ $app['kind'] }}</p>
+                    </article>
+                @endforeach
+            </section>
+
+            <section>
                 <h2>Skills</h2>
                 <ul>
                     @foreach ($portfolio['skills'] as $group)

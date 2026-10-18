@@ -4,6 +4,7 @@ import { Toast } from './lib';
 import Login from './Login';
 import Content from './modules/Content';
 import Dashboard from './modules/Dashboard';
+import AppFiles from './modules/AppFiles';
 import Files from './modules/Files';
 import Inbox from './modules/Inbox';
 import System from './modules/System';
@@ -14,6 +15,7 @@ const MODULES = [
     { id: 'inbox', label: 'Inbox', icon: 'inbox' },
     { id: 'content', label: 'Content', icon: 'edit' },
     { id: 'files', label: 'Résumé', icon: 'file' },
+    { id: 'apps', label: 'App files', icon: 'download' },
     { id: 'system', label: 'Settings', icon: 'settings' },
 ];
 
@@ -91,6 +93,7 @@ function Shell({ user, site, onSignOut }) {
         inbox: <Inbox key={route.focus ?? 'inbox'} focusId={route.focus} onUnread={setUnread} />,
         content: <Content />,
         files: <Files />,
+        apps: <AppFiles />,
         system: <System user={user} site={site} onSignOut={onSignOut} />,
     };
 

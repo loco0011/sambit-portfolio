@@ -10,6 +10,8 @@ RUN npm run build
 FROM serversideup/php:8.4-fpm-nginx-alpine
 
 ENV PHP_OPCACHE_ENABLE=1 \
+    PHP_UPLOAD_MAX_FILE_SIZE=200M \
+    PHP_POST_MAX_SIZE=200M \
     AUTORUN_ENABLED=true
 
 WORKDIR /var/www/html

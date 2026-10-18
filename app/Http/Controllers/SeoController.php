@@ -20,6 +20,9 @@ class SeoController extends Controller
             .collect(PortfolioContent::caseStudies())->keys()
                 ->map(fn ($slug) => '  <url><loc>'.e(route('work.show', $slug)).'</loc><lastmod>'.$updated.'</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>'."\n")
                 ->implode('')
+            .collect(PortfolioContent::get()['side_projects'] ?? [])->pluck('slug')
+                ->map(fn ($slug) => '  <url><loc>'.e(route('apps.show', $slug)).'</loc><lastmod>'.$updated.'</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>'."\n")
+                ->implode('')
             .'</urlset>'."\n";
 
         return response($xml)->header('Content-Type', 'application/xml; charset=UTF-8');

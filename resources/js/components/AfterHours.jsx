@@ -166,7 +166,19 @@ export default function AfterHours({ items }) {
                                     </motion.div>
                                 </AnimatePresence>
                             </div>
-                            <div className="border-t hairline px-4 py-2.5 font-mono text-[10px] text-dim">{item.meta}</div>
+                            <div className="flex min-h-[42px] items-center justify-between gap-3 border-t hairline py-1.5 pl-4 pr-1.5 font-mono text-[10px] text-dim">
+                                <span className="truncate">{item.meta}</span>
+                                <a
+                                    href={`/apps/${item.slug}`}
+                                    data-cursor="Open"
+                                    className="group/get inline-flex shrink-0 items-center gap-2 rounded-full bg-lime py-1 pl-3 pr-1 font-sans text-[12px] font-medium text-on-lime transition-shadow hover:shadow-[0_0_30px_-6px_color-mix(in_srgb,var(--color-lime)_60%,transparent)]"
+                                >
+                                    {item.platform === 'web' ? 'Visit website' : 'Get the app'}
+                                    <span className={`grid h-[22px] w-[22px] place-items-center rounded-full bg-on-lime text-[11px] text-lime transition-transform duration-500 ease-out-expo ${item.platform === 'web' ? 'group-hover/get:translate-x-0.5' : 'group-hover/get:translate-y-0.5'}`}>
+                                        {item.platform === 'web' ? '→' : '↓'}
+                                    </span>
+                                </a>
+                            </div>
                         </div>
 
                         <AnimatePresence mode="wait" initial={false}>

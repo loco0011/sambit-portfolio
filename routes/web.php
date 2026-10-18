@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin;
+use App\Http\Controllers\AppPageController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\SeoController;
@@ -11,6 +12,8 @@ Route::middleware(TrackPageView::class)->group(function () {
     Route::get('/', [PortfolioController::class, 'index'])->name('home');
     Route::get('/resume', [PortfolioController::class, 'resume'])->name('resume');
     Route::get('/work/{slug}', [PortfolioController::class, 'caseStudy'])->where('slug', '[a-z0-9-]+')->name('work.show');
+    Route::get('/apps/{slug}', [AppPageController::class, 'show'])->where('slug', '[a-z0-9-]+')->name('apps.show');
+    Route::get('/apps/{slug}/download/{key}', [AppPageController::class, 'download'])->where(['slug' => '[a-z0-9-]+', 'key' => '[a-z0-9-]+'])->name('apps.download');
 });
 
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])
@@ -38,6 +41,9 @@ Route::prefix('admin/api')->group(function () {
 
         Route::get('resume', [Admin\ResumeController::class, 'show']);
         Route::post('resume', [Admin\ResumeController::class, 'store']);
+
+        Route::get('apps', [Admin\AppFileController::class, 'index']);
+        Route::post('apps/{slug}/{key}', [Admin\AppFileController::class, 'store']);
 
         Route::put('password', [Admin\AccountController::class, 'password']);
     });

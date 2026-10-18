@@ -287,6 +287,10 @@ return [
     | stage beside their system map. `visual` picks the animated mini-UI
     | (hiringmap|savr|xypher|kashew|klyro); `diagram` has the same shape as a
     | featured project's. `icon` is a path under public/.
+    | The rest feeds the app's own page at /apps/{slug}: `downloads` lists the APK
+    | builds (uploaded in the admin panel), `screenshots` are paths under public/,
+    | and each feature's `viz` is [chat, [line, line]], [rows, [[label, note, on]]]
+    | or [bars, [[label, percent, value]]].
     */
     'side_projects' => [
         [
@@ -294,7 +298,7 @@ return [
             'name' => 'Kolkata Hiring Map',
             'tag' => 'hiring map',
             'meta' => 'Personal · web · launch-ready',
-            'icon' => '/apps/kolkata-hiring-map.svg',
+            'icon' => '/img/apps/kolkata-hiring-map.svg',
             'visual' => 'hiringmap',
             'kind' => 'A public map of who is hiring in Kolkata, where, and at what pay. A discovery layer, not a job portal: every role links out to where it was actually posted.',
             'highlights' => [
@@ -302,6 +306,36 @@ return [
                 'A nightly link check re-confirms every posting and closes dead ones, so nothing stale stays on the map',
             ],
             'stack' => ['Laravel', 'Inertia · React', 'Django', 'Leaflet', 'Docker'],
+            'platform' => 'web',
+            'category' => 'BusinessApplication',
+            'color' => '#22c487',
+            'status' => 'Launching soon',
+            'website' => null,
+            'repo' => null,
+            'headline' => 'Who\'s hiring in Kolkata,',
+            'headline_accent' => 'on one map.',
+            'lede' => 'See which companies are hiring, in which part of the city, and what they pay. Every role links straight to where it was posted, so you apply on the company\'s own page. No sign-up, no resumes, no middleman.',
+            'features' => [
+                ['eyebrow' => 'Every area', 'title' => 'See who\'s hiring', 'title_accent' => 'near you.', 'body' => 'Pins show how many open roles each company has, grouped by area: Salt Lake Sector V, Rajarhat New Town, Park Street and more.', 'tags' => ['Salt Lake Sector V', 'Rajarhat New Town', 'Park Street', 'Camac Street', 'Ballygunge', 'Howrah', 'Garia', 'Dum Dum', 'Jadavpur', 'Behala'], 'tags_alt' => ['Internships', 'Freshers', 'This week', 'IT', 'Manufacturing', 'Finance', 'Sales', 'Design']],
+                ['title' => 'Real roles, real links', 'body' => 'Every role opens the company\'s own posting. You never apply through us.', 'viz' => ['chat', ['Open posting ↗', 'Opens on the company\'s careers page']]],
+                ['title' => 'Checked every night', 'body' => 'Links are re-checked nightly, and dead postings come off the map.', 'viz' => ['rows', [['Posting still live', 'kept', true], ['Link went dead', 'removed', false]]]],
+                ['title' => 'Filters that matter', 'body' => 'Show only internships, roles for freshers, or what was posted this week.', 'viz' => ['rows', [['Internships', 'on', true], ['Freshers', 'on', true], ['Posted this week', 'off', false]]]],
+                ['stat' => '18', 'title' => 'hiring areas', 'body' => 'Across Kolkata, from Sector V to Howrah.', 'tags' => ['Sector V', 'New Town', 'Howrah', '+15']],
+            ],
+            'free' => 'Free, no sign-up.',
+            'screenshots' => [
+                ['src' => '/img/apps/kolkata-hiring-map/map.jpg', 'title' => 'The map', 'caption' => 'Who\'s hiring, area by area'],
+                ['src' => '/img/apps/kolkata-hiring-map/company.jpg', 'title' => 'A company', 'caption' => 'Its open roles and a link to the real posting'],
+                ['src' => '/img/apps/kolkata-hiring-map/openings.jpg', 'title' => 'Openings', 'caption' => 'Every live role in one list'],
+            ],
+            'downloads' => [],
+            'permissions' => null,
+            'faq' => [
+                ['q' => 'Is this a job portal?', 'a' => 'No. It\'s a map of who is hiring. There are no applications or resumes here: every role links to the company\'s own posting, and you apply there.'],
+                ['q' => 'How fresh are the listings?', 'a' => 'Every posting\'s link is checked every night. If a link stops working, the role is taken off the map.'],
+                ['q' => 'Can I add a company or an opening?', 'a' => 'Yes. Use the suggestion form on the site. Every suggestion is reviewed before it goes on the map.'],
+                ['q' => 'Does it cost anything?', 'a' => 'No. It\'s free to use, with no sign-up.'],
+            ],
             'diagram' => [
                 'nodes' => [
                     ['id' => 'ats', 'label' => 'Job boards', 'x' => 8, 'y' => 16],
@@ -320,7 +354,7 @@ return [
             'name' => 'Savr',
             'tag' => 'price comparison',
             'meta' => 'Personal · Android · in testing',
-            'icon' => '/apps/savr.png',
+            'icon' => '/img/apps/savr.png',
             'visual' => 'savr',
             'kind' => 'Which app is cheapest for this, right now? Compares what you would actually pay across quick commerce, grocery, shopping, food and ride apps.',
             'highlights' => [
@@ -328,6 +362,37 @@ return [
                 'Blinkit, Zepto and Instamart fetched in parallel in about 5 s, with no server',
             ],
             'stack' => ['Flutter', 'Dart', 'WebView', 'Share intents'],
+            'platform' => 'android',
+            'category' => 'ShoppingApplication',
+            'color' => '#2fbf8a',
+            'status' => 'In testing',
+            'website' => null,
+            'repo' => 'https://github.com/loco0011/savr',
+            'headline' => 'Find the cheapest price',
+            'headline_accent' => 'before you order.',
+            'lede' => 'Search for anything once and Savr shows what it costs on Blinkit, Zepto and Instamart right now, delivery fee included. Share a product from any shopping app to compare it in one tap.',
+            'features' => [
+                ['eyebrow' => 'One search', 'title' => 'Every app,', 'title_accent' => 'side by side.', 'body' => 'Compare quick commerce, groceries, shopping, food delivery and rides without opening five apps.', 'tags' => ['Blinkit', 'Zepto', 'Swiggy Instamart', 'BigBasket', 'Amazon', 'Flipkart', 'Myntra', 'Zomato', 'Uber', 'Ola', 'Rapido'], 'tags_alt' => ['Cheapest: Zepto', 'Fastest: Blinkit', 'Delivery fee included', 'Price per 100 g', 'In stock now']],
+                ['title' => 'Share to compare', 'body' => 'Looking at something in Blinkit or Amazon? Tap Share, pick Savr, and it finds the same thing elsewhere.', 'viz' => ['chat', ['Shared from Blinkit: Amul Taaza 500 ml', 'Found on 2 more apps']]],
+                ['title' => 'What you\'d actually pay', 'body' => 'Delivery and handling fees are added in, so the cheapest really is the cheapest.', 'viz' => ['rows', [['Blinkit', '₹28 · 9 min', false], ['Zepto', '₹27 · 11 min', true], ['Instamart', '₹29 · 14 min', false]]]],
+                ['title' => 'Rides, too', 'body' => 'See estimated fares for Uber, Ola, Rapido and more before you book. Estimates are always marked as estimates.', 'viz' => ['rows', [['Rapido bike', 'estimate', true], ['Ola auto', 'estimate', false], ['Uber Go', 'estimate', false]]]],
+                ['stat' => '25+', 'title' => 'apps compared', 'body' => 'Groceries, shopping, food and rides.', 'tags' => ['Quick', 'Grocery', 'Shopping', 'Food', 'Rides']],
+            ],
+            'free' => 'No sign-up, no ads.',
+            'screenshots' => [
+                ['src' => '/img/apps/savr/home.jpg', 'title' => 'Compare', 'caption' => 'Search once, or paste a link'],
+                ['src' => '/img/apps/savr/checking.jpg', 'title' => 'Live prices', 'caption' => 'Checks every app near you'],
+                ['src' => '/img/apps/savr/rides.jpg', 'title' => 'Rides', 'caption' => 'Fares across Rapido, Ola and Uber'],
+                ['src' => '/img/apps/savr/welcome.jpg', 'title' => 'Welcome', 'caption' => 'Use it as a guest, no sign-up'],
+            ],
+            'downloads' => [['key' => 'app', 'label' => 'Download Savr', 'file' => 'Savr']],
+            'permissions' => 'Savr only asks for your location (to show prices for your area) and the microphone (for voice search), and you can say no to both. It never asks for your contacts or photos.',
+            'faq' => [
+                ['q' => 'Is it really free?', 'a' => 'Yes. No ads, no subscription and no sign-up.'],
+                ['q' => 'Why do prices change by area?', 'a' => 'Quick-commerce apps price by location and stock. Set your address once for each app under Settings → Live prices, and Savr shows the prices for your area.'],
+                ['q' => 'Why isn\'t it on the Play Store?', 'a' => 'It\'s still in testing, so for now it\'s shared here directly. Downloading it from this page gets you the full app.'],
+                ['q' => 'Does it work on iPhone?', 'a' => 'Not yet. Savr is Android-only for now.'],
+            ],
             'diagram' => [
                 'nodes' => [
                     ['id' => 'ui', 'label' => 'Search · Share', 'x' => 8, 'y' => 50],
@@ -346,7 +411,7 @@ return [
             'name' => 'Xypher',
             'tag' => 'password manager',
             'meta' => 'Personal · Android + web · v1.2',
-            'icon' => '/apps/xypher.png',
+            'icon' => '/img/apps/xypher.png',
             'visual' => 'xypher',
             'kind' => 'A password vault that cannot read your passwords. Logins, cards and notes, with a built-in 2FA authenticator, offline by default.',
             'highlights' => [
@@ -354,6 +419,37 @@ return [
                 'The breach scan sends 5 characters of a hash, never the password',
             ],
             'stack' => ['Flutter', 'Argon2id', 'Keystore', 'PHP · MySQL'],
+            'platform' => 'android',
+            'category' => 'SecurityApplication',
+            'color' => '#2bd4c4',
+            'status' => 'Available',
+            'website' => null,
+            'repo' => 'https://github.com/loco0011/xypher',
+            'headline' => 'A password vault',
+            'headline_accent' => 'that can\'t read your passwords.',
+            'lede' => 'Keep your logins, cards, notes and Wi-Fi passwords in one place, locked with a master password only you know. It works offline, with optional encrypted sync to your other devices.',
+            'features' => [
+                ['eyebrow' => 'One vault', 'title' => 'All your logins,', 'title_accent' => 'locked by you.', 'body' => 'Logins, payment cards, secure notes, identities and Wi-Fi, with tags, favourites and search. Bring your passwords over from the browser or manager you use now.', 'tags' => ['Logins', 'Cards', 'Secure notes', 'Identities', 'Wi-Fi', 'Custom fields', 'Favourites'], 'tags_alt' => ['Import: Chrome', 'Bitwarden', '1Password', 'LastPass', 'Firefox', 'Safari', 'Edge', 'Dashlane', 'Proton Pass']],
+                ['title' => '2FA codes built in', 'body' => 'Keep your two-factor codes next to the passwords they protect, with a live countdown.', 'viz' => ['rows', [['GitHub', 'code ready', true], ['Google', 'code ready', false]]]],
+                ['title' => 'Security check-up', 'body' => 'A health score, plus lists of weak, reused, old and breached passwords to fix.', 'viz' => ['bars', [['strong', 86, ''], ['weak', 9, ''], ['reused', 5, '']]]],
+                ['title' => 'Unlock with your fingerprint', 'body' => 'The vault locks itself when you leave the app, copied passwords clear themselves, and screenshots are blocked.', 'viz' => ['rows', [['Fingerprint', 'unlocked', true], ['Auto-lock', 'when you leave', false], ['Clipboard', 'clears itself', false]]]],
+                ['stat' => '5', 'title' => 'characters', 'body' => 'All a breach check sends. Your password never leaves the phone.', 'tags' => ['Offline', 'Encrypted', 'Zero-knowledge']],
+            ],
+            'free' => 'Works offline.',
+            'screenshots' => [
+                ['src' => '/img/apps/xypher/vault.jpg', 'title' => 'Vault', 'caption' => 'Everything in one encrypted vault'],
+                ['src' => '/img/apps/xypher/authenticator.jpg', 'title' => 'Authenticator', 'caption' => '2FA codes next to your logins'],
+                ['src' => '/img/apps/xypher/radar.jpg', 'title' => 'Security radar', 'caption' => 'A health score for your passwords'],
+                ['src' => '/img/apps/xypher/generator.jpg', 'title' => 'Generator', 'caption' => 'Strong passwords in one tap'],
+            ],
+            'downloads' => [['key' => 'app', 'label' => 'Download Xypher', 'file' => 'Xypher']],
+            'permissions' => 'Xypher only uses the internet for the optional sync and breach check, and your fingerprint or face to unlock. It never asks for your contacts, photos or location.',
+            'faq' => [
+                ['q' => 'Is it really free?', 'a' => 'Yes. No ads, no subscription.'],
+                ['q' => 'What if I forget my master password?', 'a' => 'Nobody can reset it, not even me. That\'s what keeps the vault private. Export an encrypted backup from Settings and keep your master password somewhere safe.'],
+                ['q' => 'Can I use it on my computer?', 'a' => 'Yes. Turn on cloud sync in Settings and open the web vault in your browser. It is decrypted on your computer, never on the server.'],
+                ['q' => 'Does it work on iPhone?', 'a' => 'Not yet. Xypher is Android-only for now.'],
+            ],
             'diagram' => [
                 'nodes' => [
                     ['id' => 'pw', 'label' => 'Master password', 'x' => 8, 'y' => 16],
@@ -371,7 +467,7 @@ return [
             'name' => 'Kashew',
             'tag' => 'expense tracker',
             'meta' => 'Personal · Android · v1.1',
-            'icon' => '/apps/kashew.svg',
+            'icon' => '/img/apps/kashew.svg',
             'visual' => 'kashew',
             'kind' => 'An expense tracker that logs itself. Bank and UPI payments are read from SMS, and cash takes one tap or a sentence like "50 chai".',
             'highlights' => [
@@ -379,6 +475,40 @@ return [
                 'Removes duplicates by UPI reference, and treats card-bill payments as transfers so nothing counts twice',
             ],
             'stack' => ['Flutter', 'SMS parsing', 'Voice entry', 'On-device'],
+            'platform' => 'android',
+            'category' => 'FinanceApplication',
+            'color' => '#14b8a6',
+            'status' => 'Available',
+            'website' => null,
+            'repo' => null,
+            'headline' => 'An expense tracker',
+            'headline_accent' => 'that logs itself.',
+            'lede' => 'Typing in every expense never lasts. Kashew makes it effortless: log cash in one tap or by saying "50 chai", and, if you like, let it read your bank texts so card and UPI payments add themselves. No account, no internet.',
+            'features' => [
+                ['eyebrow' => 'Bank texts, sorted', 'title' => 'Payments that', 'title_accent' => 'add themselves.', 'body' => 'Your bank already texts you about every payment. The Auto-SMS version reads those texts on your phone and files each one: amount, shop and account.', 'tags' => ['HDFC', 'SBI', 'ICICI', 'Axis', 'Kotak', 'PNB', 'Bank of Baroda', 'IDFC', 'Yes Bank', 'IndusInd'], 'tags_alt' => ['Food', 'Groceries', 'Travel', 'Bills', 'Subscriptions', 'People', 'Shopping', 'Fuel']],
+                ['title' => 'Say it, it\'s saved', 'body' => 'Say or type "spent 2k on groceries" and the amount, note and category fill in.', 'viz' => ['chat', ['"50 chai"', 'Chai · Food · −₹50']]],
+                ['title' => 'Only real payments', 'body' => 'OTPs, reminders, failed payments and duplicates are skipped automatically.', 'viz' => ['rows', [['OTP message', 'skipped', false], ['Payment reminder', 'skipped', false], ['₹120 to Swiggy', 'saved', true]]]],
+                ['title' => 'Cash counts too', 'body' => 'ATM withdrawals fill your cash wallet, so even cash you forget to log still shows up in the month.', 'viz' => ['rows', [['ATM withdrawal', '+₹2,000 cash', true], ['Chai', '−₹20', false], ['Cash not logged', 'still counted', false]]]],
+                ['stat' => '~45', 'title' => 'banks', 'body' => 'Bank and card texts it understands.', 'tags' => ['UPI', 'Cards', 'ATM', 'NEFT']],
+            ],
+            'free' => 'No account, no internet.',
+            'screenshots' => [
+                ['src' => '/img/apps/kashew/overview.jpg', 'title' => 'Overview', 'caption' => 'Your month at a glance'],
+                ['src' => '/img/apps/kashew/add.jpg', 'title' => 'Add expense', 'caption' => 'Log anything in two taps'],
+                ['src' => '/img/apps/kashew/insights.jpg', 'title' => 'Insights', 'caption' => 'Where the money goes'],
+                ['src' => '/img/apps/kashew/transactions.jpg', 'title' => 'Transactions', 'caption' => 'Every payment in one list'],
+            ],
+            'downloads' => [
+                ['key' => 'standard', 'label' => 'Download Kashew', 'file' => 'Kashew'],
+                ['key' => 'sms', 'label' => 'Auto-SMS version', 'file' => 'Kashew-AutoSMS', 'note' => 'Reads bank texts for you. Android\'s Play Protect may block it when you install from a browser; tap "Install anyway" if it\'s offered.'],
+            ],
+            'permissions' => 'The standard version asks for nothing. It only uses your fingerprint for the optional app lock. The Auto-SMS version asks to read your texts, but only when you turn automatic tracking on, and the texts never leave your phone: the app has no internet access.',
+            'faq' => [
+                ['q' => 'Which version should I get?', 'a' => 'Start with the standard one: it installs normally and you log spending by tap or voice. Get the Auto-SMS version if you want card and UPI payments added for you from your bank texts. You can switch later and keep your data.'],
+                ['q' => 'Is my data safe?', 'a' => 'Everything stays on your phone. There is no account and no server, and the app can\'t go online.'],
+                ['q' => 'What happens if I uninstall it?', 'a' => 'Your data is deleted with the app, because there is no cloud backup yet.'],
+                ['q' => 'Does it work on iPhone?', 'a' => 'No. iPhones don\'t let apps read bank texts, so Kashew is Android-only.'],
+            ],
             'diagram' => [
                 'nodes' => [
                     ['id' => 'sms', 'label' => 'Bank SMS', 'x' => 8, 'y' => 16],
@@ -396,7 +526,7 @@ return [
             'name' => 'Klyro',
             'tag' => 'interview prep',
             'meta' => 'Personal · cross-platform · in progress',
-            'icon' => '/apps/klyro.png',
+            'icon' => '/img/apps/klyro.png',
             'visual' => 'klyro',
             'kind' => 'Prepare for the interview you are actually going to face. It reads your CV and the job description, then quizzes you on what you claim.',
             'highlights' => [
@@ -404,6 +534,37 @@ return [
                 'Mock interviews follow up on your answers and end with a debrief',
             ],
             'stack' => ['Flutter', 'Claude API', 'PDF · DOCX'],
+            'platform' => 'android',
+            'category' => 'EducationalApplication',
+            'color' => '#6c63ff',
+            'status' => 'Early access',
+            'website' => null,
+            'repo' => null,
+            'headline' => 'Prepare for the real interview.',
+            'headline_accent' => 'Not a generic one.',
+            'lede' => 'Klyro reads your CV and the job you\'re applying for, then asks the questions that interviewer is likely to ask, scores your answers, and runs mock interviews that follow up like a real person.',
+            'features' => [
+                ['eyebrow' => 'From your CV', 'title' => 'Questions about', 'title_accent' => 'what you claim.', 'body' => 'Upload your CV as a PDF or Word file. Klyro picks out your skills and projects, and asks about them the way an interviewer would.', 'tags' => ['Laravel', 'React', 'PostgreSQL', 'Docker', 'REST APIs', 'Node.js', 'System design', 'TypeScript'], 'tags_alt' => ['Missing: Kubernetes', 'Weak: caching', 'Match: Laravel', 'Missing: GraphQL', 'Match: React', 'Weak: testing']],
+                ['title' => 'Mock interviews that follow up', 'body' => 'The interviewer adapts to your answers and ends with a debrief.', 'viz' => ['chat', ['How would you cache an expensive API call?', 'Why that expiry time?']]],
+                ['title' => 'Feedback you can use', 'body' => 'Every answer gets scores, what you missed and a better answer.', 'viz' => ['bars', [['accuracy', 86, '8.6'], ['completeness', 72, '7.2'], ['relevance', 91, '9.1'], ['clarity', 80, '8.0']]]],
+                ['title' => 'A day-by-day plan', 'body' => 'Paste a job description and get a plan that covers your weak and missing skills before the date.', 'viz' => ['rows', [['Laravel queues', 'Day 1 ✓', true], ['Caching basics', 'Day 2 ✓', true], ['Mock interview', 'Day 3', false]]]],
+                ['stat' => '26', 'title' => 'technologies', 'body' => 'Curated questions with explanations, code and links.', 'tags' => ['PHP', 'Python', 'Java', 'React', 'SQL', '+21']],
+            ],
+            'free' => 'Your data stays on your phone.',
+            'screenshots' => [
+                ['src' => '/img/apps/klyro/home.jpg', 'title' => 'Home', 'caption' => 'Start from your CV, a job or a topic'],
+                ['src' => '/img/apps/klyro/practice.jpg', 'title' => 'Practice', 'caption' => 'Quick quizzes on your own stack'],
+                ['src' => '/img/apps/klyro/prep.jpg', 'title' => 'Prep', 'caption' => 'Plans built from a job description'],
+                ['src' => '/img/apps/klyro/interview.jpg', 'title' => 'Mock interview', 'caption' => 'Rehearse the real thing'],
+            ],
+            'downloads' => [['key' => 'app', 'label' => 'Download Klyro', 'file' => 'Klyro']],
+            'permissions' => 'Klyro only needs internet access. It doesn\'t ask for your contacts, photos, location or microphone, and it only reads a CV when you pick one.',
+            'faq' => [
+                ['q' => 'Is it really free?', 'a' => 'Yes. No ads and no subscription. The practice questions work without any setup.'],
+                ['q' => 'Do I need anything else for the AI features?', 'a' => 'Scoring your answers, reading your CV and mock interviews use Claude, an AI from Anthropic. You add your own Claude API key in Profile and pay Anthropic only for what you use. Without a key you still get curated questions across 26 technologies, bookmarks, practice and plans.'],
+                ['q' => 'Where does my data go?', 'a' => 'Everything is stored on your phone. When you use an AI feature, the text it needs, such as your CV or your answer, is sent to Claude to be scored, and nowhere else.'],
+                ['q' => 'Does it work on iPhone?', 'a' => 'Not yet. Klyro is Android-only for now.'],
+            ],
             'diagram' => [
                 'nodes' => [
                     ['id' => 'cv', 'label' => 'CV · JD', 'x' => 8, 'y' => 18],
