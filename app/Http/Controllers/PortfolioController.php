@@ -106,6 +106,21 @@ class PortfolioController extends Controller
         ]);
     }
 
+    // Trial recruiter-first homepage (light, scannable). Not indexed until it replaces "/".
+    public function minimal(): View
+    {
+        $portfolio = PortfolioContent::get();
+
+        return view('minimal', [
+            'portfolio' => $portfolio,
+            // Featured projects whose cover is drawn from their real architecture
+            'projects' => collect($portfolio['projects'])
+                ->filter(fn ($p) => ! empty($p['diagram']))
+                ->map(fn ($p) => ['slug' => $p['slug'], 'name' => $p['name'], 'url' => route('work.show', $p['slug']), 'd' => $p['diagram']])
+                ->values(),
+        ]);
+    }
+
     public function resume(): StreamedResponse
     {
         abort_unless(Storage::disk('local')->exists('resume.pdf'), 404);

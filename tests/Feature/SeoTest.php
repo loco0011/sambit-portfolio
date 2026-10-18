@@ -87,4 +87,17 @@ class SeoTest extends TestCase
             ->assertDontSee('google-site-verification')
             ->assertDontSee('googletagmanager.com');
     }
+
+    public function test_minimal_page_links_real_pages_and_stays_out_of_search(): void
+    {
+        $this->get('/minimal')
+            ->assertOk()
+            ->assertSee('<meta name="robots" content="noindex, nofollow">', false)
+            ->assertSee('href="'.route('resume').'"', false)
+            ->assertSee('href="'.route('apps.show', 'samgeet').'"', false)
+            ->assertSee(trim(json_encode(route('work.show', 'wonati')), '"'), false)
+            ->assertSee('mailto:'.config('portfolio.profile.email'), false);
+
+        $this->get('/sitemap.xml')->assertDontSee('/minimal');
+    }
 }

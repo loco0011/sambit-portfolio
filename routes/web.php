@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(TrackPageView::class)->group(function () {
     Route::get('/', [PortfolioController::class, 'index'])->name('home');
     Route::get('/resume', [PortfolioController::class, 'resume'])->name('resume');
+    Route::get('/minimal', [PortfolioController::class, 'minimal'])->name('minimal');
     Route::get('/work/{slug}', [PortfolioController::class, 'caseStudy'])->where('slug', '[a-z0-9-]+')->name('work.show');
     Route::get('/apps/{slug}', [AppPageController::class, 'show'])->where('slug', '[a-z0-9-]+')->name('apps.show');
     Route::get('/apps/{slug}/download/{key}', [AppPageController::class, 'download'])->where(['slug' => '[a-z0-9-]+', 'key' => '[a-z0-9-]+'])->name('apps.download');
