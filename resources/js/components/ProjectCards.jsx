@@ -92,7 +92,8 @@ function InfraVisual() {
     );
 }
 
-function MusicVisual() {
+// Also the Samgeet visual on the After hours stage.
+export function MusicVisual() {
     const [skipped, setSkipped] = useState(128);
     const [ref, active] = useTicker(1600, () => setSkipped((n) => n + 1));
     return (
@@ -134,27 +135,55 @@ function MusicVisual() {
 
 const STAGES = ['Lead', 'Qualified', 'Won'];
 
+// What happens to the deal at each stage of the pipeline.
+const CRM_EVENTS = ['New lead from the website', 'Discovery call booked · Google Meet', 'Won · proposal signed, invoice sent'];
+
 function CrmVisual() {
     const [stage, setStage] = useState(0);
-    const [ref] = useTicker(1300, () => setStage((s) => (s + 1) % STAGES.length));
+    const [ref] = useTicker(1500, () => setStage((s) => (s + 1) % STAGES.length));
     return (
-        <div ref={ref} className="grid h-full grid-cols-3 gap-2 p-4">
-            {STAGES.map((name, i) => (
-                <div key={name} className="flex flex-col gap-1.5 rounded-lg border border-line bg-tint/[0.015] p-2">
-                    <p className="font-mono text-[9.5px] uppercase tracking-widest text-dim">{name}</p>
-                    <div className="h-4 rounded bg-tint/[0.06]" />
-                    {i === stage && (
-                        <motion.div
-                            layoutId="crm-deal"
-                            className="rounded border border-acid/50 bg-acid/10 px-1.5 py-1 font-mono text-[9px] text-acid"
-                            transition={{ type: 'spring', stiffness: 260, damping: 26 }}
-                        >
-                            {i === 2 ? 'Deal ✓' : 'Deal'}
-                        </motion.div>
-                    )}
-                    <div className="h-4 rounded bg-tint/[0.04]" />
-                </div>
-            ))}
+        <div ref={ref} className="flex h-full flex-col gap-2 p-4">
+            <div className="grid flex-1 grid-cols-3 gap-2">
+                {STAGES.map((name, i) => (
+                    <div key={name} className="flex flex-col gap-1.5 rounded-lg border border-line bg-tint/[0.015] p-2">
+                        <p className="font-mono text-[9.5px] uppercase tracking-widest text-dim">{name}</p>
+                        <div className="h-3.5 rounded bg-tint/[0.06]" />
+                        {i === stage && (
+                            <motion.div
+                                layoutId="crm-deal"
+                                className="rounded border border-acid/50 bg-acid/10 px-1.5 py-1 font-mono text-[9px] text-acid"
+                                transition={{ type: 'spring', stiffness: 260, damping: 26 }}
+                            >
+                                {i === 2 ? 'Deal ✓' : 'Deal'}
+                            </motion.div>
+                        )}
+                    </div>
+                ))}
+            </div>
+            {/* The calendar side: the meeting lands on Google Calendar when the deal is qualified */}
+            <div className="flex items-center gap-2 rounded-lg border border-line px-2.5 py-1.5">
+                <span className={`grid h-6 w-6 shrink-0 place-items-center rounded-md font-mono text-[8px] leading-none transition-colors duration-500 ${stage === 1 ? 'bg-acid text-on-lime' : 'bg-tint/[0.06] text-dim'}`}>
+                    <span className="text-center">
+                        TUE
+                        <br />
+                        11
+                    </span>
+                </span>
+                <span className="relative h-4 min-w-0 flex-1 overflow-hidden">
+                <AnimatePresence mode="wait" initial={false}>
+                    <motion.span
+                        key={stage}
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{ duration: 0.35, ease }}
+                        className={`absolute inset-0 truncate font-mono text-[10px] leading-4 ${stage === 0 ? 'text-mute' : 'text-fg/90'}`}
+                    >
+                        {CRM_EVENTS[stage]}
+                    </motion.span>
+                </AnimatePresence>
+                </span>
+            </div>
         </div>
     );
 }
@@ -201,7 +230,69 @@ function EarningVisual() {
     );
 }
 
-const VISUALS = { chat: ChatVisual, infra: InfraVisual, music: MusicVisual, crm: CrmVisual, earning: EarningVisual };
+const PROMPTS = [
+    ['Write a launch post for our new pricing page', 'Blog post', 'HubSpot'],
+    ['Three FAQ answers about refunds, friendly tone', 'FAQ entries', 'Strapi'],
+    ['Product page copy for the winter collection', 'Landing copy', 'HubSpot'],
+];
+const MODELS = ['GPT', 'Claude', 'Gemini'];
+
+function CmsVisual() {
+    // 0 prompt · 1 model writing · 2 draft ready · 3 pushed to the CMS; then the next prompt.
+    const [n, setN] = useState(0);
+    const [ref] = useTicker(1200, () => setN((v) => v + 1));
+    const step = n % 4;
+    const [prompt, kind, target] = PROMPTS[Math.floor(n / 4) % PROMPTS.length];
+    const model = MODELS[Math.floor(n / 4) % MODELS.length];
+    return (
+        <div ref={ref} className="flex h-full flex-col justify-center gap-2 p-4">
+            <div className="flex items-center gap-2 rounded-lg border border-line bg-tint/[0.03] px-3 py-1.5 font-mono text-[10.5px] text-fg/85">
+                <span className="text-dim">prompt ›</span>
+                <span className="truncate">{prompt}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+                {MODELS.map((m) => (
+                    <span
+                        key={m}
+                        className={`rounded-full border px-2 py-0.5 font-mono text-[9.5px] transition-colors duration-500 ${
+                            m === model && step >= 1 ? 'border-acid/50 bg-acid/10 text-acid' : 'border-line text-dim'
+                        }`}
+                    >
+                        {m}
+                    </span>
+                ))}
+                <span className="ml-auto font-mono text-[9.5px] text-dim">{step === 1 ? 'writing…' : step >= 2 ? kind.toLowerCase() : 'routing'}</span>
+            </div>
+            <div className="grid gap-1 rounded-lg border border-line p-2">
+                {[92, 78, 85].map((w, i) => (
+                    <span
+                        key={i}
+                        className="h-1.5 origin-left rounded-full bg-tint/15 transition-transform duration-700 ease-out-expo"
+                        style={{ width: `${w}%`, transform: `scaleX(${step >= 1 ? 1 : 0})`, transitionDelay: `${i * 0.12}s` }}
+                    />
+                ))}
+            </div>
+            <div className="flex gap-1.5 font-mono text-[10px]">
+                {['HubSpot', 'Strapi'].map((cms) => {
+                    const live = step === 3 && cms === target;
+                    return (
+                        <span
+                            key={cms}
+                            className={`flex flex-1 items-center justify-between rounded-md border px-2 py-1 transition-colors duration-500 ${
+                                live ? 'border-acid/45 bg-acid/[0.06] text-fg' : 'border-line text-dim'
+                            }`}
+                        >
+                            {cms}
+                            <span className={live ? 'text-acid' : ''}>{live ? 'published ✓' : '—'}</span>
+                        </span>
+                    );
+                })}
+            </div>
+        </div>
+    );
+}
+
+const VISUALS = { chat: ChatVisual, infra: InfraVisual, cms: CmsVisual, crm: CrmVisual, earning: EarningVisual };
 
 /* ——— Grid ——————————————————————————————————————————————— */
 

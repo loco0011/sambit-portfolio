@@ -9,6 +9,10 @@
 @php($extra = collect($builds)->slice(1))
 @php($mb = fn ($bytes) => $bytes >= 1048576 ? round($bytes / 1048576).' MB' : max(1, round($bytes / 1024)).' KB')
 @php($feat = $app['features'] ?? [])
+{{-- A build is ready when it's uploaded, or hosted elsewhere (`external`, e.g. the latest GitHub release) --}}
+@php($ready = fn ($b) => ! empty($b['external']) || ! empty($b['upload']))
+@php($href = fn ($b) => $b['external'] ?? route('apps.download', [$app['slug'], $b['key']]))
+@php($size = fn ($b) => ! empty($b['upload']) ? $mb($b['upload']['size']) : 'from '.($b['source'] ?? 'its release page'))
 <!DOCTYPE html>
 <html lang="en" class="bg-ink">
 <head>
@@ -82,17 +86,17 @@
                         @endif
                     </div>
                     <p class="ap-fine">{{ empty($app['website']) ? 'Built and launch-ready. It goes live as soon as the server is set up.' : 'Opens in a new tab · free' }}</p>
-                @elseif (! $primary || ! $primary['upload'])
+                @elseif (! $primary || ! $ready($primary))
                     <div class="ap-ctas"><span class="ap-btn is-off">Download coming soon <span>…</span></span></div>
                     <p class="ap-fine">The app is ready; the download goes up here shortly.</p>
                 @else
                     {{-- Android visitors get the download; iPhone and computer visitors are switched by app-page.js --}}
                     <div data-device="android">
                         <div class="ap-ctas">
-                            <a class="ap-btn" href="{{ route('apps.download', [$app['slug'], $primary['key']]) }}" download>{{ $primary['label'] }} <span>↓</span></a>
+                            <a class="ap-btn" href="{{ $href($primary) }}" download>{{ $primary['label'] }} <span>↓</span></a>
                             <a class="ap-ghost" href="#install">How to install</a>
                         </div>
-                        <p class="ap-fine">For Android phones · {{ $mb($primary['upload']['size']) }} · free</p>
+                        <p class="ap-fine">For Android phones · {{ $size($primary) }} · free</p>
                     </div>
                     <div data-device="iphone" hidden>
                         <div class="ap-ctas"><span class="ap-btn is-off">Android only for now <span>✕</span></span></div>
@@ -100,11 +104,11 @@
                     </div>
                     <div data-device="desktop" hidden>
                         <div class="ap-qr"><div class="ap-qr-code" data-qr="{{ $url }}" role="img" aria-label="QR code for this page"></div><div><b>Scan with your Android phone</b><p>Opens this page on your phone, where you can tap Download.</p></div></div>
-                        <p class="ap-fine">Or <a href="{{ route('apps.download', [$app['slug'], $primary['key']]) }}" download class="underline decoration-line-2 underline-offset-4 hover:text-fg">download the file to this computer</a> ({{ $mb($primary['upload']['size']) }}).</p>
+                        <p class="ap-fine">Or <a href="{{ $href($primary) }}" download class="underline decoration-line-2 underline-offset-4 hover:text-fg">download the file to this computer</a> ({{ $size($primary) }}).</p>
                     </div>
                     @foreach ($extra as $build)
-                        @if ($build['upload'])
-                            <p class="ap-alt"><a href="{{ route('apps.download', [$app['slug'], $build['key']]) }}" download>{{ $build['label'] }} ↓</a> <span>{{ $mb($build['upload']['size']) }}@if (! empty($build['note'])) · {{ $build['note'] }}@endif</span></p>
+                        @if ($ready($build))
+                            <p class="ap-alt"><a href="{{ $href($build) }}" download>{{ $build['label'] }} ↓</a> <span>{{ $size($build) }}@if (! empty($build['note'])) · {{ $build['note'] }}@endif</span></p>
                         @endif
                     @endforeach
                 @endif
@@ -151,9 +155,9 @@
                         </div>
                     </div>
 
-                    @foreach ([1 => 'is-small', 2 => 'is-small', 3 => 'is-wide'] as $i => $size)
+                    @foreach ([1 => 'is-small', 2 => 'is-small', 3 => 'is-wide'] as $i => $span)
                         @php($f = $feat[$i])
-                        <div class="ap-card {{ $size }}">
+                        <div class="ap-card {{ $span }}">
                             @php([$type, $data] = $f['viz'] ?? [null, []])
                             <div class="ap-viz">
                                 @if ($type === 'chat')
@@ -248,8 +252,8 @@
                     @else
                         <span class="ap-btn is-off">Launching soon <span>…</span></span>
                     @endif
-                @elseif ($primary && $primary['upload'])
-                    <div data-device="android"><a class="ap-btn" href="{{ route('apps.download', [$app['slug'], $primary['key']]) }}" download>{{ $primary['label'] }} <span>↓</span></a></div>
+                @elseif ($primary && $ready($primary))
+                    <div data-device="android"><a class="ap-btn" href="{{ $href($primary) }}" download>{{ $primary['label'] }} <span>↓</span></a></div>
                     <div data-device="iphone" hidden><span class="ap-btn is-off">Android only for now <span>✕</span></span></div>
                     <div data-device="desktop" hidden><div class="ap-qr mx-auto text-left"><div class="ap-qr-code" data-qr="{{ $url }}" role="img" aria-label="QR code for this page"></div><div><b>Scan to get it on your phone</b><p>{{ $app['name'] }} runs on Android.</p></div></div></div>
                 @else

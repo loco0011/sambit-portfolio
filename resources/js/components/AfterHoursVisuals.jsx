@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { ease } from '../ui/Reveal';
 import { useTicker } from '../lib/hooks';
+import { MusicVisual } from './ProjectCards';
 
 /* Live mini-UIs for the "After hours" stage, one per app. Same rules as the
    "Also built" visuals: a ticker that pauses off-screen, transform/opacity only. */
@@ -274,4 +275,4 @@ function KlyroVisual() {
     );
 }
 
-export const VISUALS = { hiringmap: HiringMapVisual, savr: SavrVisual, xypher: XypherVisual, kashew: KashewVisual, klyro: KlyroVisual };
+export const VISUALS = { samgeet: MusicVisual, hiringmap: HiringMapVisual, savr: SavrVisual, xypher: XypherVisual, kashew: KashewVisual, klyro: KlyroVisual };

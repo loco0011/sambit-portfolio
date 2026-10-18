@@ -55,8 +55,12 @@ class AppPageTest extends TestCase
 
         $this->postJson('/admin/api/apps/klyro/app', ['file' => UploadedFile::fake()->createWithContent('klyro-1.0.0.apk', str_repeat('x', 3 * 1048576))])
             ->assertOk()
-            ->assertJsonPath('apps.3.slug', 'klyro')
-            ->assertJsonPath('apps.3.builds.0.upload.size', 3 * 1048576);
+            ->assertJsonPath('apps.5.slug', 'klyro')
+            ->assertJsonPath('apps.5.builds.0.upload.size', 3 * 1048576)
+            ->assertJsonPath('apps.0.slug', 'samgeet')
+            ->assertJsonPath('apps.1.slug', 'xypher')
+            ->assertJsonPath('apps.2.platform', 'web')
+            ->assertJsonPath('apps.5.downloads.total', 0);
 
         Storage::disk('local')->assertExists('apps/klyro-app.apk');
         $sha = hash('sha256', str_repeat('x', 3 * 1048576));
@@ -72,6 +76,17 @@ class AppPageTest extends TestCase
             ->assertOk()
             ->assertHeader('Content-Type', 'application/vnd.android.package-archive')
             ->assertDownload('Klyro.apk');
+    }
+
+    public function test_a_hosted_release_links_out_and_cannot_be_uploaded(): void
+    {
+        Storage::fake('local');
+        $latest = 'https://github.com/loco0011/samgeet/releases/latest/download/Samgeet.apk';
+
+        $this->get('/apps/samgeet')->assertOk()->assertSee('href="'.$latest.'"', false)->assertSee('from GitHub Releases')->assertDontSee('Download coming soon');
+
+        $this->actingAs(User::create(['name' => 'Admin', 'email' => 'admin@example.com', 'password' => 'correct-horse-battery']));
+        $this->postJson('/admin/api/apps/samgeet/app', ['file' => UploadedFile::fake()->create('samgeet.apk', 10)])->assertNotFound();
     }
 
     public function test_app_uploads_need_login(): void

@@ -260,7 +260,7 @@ return [
     /*
     | "More projects" list under the featured cards. One line per project, no
     | diagram needed. Required: name, kind. Optional: year, org, stack (array),
-    | url (adds an ↗ link), card (chat|infra|music|crm|earning) promotes the
+    | url (adds an ↗ link), card (chat|infra|cms|crm|earning) promotes the
     | project to an animated card in the "Also built" grid instead of a row.
     | Blank years show as "—" and sort after dated ones.
     | The first 8 show, the rest sit behind a "Show all" button.
@@ -275,24 +275,137 @@ return [
         ['name' => 'Mentor-led guidance platform', 'kind' => 'Client-service platform', 'year' => '2025', 'org' => 'Triophase', 'stack' => ['Laravel', 'Node.js', 'React', 'Docker']],
         ['name' => 'Earning platform app', 'card' => 'earning', 'kind' => 'Mobile rewards & earning app', 'stack' => ['Flutter', 'Dart']],
         ['name' => 'Astrology platform', 'kind' => 'Consumer astrology product'],
-        ['name' => 'CRM systems', 'card' => 'crm', 'kind' => 'Multiple custom CRMs for businesses'],
+        ['name' => 'CRM systems', 'card' => 'crm', 'kind' => 'Custom CRMs for businesses: drag-and-drop deal pipelines, proposals to invoices, and meetings booked on Google Calendar with Meet links', 'stack' => ['Laravel', 'React', 'Google Calendar API', 'Google Meet']],
         ['name' => 'ID card management system', 'kind' => 'Issue & manage identity cards'],
         ['name' => 'Business & company websites', 'kind' => 'Multiple sites for different businesses'],
-        ['name' => 'Samgeet, ad-free music player', 'card' => 'music', 'kind' => 'Open-source Android app, built to skip ads', 'stack' => ['Flutter', 'Dart'], 'url' => '/work/samgeet'],
+        ['name' => 'Multi-LLM content SaaS', 'card' => 'cms', 'kind' => 'Writes custom content from a prompt across several AI models, then publishes it to HubSpot and Strapi', 'stack' => ['Next.js', 'Node.js', 'OpenAI', 'Anthropic API (Claude)', 'HubSpot', 'Strapi']],
         ['name' => 'Open-source contributions', 'kind' => 'Contributions to public projects', 'url' => 'https://github.com/loco0011'],
     ],
 
     /*
     | "After hours": products built on my own time, shown one at a time on a live
     | stage beside their system map. `visual` picks the animated mini-UI
-    | (hiringmap|savr|xypher|kashew|klyro); `diagram` has the same shape as a
+    | (samgeet|hiringmap|savr|xypher|kashew|klyro); `diagram` has the same shape as a
     | featured project's. `icon` is a path under public/.
     | The rest feeds the app's own page at /apps/{slug}: `downloads` lists the APK
-    | builds (uploaded in the admin panel), `screenshots` are paths under public/,
+    | builds (uploaded in the admin panel, or `external` for a link such as a GitHub release), `screenshots` are paths under public/,
     | and each feature's `viz` is [chat, [line, line]], [rows, [[label, note, on]]]
     | or [bars, [[label, percent, value]]].
     */
     'side_projects' => [
+        [
+            'slug' => 'samgeet',
+            'name' => 'Samgeet',
+            'tag' => 'music player',
+            'meta' => 'Personal · Android · open source',
+            'icon' => '/img/apps/samgeet.png',
+            'visual' => 'samgeet',
+            'kind' => 'An open-source, ad-free music player: up to 320 kbps streaming, offline downloads, mood-matched autoplay and a library that syncs across phones.',
+            'highlights' => [
+                'An on-device taste profile learns from likes, skips and full plays, and feeds a pure ranking recommender for autoplay',
+                'Library sync across phones; the password is stretched with PBKDF2 on the phone, so the server only ever stores a hash',
+            ],
+            'stack' => ['Flutter', 'Dart', 'PHP', 'MySQL', 'Android'],
+            'diagram' => [
+                'nodes' => [
+                    ['id' => 'ui', 'label' => 'Flutter UI', 'x' => 10, 'y' => 50],
+                    ['id' => 'player', 'label' => 'Player', 'x' => 34, 'y' => 12],
+                    ['id' => 'engine', 'label' => 'Taste engine', 'x' => 34, 'y' => 88],
+                    ['id' => 'data', 'label' => 'Data & sync', 'x' => 52, 'y' => 50, 'core' => true],
+                    ['id' => 'api', 'label' => 'PHP API', 'x' => 80, 'y' => 24],
+                    ['id' => 'db', 'label' => 'MySQL', 'x' => 92, 'y' => 62],
+                    ['id' => 'share', 'label' => 'Share pages', 'x' => 74, 'y' => 92],
+                ],
+                'edges' => [['ui', 'player'], ['ui', 'engine'], ['ui', 'data'], ['engine', 'data'], ['data', 'api'], ['api', 'db'], ['api', 'share']],
+            ],
+            'platform' => 'android',
+            'category' => 'MultimediaApplication',
+            'color' => '#e8455b',
+            'status' => 'Available',
+            'website' => null,
+            'repo' => 'https://github.com/loco0011/samgeet',
+            'headline' => 'All your music.',
+            'headline_accent' => 'None of the ads.',
+            'lede' => 'Samgeet plays millions of songs in Hindi, Bengali, Punjabi, English and more, learns what you love, and keeps your playlists on every phone you sign in on. No ads, no subscription.',
+            'features' => [
+                ['eyebrow' => 'Millions of songs', 'title' => 'Every language,', 'title_accent' => 'every mood.', 'body' => 'From Bollywood to K-pop, in up to 320 kbps. Download songs and whole albums to listen offline in the same quality.', 'tags' => ['Hindi', 'Bengali', 'Punjabi', 'English', 'Tamil', 'Telugu', 'Marathi', 'Gujarati', 'Kannada', 'Malayalam', 'K-pop'], 'tags_alt' => ['Chill', 'Workout', 'Heartbreak', 'Focus', 'Rainy day', '90s', 'Party', 'Devotional']],
+                ['title' => 'Autoplay that gets you', 'body' => 'It learns from your likes, skips and full plays, then keeps the music going in the same mood.', 'viz' => ['chat', ['Up next: more like Kesariya', 'Matched to your mood']]],
+                ['title' => 'Tune the sound', 'body' => 'An equalizer with presets, or your own curve saved as a custom sound.', 'viz' => ['bars', [['bass', 78, '+6'], ['mids', 52, '0'], ['vocals', 66, '+3'], ['treble', 58, '+2']]]],
+                ['title' => 'Your library, everywhere', 'body' => 'Sign in and your playlists, likes and history follow you to any phone. Share a song or playlist with a short link.', 'viz' => ['rows', [['Playlists', 'synced', true], ['Liked songs', 'synced', true], ['Downloads', 'on this phone', false]]]],
+                ['stat' => '320', 'title' => 'kbps', 'body' => 'Streaming and offline downloads in the same quality.', 'tags' => ['Offline', 'Lock screen', 'Voice']],
+            ],
+            'free' => 'Open source, no ads.',
+            'screenshots' => [
+                ['src' => '/img/apps/samgeet/cover.jpg', 'title' => 'Cover', 'caption' => 'Big artwork, classic bar'],
+                ['src' => '/img/apps/samgeet/disc.jpg', 'title' => 'Disc', 'caption' => 'The spinning record'],
+                ['src' => '/img/apps/samgeet/immersive.jpg', 'title' => 'Immersive', 'caption' => 'Art behind frosted glass'],
+                ['src' => '/img/apps/samgeet/minimal.jpg', 'title' => 'Minimal', 'caption' => 'Big type, nothing else'],
+            ],
+            'downloads' => [['key' => 'app', 'label' => 'Download Samgeet', 'file' => 'Samgeet', 'external' => 'https://github.com/loco0011/samgeet/releases/latest/download/Samgeet.apk', 'source' => 'GitHub Releases']],
+            'permissions' => 'Samgeet needs internet to stream and notifications for the lock-screen player. An approximate, city-level location is optional and off by default. It never asks for your contacts, photos or microphone.',
+            'faq' => [
+                ['q' => 'Is it really free?', 'a' => 'Yes. No ads and no subscription, and the code is open source under the MIT licence.'],
+                ['q' => 'Do I need an account?', 'a' => 'No. You can listen as a guest. Signing in syncs your library across phones and lets you share playlists.'],
+                ['q' => 'Which phones does it work on?', 'a' => 'Android 7.0 or newer. Play Protect may warn because it is not from the Play Store; choose "Install anyway".'],
+                ['q' => 'Does it work on iPhone?', 'a' => 'Not yet. Samgeet is Android-only for now.'],
+            ],
+        ],
+        [
+            'slug' => 'xypher',
+            'name' => 'Xypher',
+            'tag' => 'password manager',
+            'meta' => 'Personal · Android + web · v1.2',
+            'icon' => '/img/apps/xypher.png',
+            'visual' => 'xypher',
+            'kind' => 'A password vault that cannot read your passwords. Logins, cards and notes, with a built-in 2FA authenticator, offline by default.',
+            'highlights' => [
+                'Zero-knowledge: Argon2id (64 MiB) derives the key, AES-256-GCM seals the vault, and the server only ever stores ciphertext',
+                'The breach scan sends 5 characters of a hash, never the password',
+            ],
+            'stack' => ['Flutter', 'Argon2id', 'Keystore', 'PHP · MySQL'],
+            'platform' => 'android',
+            'category' => 'SecurityApplication',
+            'color' => '#2bd4c4',
+            'status' => 'Available',
+            'website' => null,
+            'repo' => 'https://github.com/loco0011/xypher',
+            'headline' => 'A password vault',
+            'headline_accent' => 'that can\'t read your passwords.',
+            'lede' => 'Keep your logins, cards, notes and Wi-Fi passwords in one place, locked with a master password only you know. It works offline, with optional encrypted sync to your other devices.',
+            'features' => [
+                ['eyebrow' => 'One vault', 'title' => 'All your logins,', 'title_accent' => 'locked by you.', 'body' => 'Logins, payment cards, secure notes, identities and Wi-Fi, with tags, favourites and search. Bring your passwords over from the browser or manager you use now.', 'tags' => ['Logins', 'Cards', 'Secure notes', 'Identities', 'Wi-Fi', 'Custom fields', 'Favourites'], 'tags_alt' => ['Import: Chrome', 'Bitwarden', '1Password', 'LastPass', 'Firefox', 'Safari', 'Edge', 'Dashlane', 'Proton Pass']],
+                ['title' => '2FA codes built in', 'body' => 'Keep your two-factor codes next to the passwords they protect, with a live countdown.', 'viz' => ['rows', [['GitHub', 'code ready', true], ['Google', 'code ready', false]]]],
+                ['title' => 'Security check-up', 'body' => 'A health score, plus lists of weak, reused, old and breached passwords to fix.', 'viz' => ['bars', [['strong', 86, ''], ['weak', 9, ''], ['reused', 5, '']]]],
+                ['title' => 'Unlock with your fingerprint', 'body' => 'The vault locks itself when you leave the app, copied passwords clear themselves, and screenshots are blocked.', 'viz' => ['rows', [['Fingerprint', 'unlocked', true], ['Auto-lock', 'when you leave', false], ['Clipboard', 'clears itself', false]]]],
+                ['stat' => '5', 'title' => 'characters', 'body' => 'All a breach check sends. Your password never leaves the phone.', 'tags' => ['Offline', 'Encrypted', 'Zero-knowledge']],
+            ],
+            'free' => 'Works offline.',
+            'screenshots' => [
+                ['src' => '/img/apps/xypher/vault.jpg', 'title' => 'Vault', 'caption' => 'Everything in one encrypted vault'],
+                ['src' => '/img/apps/xypher/authenticator.jpg', 'title' => 'Authenticator', 'caption' => '2FA codes next to your logins'],
+                ['src' => '/img/apps/xypher/radar.jpg', 'title' => 'Security radar', 'caption' => 'A health score for your passwords'],
+                ['src' => '/img/apps/xypher/generator.jpg', 'title' => 'Generator', 'caption' => 'Strong passwords in one tap'],
+            ],
+            'downloads' => [['key' => 'app', 'label' => 'Download Xypher', 'file' => 'Xypher']],
+            'permissions' => 'Xypher only uses the internet for the optional sync and breach check, and your fingerprint or face to unlock. It never asks for your contacts, photos or location.',
+            'faq' => [
+                ['q' => 'Is it really free?', 'a' => 'Yes. No ads, no subscription.'],
+                ['q' => 'What if I forget my master password?', 'a' => 'Nobody can reset it, not even me. That\'s what keeps the vault private. Export an encrypted backup from Settings and keep your master password somewhere safe.'],
+                ['q' => 'Can I use it on my computer?', 'a' => 'Yes. Turn on cloud sync in Settings and open the web vault in your browser. It is decrypted on your computer, never on the server.'],
+                ['q' => 'Does it work on iPhone?', 'a' => 'Not yet. Xypher is Android-only for now.'],
+            ],
+            'diagram' => [
+                'nodes' => [
+                    ['id' => 'pw', 'label' => 'Master password', 'x' => 8, 'y' => 16],
+                    ['id' => 'kdf', 'label' => 'Argon2id', 'x' => 8, 'y' => 84],
+                    ['id' => 'vault', 'label' => 'AES-GCM vault', 'x' => 46, 'y' => 50, 'core' => true],
+                    ['id' => 'bio', 'label' => 'Keystore · biometric', 'x' => 48, 'y' => 4],
+                    ['id' => 'cloud', 'label' => 'Cloud (ciphertext)', 'x' => 88, 'y' => 24],
+                    ['id' => 'hibp', 'label' => 'HIBP k-anon', 'x' => 88, 'y' => 80],
+                ],
+                'edges' => [['pw', 'kdf'], ['kdf', 'vault'], ['bio', 'vault'], ['vault', 'cloud'], ['vault', 'hibp']],
+            ],
+        ],
         [
             'slug' => 'kolkata-hiring-map',
             'name' => 'Kolkata Hiring Map',
@@ -404,62 +517,6 @@ return [
                     ['id' => 'srv', 'label' => 'Price server', 'x' => 62, 'y' => 96],
                 ],
                 'edges' => [['ui', 'core'], ['core', 'bl'], ['core', 'ze'], ['core', 'in'], ['core', 'ride'], ['core', 'srv']],
-            ],
-        ],
-        [
-            'slug' => 'xypher',
-            'name' => 'Xypher',
-            'tag' => 'password manager',
-            'meta' => 'Personal · Android + web · v1.2',
-            'icon' => '/img/apps/xypher.png',
-            'visual' => 'xypher',
-            'kind' => 'A password vault that cannot read your passwords. Logins, cards and notes, with a built-in 2FA authenticator, offline by default.',
-            'highlights' => [
-                'Zero-knowledge: Argon2id (64 MiB) derives the key, AES-256-GCM seals the vault, and the server only ever stores ciphertext',
-                'The breach scan sends 5 characters of a hash, never the password',
-            ],
-            'stack' => ['Flutter', 'Argon2id', 'Keystore', 'PHP · MySQL'],
-            'platform' => 'android',
-            'category' => 'SecurityApplication',
-            'color' => '#2bd4c4',
-            'status' => 'Available',
-            'website' => null,
-            'repo' => 'https://github.com/loco0011/xypher',
-            'headline' => 'A password vault',
-            'headline_accent' => 'that can\'t read your passwords.',
-            'lede' => 'Keep your logins, cards, notes and Wi-Fi passwords in one place, locked with a master password only you know. It works offline, with optional encrypted sync to your other devices.',
-            'features' => [
-                ['eyebrow' => 'One vault', 'title' => 'All your logins,', 'title_accent' => 'locked by you.', 'body' => 'Logins, payment cards, secure notes, identities and Wi-Fi, with tags, favourites and search. Bring your passwords over from the browser or manager you use now.', 'tags' => ['Logins', 'Cards', 'Secure notes', 'Identities', 'Wi-Fi', 'Custom fields', 'Favourites'], 'tags_alt' => ['Import: Chrome', 'Bitwarden', '1Password', 'LastPass', 'Firefox', 'Safari', 'Edge', 'Dashlane', 'Proton Pass']],
-                ['title' => '2FA codes built in', 'body' => 'Keep your two-factor codes next to the passwords they protect, with a live countdown.', 'viz' => ['rows', [['GitHub', 'code ready', true], ['Google', 'code ready', false]]]],
-                ['title' => 'Security check-up', 'body' => 'A health score, plus lists of weak, reused, old and breached passwords to fix.', 'viz' => ['bars', [['strong', 86, ''], ['weak', 9, ''], ['reused', 5, '']]]],
-                ['title' => 'Unlock with your fingerprint', 'body' => 'The vault locks itself when you leave the app, copied passwords clear themselves, and screenshots are blocked.', 'viz' => ['rows', [['Fingerprint', 'unlocked', true], ['Auto-lock', 'when you leave', false], ['Clipboard', 'clears itself', false]]]],
-                ['stat' => '5', 'title' => 'characters', 'body' => 'All a breach check sends. Your password never leaves the phone.', 'tags' => ['Offline', 'Encrypted', 'Zero-knowledge']],
-            ],
-            'free' => 'Works offline.',
-            'screenshots' => [
-                ['src' => '/img/apps/xypher/vault.jpg', 'title' => 'Vault', 'caption' => 'Everything in one encrypted vault'],
-                ['src' => '/img/apps/xypher/authenticator.jpg', 'title' => 'Authenticator', 'caption' => '2FA codes next to your logins'],
-                ['src' => '/img/apps/xypher/radar.jpg', 'title' => 'Security radar', 'caption' => 'A health score for your passwords'],
-                ['src' => '/img/apps/xypher/generator.jpg', 'title' => 'Generator', 'caption' => 'Strong passwords in one tap'],
-            ],
-            'downloads' => [['key' => 'app', 'label' => 'Download Xypher', 'file' => 'Xypher']],
-            'permissions' => 'Xypher only uses the internet for the optional sync and breach check, and your fingerprint or face to unlock. It never asks for your contacts, photos or location.',
-            'faq' => [
-                ['q' => 'Is it really free?', 'a' => 'Yes. No ads, no subscription.'],
-                ['q' => 'What if I forget my master password?', 'a' => 'Nobody can reset it, not even me. That\'s what keeps the vault private. Export an encrypted backup from Settings and keep your master password somewhere safe.'],
-                ['q' => 'Can I use it on my computer?', 'a' => 'Yes. Turn on cloud sync in Settings and open the web vault in your browser. It is decrypted on your computer, never on the server.'],
-                ['q' => 'Does it work on iPhone?', 'a' => 'Not yet. Xypher is Android-only for now.'],
-            ],
-            'diagram' => [
-                'nodes' => [
-                    ['id' => 'pw', 'label' => 'Master password', 'x' => 8, 'y' => 16],
-                    ['id' => 'kdf', 'label' => 'Argon2id', 'x' => 8, 'y' => 84],
-                    ['id' => 'vault', 'label' => 'AES-GCM vault', 'x' => 46, 'y' => 50, 'core' => true],
-                    ['id' => 'bio', 'label' => 'Keystore · biometric', 'x' => 48, 'y' => 4],
-                    ['id' => 'cloud', 'label' => 'Cloud (ciphertext)', 'x' => 88, 'y' => 24],
-                    ['id' => 'hibp', 'label' => 'HIBP k-anon', 'x' => 88, 'y' => 80],
-                ],
-                'edges' => [['pw', 'kdf'], ['kdf', 'vault'], ['bio', 'vault'], ['vault', 'cloud'], ['vault', 'hibp']],
             ],
         ],
         [
