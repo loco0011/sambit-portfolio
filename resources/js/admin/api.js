@@ -14,6 +14,39 @@ export function subscribeActivity(fn) {
 
 const emit = () => activity.forEach((fn) => fn(pending > 0));
 
+/** POSTs a FormData with upload progress (fetch can't report it), same auth and errors as api(). */
+export function upload(path, form, onProgress = () => {}) {
+    pending++;
+    emit();
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', `/admin/api/${path}`);
+        xhr.withCredentials = true;
+        xhr.setRequestHeader('Accept', 'application/json');
+        xhr.setRequestHeader('X-CSRF-TOKEN', csrf);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        xhr.upload.onprogress = (e) => e.lengthComputable && onProgress(e.loaded / e.total);
+        xhr.onload = () => {
+            let data = {};
+            try {
+                data = JSON.parse(xhr.responseText);
+            } catch {}
+            if (xhr.status === 401 || xhr.status === 419) onUnauthorized();
+            if (xhr.status >= 200 && xhr.status < 300) return resolve(data);
+            const message = xhr.status === 413 ? 'That file is larger than the server accepts.' : data?.errors ? Object.values(data.errors)[0]?.[0] : data?.message;
+            const error = new Error(message || `Error ${xhr.status}`);
+            error.status = xhr.status;
+            reject(error);
+        };
+        xhr.onerror = () => reject(new Error('Upload failed. Check your connection and try again.'));
+        xhr.onloadend = () => {
+            pending--;
+            emit();
+        };
+        xhr.send(form);
+    });
+}
+
 export async function api(path, { method = 'GET', body } = {}) {
     const isForm = body instanceof FormData;
     pending++;

@@ -4,7 +4,7 @@ import { Toast } from './lib';
 import Login from './Login';
 import Content from './modules/Content';
 import Dashboard from './modules/Dashboard';
-import AppFiles from './modules/AppFiles';
+import Projects from './modules/Projects';
 import Files from './modules/Files';
 import Inbox from './modules/Inbox';
 import System from './modules/System';
@@ -15,14 +15,14 @@ const MODULES = [
     { id: 'inbox', label: 'Inbox', icon: 'inbox' },
     { id: 'content', label: 'Content', icon: 'edit' },
     { id: 'files', label: 'Résumé', icon: 'file' },
-    { id: 'apps', label: 'App files', icon: 'download' },
+    { id: 'projects', label: 'Projects', icon: 'download' },
     { id: 'system', label: 'Settings', icon: 'settings' },
 ];
 
-// #/inbox/12 → { id: 'inbox', focus: 12 }
+// #/inbox/12 → { id: 'inbox', focus: 12 }; #/projects/savr → { id: 'projects', focus: 'savr' }
 function readHash() {
     const [, id, focus] = window.location.hash.split('/');
-    return { id: MODULES.some((m) => m.id === id) ? id : 'dash', focus: focus ? Number(focus) : null };
+    return { id: MODULES.some((m) => m.id === id) ? id : 'dash', focus: !focus ? null : /^\d+$/.test(focus) ? Number(focus) : decodeURIComponent(focus) };
 }
 
 function Toaster({ toasts, onDismiss }) {
@@ -93,7 +93,7 @@ function Shell({ user, site, onSignOut }) {
         inbox: <Inbox key={route.focus ?? 'inbox'} focusId={route.focus} onUnread={setUnread} />,
         content: <Content />,
         files: <Files />,
-        apps: <AppFiles />,
+        projects: <Projects focus={route.focus} go={go} />,
         system: <System user={user} site={site} onSignOut={onSignOut} />,
     };
 

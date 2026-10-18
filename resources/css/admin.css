@@ -1684,3 +1684,93 @@ textarea.input {
         transition-duration: 0.01ms !important;
     }
 }
+
+/* ---------- Projects (After hours apps) ---------- */
+
+.projects {
+    grid-template-columns: 300px minmax(0, 1fr);
+}
+
+.project-icon {
+    width: 34px;
+    height: 34px;
+    flex: none;
+    border-radius: 9px;
+}
+
+.project {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px 28px;
+    min-width: 0;
+}
+
+.project-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 14px;
+}
+
+.project-head img {
+    border-radius: 12px;
+}
+
+.project-head h2 {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.project-head > .btn {
+    margin-left: auto;
+}
+
+.project-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-bottom: 0;
+}
+
+.project-stats .stat-value.is-text {
+    font-size: 18px;
+}
+
+.project-foot {
+    font-size: 13px;
+}
+
+.badge-warn {
+    background: var(--danger-soft);
+    border-color: transparent;
+    color: var(--danger);
+}
+
+.upload-bar {
+    width: min(280px, 100%);
+    height: 6px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    overflow: hidden;
+}
+
+.upload-bar span {
+    display: block;
+    height: 100%;
+    background: var(--accent);
+    transform-origin: left;
+    transition: transform 0.2s;
+}
+
+@media (max-width: 860px) {
+    .projects {
+        grid-template-columns: 1fr;
+    }
+
+    .project {
+        padding: 20px;
+    }
+
+    .project-stats {
+        grid-template-columns: 1fr;
+    }
+}
