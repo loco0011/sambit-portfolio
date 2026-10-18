@@ -188,33 +188,56 @@ function scoreColor(v, { bad, acid }) {
 
 function Gauge() {
     const ref = useRef(null);
-    const inView = useInView(ref, { once: true });
+    const inView = useInView(ref, { margin: '-10% 0px' });
     const [v, setV] = useState(0);
+    const shown = useRef(0);
     const [phase, setPhase] = useState('idle'); // idle | before | hold | after | done
 
-    // Three beats: the old site fills to ~80 in red, holds with a warning
-    // pulse, then the rebuild climbs to 95+ as the ring turns lime.
+    // Three beats, on a loop while the card is on screen: the old site fills to
+    // ~80 in red, holds with a warning pulse, then the rebuild climbs to 95+ as
+    // the ring turns lime. It rests on the result, drains, and starts over.
     useEffect(() => {
         if (!inView) return;
         let current;
+        let timer;
         let stopped = false;
+        const set = (x) => {
+            shown.current = Math.round(x);
+            setV(shown.current);
+        };
         const run = (from, to, opts) =>
             new Promise((resolve) => {
-                current = animate(from, to, { ...opts, onUpdate: (x) => setV(Math.round(x)), onComplete: resolve });
+                current = animate(from, to, { ...opts, onUpdate: set, onComplete: resolve });
             });
+        const wait = (ms) => new Promise((r) => (timer = setTimeout(r, ms)));
         (async () => {
-            setPhase('before');
-            await run(0, BEFORE, { duration: 1.1, ease: [0.33, 1, 0.68, 1] });
-            if (stopped) return;
-            setPhase('hold');
-            await new Promise((r) => setTimeout(r, 900));
-            if (stopped) return;
-            setPhase('after');
-            await run(BEFORE, AFTER, { duration: 1.5, ease: [0.16, 1, 0.3, 1] });
-            if (!stopped) setPhase('done');
+            // Coming back into view mid-cycle: drain whatever is showing first.
+            if (shown.current > 0) {
+                setPhase('idle');
+                await run(shown.current, 0, { duration: 0.5, ease: 'easeIn' });
+            }
+            while (!stopped) {
+                setPhase('before');
+                await run(0, BEFORE, { duration: 1.1, ease: [0.33, 1, 0.68, 1] });
+                if (stopped) return;
+                setPhase('hold');
+                await wait(900);
+                if (stopped) return;
+                setPhase('after');
+                await run(BEFORE, AFTER, { duration: 1.5, ease: [0.16, 1, 0.3, 1] });
+                if (stopped) return;
+                setPhase('done');
+                await wait(2600);
+                if (stopped) return;
+                setPhase('idle');
+                await run(AFTER, 0, { duration: 0.7, ease: [0.65, 0, 0.35, 1] });
+                if (stopped) return;
+                await wait(400);
+            }
         })();
         return () => {
             stopped = true;
+            clearTimeout(timer);
             current?.stop();
         };
     }, [inView]);
