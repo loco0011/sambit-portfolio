@@ -373,3 +373,25 @@
         box-shadow: 0 1px 2px rgb(26 46 10 / 0.05), 0 6px 20px -8px rgb(26 46 10 / 0.12);
     }
 }
+
+/* "Professional view" pill: a slowly turning lime border, so the way to the plain site is easy to spot */
+@property --vs-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+.view-switch {
+    border: 1.5px solid transparent;
+    background:
+        linear-gradient(var(--color-ink), var(--color-ink)) padding-box,
+        conic-gradient(from var(--vs-angle), var(--color-lime), color-mix(in srgb, var(--color-lime) 15%, transparent), var(--color-acid), color-mix(in srgb, var(--color-lime) 15%, transparent), var(--color-lime)) border-box;
+    animation: vs-turn 4s linear infinite;
+    transition: transform 0.3s var(--ease-out-expo);
+}
+.view-switch:hover { transform: translateY(-2px); }
+@keyframes vs-turn {
+    to { --vs-angle: 360deg; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .view-switch { animation: none; }
+}

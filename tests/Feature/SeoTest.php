@@ -95,7 +95,8 @@ class SeoTest extends TestCase
             ->assertSee('<meta name="robots" content="noindex, nofollow">', false)
             ->assertSee('href="'.route('resume').'"', false)
             ->assertSee('href="'.route('apps.show', 'samgeet').'"', false)
-            ->assertSee(trim(json_encode(route('work.show', 'wonati')), '"'), false)
+            ->assertSee('href="'.route('work.show', 'wonati').'"', false)
+            ->assertSee('href="'.url('/').'"', false)
             ->assertSee('mailto:'.config('portfolio.profile.email'), false);
 
         $this->get('/sitemap.xml')->assertDontSee('/minimal');
