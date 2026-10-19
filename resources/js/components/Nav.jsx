@@ -89,18 +89,32 @@ export default function Nav({ profile, onPalette }) {
                     ))}
                 </nav>
 
-                <button
-                    onClick={onPalette}
-                    className="glass flex items-center gap-2 rounded-full border hairline bg-ink/55 px-3 py-1.5 text-[12px] text-mute transition-colors hover:border-line-2 hover:text-fg"
-                    aria-label="Open command menu"
-                >
-                    <span className="lg:hidden">Menu</span>
-                    <span className="hidden lg:inline">Quick actions</span>
-                    <kbd className="hidden items-center gap-[3px] rounded-md border hairline px-1.5 py-0.5 font-mono text-[10px] leading-none md:inline-flex">
-                        <span>{MOD}</span>
-                        <span>K</span>
-                    </kbd>
-                </button>
+                <div className="flex items-center gap-2">
+                    {/* The plain, recruiter-first version of the site: the one bright button up here so it's found first (on phones it floats instead, see ViewSwitch) */}
+                    <a
+                        href="/minimal"
+                        data-cursor="Open"
+                        title="A simpler version of this site, easier to scan"
+                        className="recruiter-cta group hidden items-center gap-1.5 rounded-full bg-lime px-3 py-1.5 text-[12px] font-medium text-on-lime transition-shadow sm:inline-flex hover:shadow-[0_0_30px_-4px_color-mix(in_srgb,var(--color-lime)_60%,transparent)]"
+                    >
+                        Recruiter view
+                        <span className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden>
+                            ↗
+                        </span>
+                    </a>
+                    <button
+                        onClick={onPalette}
+                        className="glass flex items-center gap-2 rounded-full border hairline bg-ink/55 px-3 py-1.5 text-[12px] text-mute transition-colors hover:border-line-2 hover:text-fg"
+                        aria-label="Open command menu"
+                    >
+                        <span className="lg:hidden">Menu</span>
+                        <span className="hidden lg:inline">Quick actions</span>
+                        <kbd className="hidden items-center gap-[3px] rounded-md border hairline px-1.5 py-0.5 font-mono text-[10px] leading-none md:inline-flex">
+                            <span>{MOD}</span>
+                            <span>K</span>
+                        </kbd>
+                    </button>
+                </div>
             </div>
             <motion.div className="absolute inset-x-0 top-0 h-[2px] origin-left bg-acid/80" style={{ scaleX: scrollYProgress }} />
         </motion.header>

@@ -395,3 +395,22 @@
 @media (prefers-reduced-motion: reduce) {
     .view-switch { animation: none; }
 }
+
+/* "Recruiter view" button in the nav: a thin accent arc that orbits just outside the pill */
+.recruiter-cta { position: relative; isolation: isolate; }
+.recruiter-cta::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: conic-gradient(from var(--vs-angle), transparent 0 62%, color-mix(in srgb, var(--color-acid) 55%, transparent) 82%, var(--color-acid) 96%, transparent);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: vs-turn 3.5s linear infinite;
+    pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+    .recruiter-cta::before { animation: none; background: color-mix(in srgb, var(--color-acid) 45%, transparent); }
+}

@@ -66,7 +66,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
 @media (prefers-reduced-motion: reduce) { .btn.fx, .btn.float { animation: none; } .btn.fx .spark, .btn.fx .arr { transition: none; } }
 
 /* Hero */
-.hero { padding: 80px 0 72px; }
+.hero { padding: 64px 0 72px; }
 .hero .container { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 56px; align-items: center; }
 .status { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--accent); background: var(--accent-soft); padding: 4px 12px; border-radius: 999px; font-weight: 500; }
 .status::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
@@ -79,8 +79,18 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
 .socials a { color: var(--mute); display: inline-flex; align-items: center; gap: 6px; }
 .socials a:hover { color: var(--accent); }
 .socials svg { width: 18px; height: 18px; }
-.photo { width: 100%; max-width: 380px; aspect-ratio: 4 / 5; justify-self: end; border-radius: 16px; background: var(--alt); border: 1px solid var(--line); display: grid; place-items: center; color: var(--mute); font-size: 14px; overflow: hidden; }
-.photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* Photo with a thin green outline offset behind it, for depth without effects */
+.photo { position: relative; justify-self: end; width: 100%; max-width: 350px; margin: 0 20px 20px 0; }
+.photo::before { content: ''; position: absolute; inset: 20px -20px -20px 20px; border: 2px solid var(--accent); border-radius: 16px; }
+.photo img { position: relative; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 20%; border-radius: 16px; display: block; }
+
+/* Proof numbers under the hero */
+.proof { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: var(--radius); background: #fff; margin-top: 52px; }
+.hero .container + .container { display: block; }
+.proof div { padding: 20px 22px; border-left: 1px solid var(--line); }
+.proof div:first-child { border-left: 0; }
+.proof b { display: block; font-size: 28px; line-height: 1.15; letter-spacing: -0.025em; color: var(--ink); font-weight: 700; font-variant-numeric: tabular-nums; }
+.proof span { display: block; margin-top: 4px; font-size: 14px; color: var(--mute); line-height: 1.45; }
 
 /* Sections */
 section.block { padding: 88px 0; }
@@ -106,6 +116,11 @@ section.block.alt { background: var(--alt); border-top: 1px solid var(--line); b
 .job .when b { display: block; color: var(--ink); font-weight: 600; font-size: 15.5px; margin-bottom: 2px; }
 .job h3 { margin: 0; font-size: 17.5px; color: var(--ink); font-weight: 600; }
 .job p { margin: 8px 0 0; }
+.job .co { font-size: 14.5px; color: var(--mute); margin-top: 2px; }
+.job ul { margin: 12px 0 0; padding-left: 18px; }
+.job li { margin-top: 6px; }
+.job li::marker { color: var(--accent); }
+.job li b { color: var(--ink); font-weight: 600; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
 .tag { font-size: 13px; color: var(--text); background: var(--alt); border: 1px solid var(--line); border-radius: 6px; padding: 2px 9px; }
 
@@ -124,6 +139,35 @@ section.block.alt { background: var(--alt); border-top: 1px solid var(--line); b
 .thumb img { width: 46%; border-radius: 14px 14px 0 0; box-shadow: 0 10px 30px -12px rgb(17 24 39 / .4); display: block; }
 .thumb.web { padding: 18px 18px 0; }
 .thumb.web img { width: 100%; border-radius: 8px 8px 0 0; }
+/* Featured client work: text on the left, how the system fits together on the right */
+.featured { display: grid; gap: 16px; }
+/* Tabs above the featured project; only one project is shown at a time */
+.ftabs { display: inline-flex; justify-self: start; gap: 4px; padding: 4px; background: var(--alt); border: 1px solid var(--line); border-radius: 10px; max-width: 100%; overflow-x: auto; }
+.ftabs button { font: 500 14.5px var(--sans); color: var(--mute); background: none; border: 0; border-radius: 7px; padding: 8px 16px; cursor: pointer; white-space: nowrap; transition: color .15s, background .15s, box-shadow .15s; }
+.ftabs button:hover { color: var(--ink); }
+.ftabs button[aria-selected="true"] { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgb(17 24 39 / .12); }
+.feat[hidden] { display: none; }
+.feat.enter { animation: featIn .35s cubic-bezier(.2, .7, .2, 1) both; }
+@keyframes featIn { from { opacity: 0; transform: translateY(8px); } }
+.feat { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; transition: border-color .15s, box-shadow .25s; }
+.feat:hover { border-color: #c7cbd1; box-shadow: 0 8px 24px -12px rgb(17 24 39 / .15); }
+.feat .body { padding: 30px; }
+.feat .type { font-size: 13px; color: var(--mute); }
+.feat h3 { margin: 4px 0 0; font-size: 24px; color: var(--ink); font-weight: 700; letter-spacing: -0.02em; }
+.feat p { margin: 10px 0 0; }
+.feat ul { margin: 14px 0 0; padding-left: 18px; font-size: 15px; }
+.feat li { margin-top: 5px; }
+.feat li::marker { color: var(--accent); }
+.feat .more { display: inline-block; margin-top: 18px; font-size: 14.5px; font-weight: 500; color: var(--accent); }
+.feat:hover .more { text-decoration: underline; text-underline-offset: 3px; }
+.feat .diagram { background: var(--alt); border-left: 1px solid var(--line); display: flex; flex-direction: column; justify-content: center; padding: 22px; }
+.feat .diagram small { font-size: 12.5px; color: var(--mute); margin-bottom: 8px; }
+.arch { width: 100%; height: auto; display: block; }
+.arch line { stroke: #c4cad2; stroke-width: 1.5; }
+.arch rect { fill: #fff; stroke: #d1d5db; }
+.arch text { font: 500 12px var(--sans); fill: var(--ink); text-anchor: middle; }
+.arch .core rect { fill: var(--accent); stroke: var(--accent); }
+.arch .core text { fill: #fff; font-weight: 600; }
 .subhead { margin: 56px 0 24px; font-size: 20px; color: var(--ink); font-weight: 600; letter-spacing: -0.015em; }
 
 /* Rotating role in the availability badge */
@@ -149,7 +193,7 @@ section.block.alt { background: var(--alt); border-top: 1px solid var(--line); b
 .js .reveal.in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
     .js .reveal { opacity: 1; transform: none; transition: none; }
-    .card.is-shown { animation: none; }
+    .card.is-shown, .feat.enter { animation: none; }
     .card, .toggle .chev { transition: none; }
     .card:hover { transform: none; }
     html { scroll-behavior: auto; }
@@ -174,8 +218,13 @@ footer a:hover { color: var(--accent); }
 
 @media (max-width: 900px) {
     .hero .container, .about { grid-template-columns: 1fr; gap: 36px; }
-    .photo { justify-self: start; max-width: 300px; }
+    .photo { justify-self: start; max-width: 280px; }
     .grid3, .skills { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .proof { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .proof div:nth-child(3) { border-left: 0; }
+    .proof div:nth-child(n+3) { border-top: 1px solid var(--line); }
+    .feat { grid-template-columns: 1fr; }
+    .feat .diagram { border-left: 0; border-top: 1px solid var(--line); }
     .job { grid-template-columns: 1fr; gap: 4px; }
 }
 @media (max-width: 620px) {
@@ -186,6 +235,10 @@ footer a:hover { color: var(--accent); }
     .brand span.n { display: none; }
     .grid3, .skills { grid-template-columns: 1fr; }
     .hero { padding: 48px 0; }
+    .proof { margin-top: 44px; }
+    .proof div { padding: 16px; }
+    .proof b { font-size: 21px; }
+    .feat .body { padding: 22px; }
     section.block { padding: 64px 0; }
 }
 </style>
@@ -198,10 +251,10 @@ footer a:hover { color: var(--accent); }
         <span class="nav-bar" id="navBar" aria-hidden="true"></span>
         <a class="brand" href="#top"><img src="/icon-192.png" alt="" width="34" height="34">Sambit Maity</a>
         <ul>
-            <li class="txt"><a href="#about">About</a></li>
             <li class="txt"><a href="#experience">Experience</a></li>
             <li class="txt"><a href="#projects">Projects</a></li>
             <li class="txt"><a href="#skills">Skills</a></li>
+            <li class="txt"><a href="#about">About</a></li>
             <li class="txt"><a href="#contact">Contact</a></li>
             <li><a class="btn sm" href="{{ route('resume') }}">Résumé</a></li>
         </ul>
@@ -227,30 +280,18 @@ footer a:hover { color: var(--accent); }
             </div>
             <div class="photo"><img src="/images/sambit.jpg" alt="Sambit Maity" width="760" height="950"></div>
         </div>
-    </section>
-
-    <section class="block alt" id="about">
         <div class="container">
-            <div class="head reveal"><div class="kicker">About</div><h2>A bit about me</h2></div>
-            <div class="about reveal">
-                <div>
-                    <p>I've spent the last three years building web products for teams in India and, for a year and a half, for a company in New Zealand. I lean towards the backend, mostly Laravel and Node.js, and handle the React frontend when a project needs it.</p>
-                    <p>I like owning a feature from the database to the deploy. At my last job I ran the company's servers on my own and took the main website's performance score from around 80 to above 95.</p>
-                    <p>Collabmate shut down in October 2026, so I'm looking for my next full-stack or backend role. I can start right away, in Kolkata or remotely.</p>
-                </div>
-                <ul class="facts">
-                    <li><span>Focus</span><b>Backend · Laravel, Node.js</b></li>
-                    <li><span>Experience</span><b>3 years</b></li>
-                    <li><span>Location</span><b>Kolkata, India</b></li>
-                    <li><span>Work mode</span><b>On-site, hybrid or remote</b></li>
-                    <li><span>Notice period</span><b>Immediate</b></li>
-                    <li><span>Education</span><b>B.Tech CSE, CGPA 9.08</b></li>
-                </ul>
+            <div class="proof">
+                <div><b>3 years</b><span>building production web apps</span></div>
+                <div><b>4 companies</b><span>including 1.5 years for a New Zealand firm</span></div>
+                <div><b>15 projects</b><span>9 for clients and employers, 6 of my own</span></div>
+                <div><b>80 → 95+</b><span>performance score after my website rebuild</span></div>
             </div>
         </div>
     </section>
 
-    <section class="block" id="experience">
+
+    <section class="block alt" id="experience">
         <div class="container">
             <div class="head reveal"><div class="kicker">Experience</div><h2>Where I've worked</h2></div>
             <div class="timeline reveal">
@@ -258,7 +299,12 @@ footer a:hover { color: var(--accent); }
                     <div class="when"><b>Collabmate</b>Jun 2026 – Oct 2026</div>
                     <div>
                         <h3>Software Developer</h3>
-                        <p>A small team, so I covered a lot. I set up and ran five production servers, automated our deploys, and rebuilt the main website, taking its performance score from about 80 to 95+. I also built an internal assistant that answers questions from company documents using Claude and OpenAI. The company closed in October 2026.</p>
+                        <ul>
+                            <li>Set up and ran <b>five production servers</b> on my own, and automated our deploys.</li>
+                            <li>Rebuilt the main website and took its performance score from <b>about 80 to 95+</b>.</li>
+                            <li>Built an internal assistant that answers staff questions from company documents, using Claude and OpenAI.</li>
+                        </ul>
+                        <p class="co">A small team, so I covered a lot. The company closed in October 2026.</p>
                         <div class="tags"><span class="tag">Laravel</span><span class="tag">Docker</span><span class="tag">Nginx</span><span class="tag">n8n</span><span class="tag">Flutter</span></div>
                     </div>
                 </article>
@@ -266,7 +312,12 @@ footer a:hover { color: var(--accent); }
                     <div class="when"><b>Triophase Global Services</b>Nov 2025 – May 2026</div>
                     <div>
                         <h3>Software Developer</h3>
-                        <p>Built three products with Laravel, Node.js and React, from the first commit to deployment: a college management system, a self-hosted mail platform, and a platform mentors use to run guidance sessions with their clients.</p>
+                        <p>Built <b>three products</b> with Laravel, Node.js and React, each from the first commit to deployment:</p>
+                        <ul>
+                            <li>A college management system</li>
+                            <li>A self-hosted mail platform</li>
+                            <li>A platform mentors use to run guidance sessions with their clients</li>
+                        </ul>
                         <div class="tags"><span class="tag">Laravel</span><span class="tag">Node.js</span><span class="tag">React</span><span class="tag">Docker</span></div>
                     </div>
                 </article>
@@ -274,7 +325,11 @@ footer a:hover { color: var(--accent); }
                     <div class="when"><b>Spiral Compute</b>Mar 2024 – Oct 2025<br>New Zealand, remote</div>
                     <div>
                         <h3>Software Development Engineer (SDE-1)</h3>
-                        <p>Worked on client products in Laravel, React, Node.js and Next.js, including Strapi and HubSpot integrations. On one project I did all of it: the database design, the API and the frontend.</p>
+                        <ul>
+                            <li>Built client products in Laravel, React, Node.js and Next.js.</li>
+                            <li>Integrated Strapi and HubSpot for content and CRM.</li>
+                            <li>On one project I did all of it: <b>the database design, the API and the frontend</b>.</li>
+                        </ul>
                         <div class="tags"><span class="tag">Laravel</span><span class="tag">React</span><span class="tag">Next.js</span><span class="tag">Strapi</span><span class="tag">HubSpot</span></div>
                     </div>
                 </article>
@@ -289,14 +344,41 @@ footer a:hover { color: var(--accent); }
         </div>
     </section>
 
-    <section class="block alt" id="projects">
+    <section class="block" id="projects">
         <div class="container">
             <div class="head reveal"><div class="kicker">Projects</div><h2>Things I've built</h2><p>Client and company work first, then apps I built on my own.</p></div>
-            <h3 class="subhead" style="margin-top:0">Client work</h3>
+            @php($featured = [
+                'wonati' => ['type' => 'AI platform · client work', 'text' => 'An AI writing platform that sends each request to an OpenAI or Anthropic model, with Stripe subscriptions and live progress updates.', 'points' => ['One Laravel API in front of both OpenAI and Anthropic', 'Stripe subscriptions and usage-based billing', 'Generation progress pushed live to the browser with Pusher']],
+                'finvena' => ['type' => 'Job marketplace · client work', 'text' => 'A job marketplace for fintech roles, with separate dashboards for candidates and employers, chat, payments and SMS.', 'points' => ['Separate dashboards and permissions for candidates, employers and admins', 'Real-time chat between both sides', 'Stripe payments, and SMS and calls through Twilio']],
+                'ehlostack' => ['type' => 'Email infrastructure · client work', 'text' => 'A self-hosted email platform: ZoneMTA does the sending, and a React dashboard manages it and shows how delivery is going.', 'points' => ['Outgoing mail sent through ZoneMTA', 'Dashboard for domains, services and delivery health', 'Runs in Docker behind Nginx']],
+            ])
+            @php($projects = collect($portfolio['projects'])->keyBy('slug'))
+            @php($featured = array_intersect_key($featured, $projects->all()))
+            <div class="featured reveal">
+                <div class="ftabs" role="tablist" aria-label="Featured projects">
+                    @foreach ($featured as $slug => $f)
+                        <button type="button" role="tab" id="tab-{{ $slug }}" aria-controls="feat-{{ $slug }}" aria-selected="{{ $loop->first ? 'true' : 'false' }}" @unless ($loop->first) tabindex="-1" @endunless>{{ $projects[$slug]['name'] }}</button>
+                    @endforeach
+                </div>
+                @foreach ($featured as $slug => $f)
+                    @php($proj = $projects[$slug])
+                    <a class="feat" id="feat-{{ $slug }}" role="tabpanel" aria-labelledby="tab-{{ $slug }}" href="{{ route('work.show', $slug) }}" @unless ($loop->first) hidden @endunless>
+                        <div class="body">
+                            <span class="type">{{ $f['type'] }}</span>
+                            <h3>{{ $proj['name'] }}</h3>
+                            <p>{{ $f['text'] }}</p>
+                            <ul>@foreach ($f['points'] as $pt)<li>{{ $pt }}</li>@endforeach</ul>
+                            <div class="tags">@foreach (array_slice($proj['stack'], 0, 5) as $s)<span class="tag">{{ $s }}</span>@endforeach</div>
+                            <span class="more">Read case study →</span>
+                        </div>
+                        @if (! empty($proj['diagram']))
+                            <div class="diagram"><small>How it fits together</small>@include('partials.arch-diagram', ['diagram' => $proj['diagram'], 'name' => $proj['name']])</div>
+                        @endif
+                    </a>
+                @endforeach
+            </div>
+            <h3 class="subhead">More client and company work</h3>
             <div class="grid3" data-limit="3" data-label="projects">
-                <a class="card" href="{{ route('work.show', 'wonati') }}"><div class="body"><span class="type">AI platform · client work</span><h3>Wonati.ai</h3><p>An AI writing platform that sends each request to an OpenAI or Anthropic model, with Stripe subscriptions and live progress updates.</p><div class="tags"><span class="tag">React</span><span class="tag">Laravel</span><span class="tag">PostgreSQL</span></div><span class="more">Read case study →</span></div></a>
-                <a class="card" href="{{ route('work.show', 'finvena') }}"><div class="body"><span class="type">Job marketplace · client work</span><h3>Finvena</h3><p>A job marketplace for fintech roles, with separate dashboards for candidates and employers, chat, payments and SMS.</p><div class="tags"><span class="tag">Laravel</span><span class="tag">MySQL</span><span class="tag">Stripe</span></div><span class="more">Read case study →</span></div></a>
-                <a class="card" href="{{ route('work.show', 'ehlostack') }}"><div class="body"><span class="type">Email infrastructure · client work</span><h3>EhloStack</h3><p>A self-hosted email platform: ZoneMTA does the sending, and a React dashboard manages it and shows how delivery is going.</p><div class="tags"><span class="tag">React</span><span class="tag">Node.js</span><span class="tag">Docker</span></div><span class="more">Read case study →</span></div></a>
                 <div class="card"><div class="body"><span class="type">AI SaaS · client work</span><h3>Multi-LLM content platform</h3><p>Writes content from a prompt using GPT, Claude or Gemini, then publishes it straight into HubSpot or Strapi.</p><div class="tags"><span class="tag">Next.js</span><span class="tag">Node.js</span><span class="tag">OpenAI</span><span class="tag">Claude</span></div></div></div>
                 <div class="card"><div class="body"><span class="type">CRM · client work</span><h3>Custom CRM systems</h3><p>CRMs for businesses with drag-and-drop deal pipelines, proposals through to invoices, and meetings booked on Google Calendar with Meet links.</p><div class="tags"><span class="tag">Laravel</span><span class="tag">React</span><span class="tag">Google Calendar API</span></div></div></div>
                 <div class="card"><div class="body"><span class="type">AI agent · Collabmate</span><h3>Company chat assistant</h3><p>Answers staff questions from the company's own documents, using Claude and OpenAI wired together in n8n.</p><div class="tags"><span class="tag">n8n</span><span class="tag">Claude</span><span class="tag">OpenAI</span></div></div></div>
@@ -317,7 +399,7 @@ footer a:hover { color: var(--accent); }
         </div>
     </section>
 
-    <section class="block" id="skills">
+    <section class="block alt" id="skills">
         <div class="container">
             <div class="head reveal"><div class="kicker">Skills</div><h2>What I work with</h2></div>
             <div class="skills reveal">
@@ -331,6 +413,26 @@ footer a:hover { color: var(--accent); }
         </div>
     </section>
 
+    <section class="block" id="about">
+        <div class="container">
+            <div class="head reveal"><div class="kicker">About</div><h2>A bit about me</h2></div>
+            <div class="about reveal">
+                <div>
+                    <p>I've spent the last three years building web products for teams in India and, for a year and a half, for a company in New Zealand. I lean towards the backend, mostly Laravel and Node.js, and handle the React frontend when a project needs it.</p>
+                    <p>I like owning a feature from the database to the deploy. Outside work I build my own Android apps in Flutter; they are in the Projects section.</p>
+                    <p>Collabmate shut down in October 2026, so I'm looking for my next full-stack or backend role. I can start right away, in Kolkata or remotely.</p>
+                </div>
+                <ul class="facts">
+                    <li><span>Focus</span><b>Backend · Laravel, Node.js</b></li>
+                    <li><span>Experience</span><b>3 years</b></li>
+                    <li><span>Location</span><b>Kolkata, India</b></li>
+                    <li><span>Work mode</span><b>On-site, hybrid or remote</b></li>
+                    <li><span>Notice period</span><b>Immediate</b></li>
+                    <li><span>Education</span><b>B.Tech CSE, CGPA 9.08</b></li>
+                </ul>
+            </div>
+        </div>
+    </section>
     <section class="block alt contact" id="contact">
         <div class="container">
             <div class="head" style="margin-bottom:0"><div class="kicker">Contact</div></div>
@@ -401,11 +503,11 @@ document.documentElement.classList.add('js');
         i = (i + 1) % ROLES.length;
         // Fade the current role out, swap the text and width, fade the new one in
         // Width is measured fresh each time (after fonts load) and handed back to auto afterwards, so it never clips
-        roll.style.width = roll.offsetWidth + 'px';
+        roll.style.width = Math.ceil(roll.getBoundingClientRect().width) + 'px';
         roll.classList.add('swap');
         setTimeout(() => {
             word.textContent = ROLES[i];
-            roll.style.width = word.offsetWidth + 'px';
+            roll.style.width = Math.ceil(word.getBoundingClientRect().width) + 1 + 'px';
             roll.classList.remove('swap');
             setTimeout(() => (roll.style.width = ''), 400);
         }, reduce ? 0 : 250);
@@ -438,6 +540,30 @@ document.querySelectorAll('.grid3[data-limit]').forEach((grid) => {
     grid.after(wrap);
 });
 
+// Featured projects: switch the visible one from the tabs (arrow keys move between tabs)
+document.querySelectorAll('.ftabs').forEach((list) => {
+    const tabs = [...list.querySelectorAll('[role="tab"]')];
+    const show = (tab) => {
+        tabs.forEach((t) => {
+            const on = t === tab;
+            t.setAttribute('aria-selected', on);
+            t.tabIndex = on ? 0 : -1;
+            const panel = document.getElementById(t.getAttribute('aria-controls'));
+            panel.hidden = !on;
+            panel.classList.toggle('enter', on);
+        });
+    };
+    tabs.forEach((t, i) => {
+        t.addEventListener('click', () => show(t));
+        t.addEventListener('keydown', (e) => {
+            const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+            if (!step) return;
+            const next = tabs[(i + step + tabs.length) % tabs.length];
+            next.focus();
+            show(next);
+        });
+    });
+});
 // Fade sections in once as they scroll into view
 const io = new IntersectionObserver((entries) => entries.forEach((e) => {
     if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }

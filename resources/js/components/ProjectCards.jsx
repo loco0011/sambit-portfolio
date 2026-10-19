@@ -342,7 +342,7 @@ export default function ProjectCards({ items }) {
                     </h3>
                 </div>
             </FadeUp>
-            <div className="mt-6 grid gap-3 sm:gap-4 md:grid-cols-6">
+            <div className="mt-6 grid grid-cols-[minmax(0,1fr)] gap-3 sm:gap-4 md:grid-cols-6">
                 {items.map((item, i) => (
                     <Card key={item.name} item={item} index={i} />
                 ))}
