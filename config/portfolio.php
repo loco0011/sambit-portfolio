@@ -166,6 +166,9 @@ return [
                 'Twilio-powered communication workflows',
             ],
             'stack' => ['Laravel', 'MySQL', 'jQuery', 'Stripe', 'Twilio'],
+            'links' => [
+                ['label' => 'Live site', 'url' => 'https://finvena.com/'],
+            ],
             'diagram' => [
                 'nodes' => [
                     ['id' => 'cand', 'label' => 'Candidates', 'x' => 12, 'y' => 22],
@@ -278,6 +281,7 @@ return [
         ['name' => 'CRM systems', 'card' => 'crm', 'kind' => 'Custom CRMs for businesses: drag-and-drop deal pipelines, proposals to invoices, and meetings booked on Google Calendar with Meet links', 'stack' => ['Laravel', 'React', 'Google Calendar API', 'Google Meet']],
         ['name' => 'ID card management system', 'kind' => 'Issue & manage identity cards'],
         ['name' => 'Business & company websites', 'kind' => 'Multiple sites for different businesses'],
+        ['name' => 'Fintello', 'kind' => 'Marketing platform for financial and insurance advisors: leads, LinkedIn outreach, ad and email campaigns, websites and funnels', 'url' => 'https://fintello.com/'],
         ['name' => 'Multi-LLM content SaaS', 'card' => 'cms', 'kind' => 'Writes custom content from a prompt across several AI models, then publishes it to HubSpot and Strapi', 'stack' => ['Next.js', 'Node.js', 'OpenAI', 'Anthropic API (Claude)', 'HubSpot', 'Strapi']],
         ['name' => 'Open-source contributions', 'kind' => 'Contributions to public projects', 'url' => 'https://github.com/loco0011'],
     ],
