@@ -278,6 +278,7 @@ return [
         ['name' => 'Mentor-led guidance platform', 'kind' => 'Client-service platform', 'year' => '2025', 'org' => 'Triophase', 'stack' => ['Laravel', 'Node.js', 'React', 'Docker']],
         ['name' => 'Earning platform app', 'card' => 'earning', 'kind' => 'Mobile rewards & earning app', 'stack' => ['Flutter', 'Dart']],
         ['name' => 'Astrology platform', 'kind' => 'Consumer astrology product'],
+        ['name' => 'Inventory management system', 'kind' => 'Stock tracking for a business', 'org' => 'Spiral Compute'],
         ['name' => 'CRM systems', 'card' => 'crm', 'kind' => 'Custom CRMs for businesses: drag-and-drop deal pipelines, proposals to invoices, and meetings booked on Google Calendar with Meet links', 'stack' => ['Laravel', 'React', 'Google Calendar API', 'Google Meet']],
         ['name' => 'ID card management system', 'kind' => 'Issue & manage identity cards'],
         ['name' => 'Business & company websites', 'kind' => 'Multiple sites for different businesses'],

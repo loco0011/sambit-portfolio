@@ -386,6 +386,8 @@ footer a:hover { color: var(--accent); }
                 <div class="card"><div class="body"><span class="type">Performance · Collabmate</span><h3>Main website rebuild</h3><p>Rebuilt the company's main website and took its performance score from about 80 to 95+ with caching, image work and server tuning.</p><div class="tags"><span class="tag">Laravel</span><span class="tag">Tailwind</span><span class="tag">Nginx</span></div></div></div>
                 <div class="card"><div class="body"><span class="type">Education · Triophase</span><h3>College management system</h3><p>An ERP for colleges, built from the first commit to deployment.</p><div class="tags"><span class="tag">Laravel</span><span class="tag">React</span><span class="tag">MySQL</span></div></div></div>
                 <div class="card"><div class="body"><span class="type">Platform · Triophase</span><h3>Mentor guidance platform</h3><p>A platform mentors use to run guidance sessions with their clients.</p><div class="tags"><span class="tag">Laravel</span><span class="tag">Node.js</span><span class="tag">React</span><span class="tag">Docker</span></div></div></div>
+                <div class="card"><div class="body"><span class="type">Operations · Spiral Compute</span><h3>Inventory management system</h3><p>An internal system for tracking a business's stock and inventory.</p></div></div>
+                <div class="card"><div class="body"><span class="type">Consumer · client work</span><h3>Astrology platform</h3><p>A consumer astrology product built for a client.</p></div></div>
             </div>
 
             <h3 class="subhead">Personal projects</h3>
