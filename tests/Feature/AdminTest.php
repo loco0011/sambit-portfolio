@@ -124,7 +124,7 @@ class AdminTest extends TestCase
         Storage::disk('local')->assertExists('resume.pdf');
     }
 
-    public function test_resume_download_records_details_without_the_ip(): void
+    public function test_resume_download_records_ip_and_details(): void
     {
         Storage::fake('local');
         Storage::disk('local')->put('resume.pdf', 'pdf');
@@ -142,9 +142,6 @@ class AdminTest extends TestCase
             ->get('/resume')
             ->assertOk();
 
-        $view = PageView::where('path', '/resume')->sole();
-        $this->assertStringNotContainsString('203.0.113.9', json_encode($view->getAttributes()));
-
         $this->actingAs($this->admin())
             ->getJson('/admin/api/resume/downloads')
             ->assertOk()
@@ -152,10 +149,28 @@ class AdminTest extends TestCase
             ->assertJsonPath('countries.0.name', 'India')
             ->assertJsonPath('orgs.0.name', 'Acme Corp')
             ->assertJsonPath('recent.data.0.referrer', 'linkedin.com')
+            ->assertJsonPath('recent.data.0.details.ip', '203.0.113.9')
             ->assertJsonPath('recent.data.0.details.city', 'Bengaluru')
             ->assertJsonPath('recent.data.0.details.browser', 'Chrome')
             ->assertJsonPath('recent.data.0.details.os', 'Windows')
             ->assertJsonPath('recent.data.0.details.language', 'en-IN');
+    }
+
+    public function test_resume_download_by_logged_in_admin_is_counted_and_labelled(): void
+    {
+        Storage::fake('local');
+        Storage::disk('local')->put('resume.pdf', 'pdf');
+        $this->actingAs($this->admin());
+
+        $this->withHeaders(['User-Agent' => 'Mozilla/5.0 Chrome/130.0'])->get('/resume')->assertOk();
+        $this->withHeaders(['User-Agent' => 'Mozilla/5.0 Chrome/130.0'])->get('/resume')->assertOk();
+        $this->withHeaders(['User-Agent' => 'Mozilla/5.0 Chrome/130.0'])->get('/')->assertOk();
+
+        $this->getJson('/admin/api/resume/downloads')
+            ->assertJsonPath('total', 2)
+            ->assertJsonPath('recent.data.0.details.admin', true);
+
+        $this->assertSame(0, PageView::where('path', '/')->count());
     }
 
     public function test_resume_downloads_require_login_and_keep_older_rows(): void

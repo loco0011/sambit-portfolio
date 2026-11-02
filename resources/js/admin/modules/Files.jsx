@@ -61,13 +61,24 @@ function Downloads() {
     const toast = useToast();
     const [page, setPage] = useState(1);
     const [data, setData] = useState(null);
+    const [busy, setBusy] = useState(false);
+
+    const load = async () => {
+        setBusy(true);
+        try {
+            setData(await api(`resume/downloads?page=${page}`));
+        } catch (e) {
+            toast(e.message, 'warn');
+        } finally {
+            setBusy(false);
+        }
+    };
 
     useEffect(() => {
-        let live = true;
-        api(`resume/downloads?page=${page}`)
-            .then((d) => live && setData(d))
-            .catch((e) => toast(e.message, 'warn'));
-        return () => (live = false);
+        load();
+        // Downloads usually happen in another tab, so catch up when coming back to this one.
+        window.addEventListener('focus', load);
+        return () => window.removeEventListener('focus', load);
     }, [page]);
 
     if (!data) return <Loading />;
@@ -90,42 +101,59 @@ function Downloads() {
                 ))}
             </div>
 
-            <div className="grid">
-                <TopList title="Top countries" items={data.countries} empty="No locations recorded yet." />
-                <TopList title="Top companies and networks" items={data.orgs} empty="No networks recorded yet." />
-
+            <div className="grid downloads-section">
                 <Card
                     className="span-12"
                     title="Recent downloads"
-                    description="Location and network are estimated from the visitor's IP, which isn't stored. Home and mobile users show their ISP. IP geolocation by DB-IP."
+                    description="Location and network are estimated from the IP. Home and mobile users show their ISP. IP geolocation by DB-IP."
+                    actions={
+                        <button className="btn btn-sm" disabled={busy} onClick={load}>
+                            {busy ? 'Refreshing…' : 'Refresh'}
+                        </button>
+                    }
                     flush
                 >
                     {recent.data.length ? (
-                        <ul className="list">
-                            {recent.data.map((d) => {
-                                const x = d.details ?? {};
-                                const place = [x.city, x.region, x.country].filter(Boolean).join(', ');
-                                const browser = [x.browser, x.os].filter(Boolean).join(' on ');
-                                const source = d.referrer ? `from ${d.referrer}` : x.page ? `clicked on ${x.page}` : 'direct link';
+                        <div className="downloads-scroll">
+                            <table className="downloads-table">
+                                <thead>
+                                    <tr>
+                                        <th>When</th>
+                                        <th>Location</th>
+                                        <th>Network</th>
+                                        <th>IP address</th>
+                                        <th>Browser</th>
+                                        <th>Source</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {recent.data.map((d) => {
+                                        const x = d.details ?? {};
+                                        const place = [x.city, x.region, x.country].filter(Boolean).join(', ');
+                                        const browser = [x.browser, x.os].filter(Boolean).join(' on ');
 
-                                return (
-                                    <li key={d.id}>
-                                        <div className="list-item is-static">
-                                            <span className="list-main">
-                                                <span className="list-title">
-                                                    {place || 'Location not recorded'}
-                                                    {x.org && <span className="muted"> · {x.org}</span>}
-                                                </span>
-                                                <span className="list-snippet">{[browser || d.device, x.language, source].filter(Boolean).join(' · ')}</span>
-                                            </span>
-                                            <span className="list-meta" title={stamp(d.created_at)}>
-                                                {ago(d.created_at)}
-                                            </span>
-                                        </div>
-                                    </li>
-                                );
-                            })}
-                        </ul>
+                                        return (
+                                            <tr key={d.id}>
+                                                <td className="downloads-when" title={stamp(d.created_at)}>
+                                                    {ago(d.created_at)}
+                                                </td>
+                                                <td>
+                                                    {place || <span className="muted">Not recorded</span>}
+                                                    {x.admin && <span className="badge downloads-you">You</span>}
+                                                </td>
+                                                <td>{x.org || <span className="muted">—</span>}</td>
+                                                <td>{x.ip ? <code>{x.ip}</code> : <span className="muted">—</span>}</td>
+                                                <td>
+                                                    {browser || <span className="downloads-device">{d.device}</span>}
+                                                    {x.language && <span className="muted"> · {x.language}</span>}
+                                                </td>
+                                                <td>{d.referrer || x.page || <span className="muted">Direct link</span>}</td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
                     ) : (
                         <p className="muted downloads-empty">Nobody has downloaded your résumé yet.</p>
                     )}
@@ -143,6 +171,9 @@ function Downloads() {
                         </div>
                     )}
                 </Card>
+
+                <TopList title="Top countries" items={data.countries} empty="No locations recorded yet." />
+                <TopList title="Top companies and networks" items={data.orgs} empty="No networks recorded yet." />
             </div>
         </>
     );
@@ -155,7 +186,8 @@ export default function Files() {
 
     return (
         <>
-            <PageHeader title="Résumé" description="The PDF visitors download from your site." />
+            <PageHeader title="Résumé" description="Who is downloading your résumé, and the PDF they get." />
+            <Downloads />
             <div className="grid">
                 <Card className="span-7" title="Upload" description="Uploading replaces the current file immediately.">
                     <div
@@ -216,8 +248,6 @@ export default function Files() {
                     )}
                 </Card>
             </div>
-
-            <Downloads />
         </>
     );
 }
