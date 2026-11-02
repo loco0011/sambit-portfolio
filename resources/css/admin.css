@@ -368,6 +368,7 @@ code {
 .span-3 { grid-column: span 3; }
 .span-4 { grid-column: span 4; }
 .span-5 { grid-column: span 5; }
+.span-6 { grid-column: span 6; }
 .span-7 { grid-column: span 7; }
 .span-8 { grid-column: span 8; }
 .span-12 { grid-column: span 12; }
@@ -1085,12 +1086,51 @@ textarea.input {
     box-shadow: inset 2px 0 0 var(--accent);
 }
 
-.list-item.is-static {
-    cursor: default;
+.downloads-section {
+    margin-bottom: 16px;
 }
 
-.list-item.is-static:hover {
-    background: transparent;
+.downloads-scroll {
+    overflow-x: auto;
+}
+
+.downloads-table {
+    width: 100%;
+    min-width: 820px;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.downloads-table th {
+    padding: 10px 20px;
+    color: var(--text-3);
+    font-size: 12px;
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--border);
+}
+
+.downloads-table td {
+    padding: 12px 20px;
+    vertical-align: top;
+}
+
+.downloads-table tbody tr + tr td {
+    border-top: 1px solid var(--border);
+}
+
+.downloads-when {
+    color: var(--text-3);
+    white-space: nowrap;
+}
+
+.downloads-you {
+    margin-left: 8px;
+}
+
+.downloads-device {
+    text-transform: capitalize;
 }
 
 .downloads-empty {
