@@ -40,6 +40,9 @@ if [ "${admins:-0}" = 0 ]; then
     docker compose exec "$CONTAINER" php artisan admin:user "$email" --name=Sambit
 fi
 
+step "Refreshing the GeoIP databases"
+docker compose exec -T "$CONTAINER" php artisan geoip:update || echo "! GeoIP update failed. Résumé downloads are still counted; run it again later."
+
 step "Cleaning up old images"
 docker image prune -f >/dev/null
 echo "✓ done"

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Support\GeoIp;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 
@@ -17,3 +18,7 @@ Artisan::command('admin:user {email} {--name=Admin}', function (string $email) {
 
     $this->info(($user->wasRecentlyCreated ? 'Created' : 'Updated')." admin {$email}. Sign in at ".url('/admin'));
 })->purpose('Create an admin panel user, or reset their password');
+
+Artisan::command('geoip:update', function (GeoIp $geoIp) {
+    $this->info("GeoIP databases updated: {$geoIp->update()}");
+})->purpose('Download the monthly DB-IP Lite databases used to locate résumé downloads');

@@ -8,5 +8,7 @@ class PageView extends Model
 {
     const UPDATED_AT = null;
 
-    protected $fillable = ['path', 'referrer', 'visitor', 'device'];
+    protected $fillable = ['path', 'referrer', 'visitor', 'device', 'details'];
+
+    protected $casts = ['details' => 'array'];
 }

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { api } from '../api';
 import { ago, bytes, stamp, useToast } from '../lib';
-import { Card, Icon, PageHeader, Spinner } from '../ui/Kit';
+import { Card, Icon, Loading, PageHeader, Spinner } from '../ui/Kit';
 
 // Shared by the Résumé page and the dashboard card.
 export function useResume() {
@@ -33,6 +33,119 @@ export function useResume() {
     };
 
     return { info, busy, upload };
+}
+
+function TopList({ title, items, empty }) {
+    const top = Math.max(1, ...items.map((i) => i.count));
+
+    return (
+        <Card className="span-6" title={title}>
+            {items.length ? (
+                <ul className="bars-list">
+                    {items.map((i) => (
+                        <li key={i.name}>
+                            <span className="bars-fill" style={{ width: `${(i.count / top) * 100}%` }} />
+                            <span>{i.name}</span>
+                            <span className="num">{i.count}</span>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p className="muted">{empty}</p>
+            )}
+        </Card>
+    );
+}
+
+function Downloads() {
+    const toast = useToast();
+    const [page, setPage] = useState(1);
+    const [data, setData] = useState(null);
+
+    useEffect(() => {
+        let live = true;
+        api(`resume/downloads?page=${page}`)
+            .then((d) => live && setData(d))
+            .catch((e) => toast(e.message, 'warn'));
+        return () => (live = false);
+    }, [page]);
+
+    if (!data) return <Loading />;
+
+    const { recent } = data;
+
+    return (
+        <>
+            <div className="stats">
+                {[
+                    ['All-time downloads', data.total],
+                    ['Last 7 days', data.last_7],
+                    ['Last 30 days', data.last_30],
+                    ['Countries', data.countries.length],
+                ].map(([label, value]) => (
+                    <div className="card stat" key={label}>
+                        <span className="stat-label">{label}</span>
+                        <span className="stat-value">{value.toLocaleString()}</span>
+                    </div>
+                ))}
+            </div>
+
+            <div className="grid">
+                <TopList title="Top countries" items={data.countries} empty="No locations recorded yet." />
+                <TopList title="Top companies and networks" items={data.orgs} empty="No networks recorded yet." />
+
+                <Card
+                    className="span-12"
+                    title="Recent downloads"
+                    description="Location and network are estimated from the visitor's IP, which isn't stored. Home and mobile users show their ISP. IP geolocation by DB-IP."
+                    flush
+                >
+                    {recent.data.length ? (
+                        <ul className="list">
+                            {recent.data.map((d) => {
+                                const x = d.details ?? {};
+                                const place = [x.city, x.region, x.country].filter(Boolean).join(', ');
+                                const browser = [x.browser, x.os].filter(Boolean).join(' on ');
+                                const source = d.referrer ? `from ${d.referrer}` : x.page ? `clicked on ${x.page}` : 'direct link';
+
+                                return (
+                                    <li key={d.id}>
+                                        <div className="list-item is-static">
+                                            <span className="list-main">
+                                                <span className="list-title">
+                                                    {place || 'Location not recorded'}
+                                                    {x.org && <span className="muted"> · {x.org}</span>}
+                                                </span>
+                                                <span className="list-snippet">{[browser || d.device, x.language, source].filter(Boolean).join(' · ')}</span>
+                                            </span>
+                                            <span className="list-meta" title={stamp(d.created_at)}>
+                                                {ago(d.created_at)}
+                                            </span>
+                                        </div>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    ) : (
+                        <p className="muted downloads-empty">Nobody has downloaded your résumé yet.</p>
+                    )}
+                    {recent.last_page > 1 && (
+                        <div className="row downloads-pager">
+                            <button className="btn btn-sm" disabled={page <= 1} onClick={() => setPage(page - 1)}>
+                                Newer
+                            </button>
+                            <span className="muted">
+                                Page {recent.current_page} of {recent.last_page}
+                            </span>
+                            <button className="btn btn-sm" disabled={page >= recent.last_page} onClick={() => setPage(page + 1)}>
+                                Older
+                            </button>
+                        </div>
+                    )}
+                </Card>
+            </div>
+        </>
+    );
 }
 
 export default function Files() {
@@ -103,6 +216,8 @@ export default function Files() {
                     )}
                 </Card>
             </div>
+
+            <Downloads />
         </>
     );
 }
