@@ -42,6 +42,7 @@ Route::prefix('admin/api')->group(function () {
 
         Route::get('resume', [Admin\ResumeController::class, 'show']);
         Route::post('resume', [Admin\ResumeController::class, 'store']);
+        Route::get('resume/downloads', [Admin\ResumeController::class, 'downloads']);
 
         Route::get('apps', [Admin\AppFileController::class, 'index']);
         Route::post('apps/{slug}/{key}', [Admin\AppFileController::class, 'store']);

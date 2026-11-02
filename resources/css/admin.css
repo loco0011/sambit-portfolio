@@ -1085,6 +1085,25 @@ textarea.input {
     box-shadow: inset 2px 0 0 var(--accent);
 }
 
+.list-item.is-static {
+    cursor: default;
+}
+
+.list-item.is-static:hover {
+    background: transparent;
+}
+
+.downloads-empty {
+    padding: 20px;
+}
+
+.downloads-pager {
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    border-top: 1px solid var(--border);
+}
+
 .list-main {
     flex: 1;
     min-width: 0;

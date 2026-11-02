@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\ContactMessage;
 use App\Models\PageView;
 use App\Models\User;
+use App\Support\GeoIp;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -121,6 +122,53 @@ class AdminTest extends TestCase
             ->assertJsonPath('exists', true);
 
         Storage::disk('local')->assertExists('resume.pdf');
+    }
+
+    public function test_resume_download_records_details_without_the_ip(): void
+    {
+        Storage::fake('local');
+        Storage::disk('local')->put('resume.pdf', 'pdf');
+
+        $this->mock(GeoIp::class)->shouldReceive('lookup')->with('203.0.113.9')->andReturn([
+            'country' => 'India', 'country_code' => 'IN', 'region' => 'Karnataka', 'city' => 'Bengaluru', 'org' => 'Acme Corp',
+        ]);
+
+        $this->withServerVariables(['REMOTE_ADDR' => '203.0.113.9'])
+            ->withHeaders([
+                'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/130.0 Safari/537.36',
+                'Accept-Language' => 'en-IN,en;q=0.9',
+                'Referer' => 'https://www.linkedin.com/in/someone',
+            ])
+            ->get('/resume')
+            ->assertOk();
+
+        $view = PageView::where('path', '/resume')->sole();
+        $this->assertStringNotContainsString('203.0.113.9', json_encode($view->getAttributes()));
+
+        $this->actingAs($this->admin())
+            ->getJson('/admin/api/resume/downloads')
+            ->assertOk()
+            ->assertJsonPath('total', 1)
+            ->assertJsonPath('countries.0.name', 'India')
+            ->assertJsonPath('orgs.0.name', 'Acme Corp')
+            ->assertJsonPath('recent.data.0.referrer', 'linkedin.com')
+            ->assertJsonPath('recent.data.0.details.city', 'Bengaluru')
+            ->assertJsonPath('recent.data.0.details.browser', 'Chrome')
+            ->assertJsonPath('recent.data.0.details.os', 'Windows')
+            ->assertJsonPath('recent.data.0.details.language', 'en-IN');
+    }
+
+    public function test_resume_downloads_require_login_and_keep_older_rows(): void
+    {
+        $this->getJson('/admin/api/resume/downloads')->assertUnauthorized();
+
+        PageView::create(['path' => '/resume', 'visitor' => 'old', 'device' => 'mobile']);
+        PageView::create(['path' => '/', 'visitor' => 'old', 'device' => 'mobile']);
+
+        $this->actingAs($this->admin())
+            ->getJson('/admin/api/resume/downloads')
+            ->assertJsonPath('total', 1)
+            ->assertJsonPath('recent.data.0.details', null);
     }
 
     public function test_password_change_needs_current_password(): void
