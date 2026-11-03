@@ -354,6 +354,16 @@ code {
 .page-actions {
     display: flex;
     gap: 8px;
+    max-width: 100%;
+}
+
+.page-actions .segmented {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.page-actions .segmented button {
+    flex-shrink: 0;
 }
 
 /* ---------- Layout grid ---------- */
