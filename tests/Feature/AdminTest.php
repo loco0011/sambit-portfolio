@@ -173,6 +173,31 @@ class AdminTest extends TestCase
         $this->assertSame(0, PageView::where('path', '/')->count());
     }
 
+    public function test_resume_downloads_can_be_filtered_by_date_range(): void
+    {
+        $this->travelTo('2026-11-03 12:00:00');
+
+        foreach (['2026-11-03 09:00:00', '2026-11-02 09:00:00', '2026-10-30 09:00:00', '2026-10-10 09:00:00', '2026-01-01 09:00:00'] as $at) {
+            PageView::create(['path' => '/resume', 'visitor' => 'v', 'device' => 'desktop', 'details' => ['country' => 'India']])
+                ->forceFill(['created_at' => $at])->save();
+        }
+
+        $this->actingAs($this->admin());
+
+        foreach (['today' => 1, 'yesterday' => 1, '7d' => 3, '30d' => 4, 'all' => 5, 'bogus' => 5] as $range => $count) {
+            $this->getJson("/admin/api/resume/downloads?range={$range}&tz=UTC")
+                ->assertJsonPath('count', $count)
+                ->assertJsonPath('total', 5)
+                ->assertJsonPath('countries.0.count', $count)
+                ->assertJsonPath('recent.total', $count);
+        }
+
+        // 2026-11-03 03:00 UTC is still 2 November in New York, so it counts as yesterday there (with the 2 Nov 09:00 one).
+        PageView::create(['path' => '/resume', 'visitor' => 'v', 'device' => 'desktop'])->forceFill(['created_at' => '2026-11-03 03:00:00'])->save();
+        $this->getJson('/admin/api/resume/downloads?range=yesterday&tz=America/New_York')->assertJsonPath('count', 2);
+        $this->getJson('/admin/api/resume/downloads?range=today&tz=America/New_York')->assertJsonPath('count', 1);
+    }
+
     public function test_resume_downloads_require_login_and_keep_older_rows(): void
     {
         $this->getJson('/admin/api/resume/downloads')->assertUnauthorized();

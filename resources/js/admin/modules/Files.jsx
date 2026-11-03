@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { api } from '../api';
 import { ago, bytes, stamp, useToast } from '../lib';
-import { Card, Icon, Loading, PageHeader, Spinner } from '../ui/Kit';
+import { Card, Icon, Loading, PageHeader, Segmented, Spinner } from '../ui/Kit';
+
+const RANGES = { today: 'Today', yesterday: 'Yesterday', '7d': '7 days', '30d': '30 days', all: 'All time' };
+const TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 // Shared by the Résumé page and the dashboard card.
 export function useResume() {
@@ -57,16 +60,19 @@ function TopList({ title, items, empty }) {
     );
 }
 
-function Downloads() {
+function Downloads({ range }) {
     const toast = useToast();
     const [page, setPage] = useState(1);
     const [data, setData] = useState(null);
     const [busy, setBusy] = useState(false);
 
+    // A new range starts from the first page.
+    useEffect(() => setPage(1), [range]);
+
     const load = async () => {
         setBusy(true);
         try {
-            setData(await api(`resume/downloads?page=${page}`));
+            setData(await api(`resume/downloads?range=${range}&tz=${encodeURIComponent(TZ)}&page=${page}`));
         } catch (e) {
             toast(e.message, 'warn');
         } finally {
@@ -79,20 +85,22 @@ function Downloads() {
         // Downloads usually happen in another tab, so catch up when coming back to this one.
         window.addEventListener('focus', load);
         return () => window.removeEventListener('focus', load);
-    }, [page]);
+    }, [page, range]);
 
     if (!data) return <Loading />;
 
     const { recent } = data;
+    const period = range === 'all' ? 'all time' : RANGES[range].toLowerCase();
+    const empty = range === 'all' ? 'Nobody has downloaded your résumé yet.' : `No downloads ${range === '7d' || range === '30d' ? `in the last ${period}` : period}.`;
 
     return (
         <>
             <div className="stats">
                 {[
-                    ['All-time downloads', data.total],
-                    ['Last 7 days', data.last_7],
-                    ['Last 30 days', data.last_30],
+                    [`Downloads · ${RANGES[range]}`, data.count],
                     ['Countries', data.countries.length],
+                    ['Companies and networks', data.orgs.length],
+                    ['All-time downloads', data.total],
                 ].map(([label, value]) => (
                     <div className="card stat" key={label}>
                         <span className="stat-label">{label}</span>
@@ -155,7 +163,7 @@ function Downloads() {
                             </table>
                         </div>
                     ) : (
-                        <p className="muted downloads-empty">Nobody has downloaded your résumé yet.</p>
+                        <p className="muted downloads-empty">{empty}</p>
                     )}
                     {recent.last_page > 1 && (
                         <div className="row downloads-pager">
@@ -182,12 +190,17 @@ function Downloads() {
 export default function Files() {
     const { info, busy, upload } = useResume();
     const [over, setOver] = useState(false);
+    const [range, setRange] = useState('all');
     const input = useRef();
 
     return (
         <>
-            <PageHeader title="Résumé" description="Who is downloading your résumé, and the PDF they get." />
-            <Downloads />
+            <PageHeader
+                title="Résumé"
+                description="Who is downloading your résumé, and the PDF they get."
+                actions={<Segmented label="Date range" options={Object.keys(RANGES)} value={range} onChange={setRange} format={(v) => RANGES[v]} />}
+            />
+            <Downloads range={range} />
             <div className="grid">
                 <Card className="span-7" title="Upload" description="Uploading replaces the current file immediately.">
                     <div
