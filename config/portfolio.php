@@ -13,7 +13,7 @@ return [
     'profile' => [
         'name' => 'Sambit Maity',
         'role' => 'Full-Stack Software Engineer',
-        'headline' => 'Laravel & Node.js engineer who owns products end to end — from architecture and APIs to servers, automation and the pixels on screen.',
+        'headline' => 'Backend-focused full-stack developer with 3+ years of experience building scalable APIs, databases and server infrastructure in Laravel and Node.js, plus the React frontends on top.',
         'location' => 'Kolkata, India',
         'timezone' => 'Asia/Kolkata',
         'email' => 'official.sambitmaity@gmail.com',
