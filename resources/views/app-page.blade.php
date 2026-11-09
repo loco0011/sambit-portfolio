@@ -37,7 +37,7 @@
     <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script type="application/ld+json">
         {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}
     </script>
@@ -353,7 +353,7 @@
         .ap-card.is-free p { color: color-mix(in srgb, var(--color-on-lime) 70%, transparent); }
         .ap-card.is-free h3 { font-size: 16px; }
         .ap-bigtitle { font-size: clamp(2.2rem, 4.4vw, 3.6rem); font-weight: 600; letter-spacing: -0.045em; line-height: .98; margin-top: 6px; }
-        .ap-bigtitle .serif-i { color: var(--color-acid); font-weight: 400; }
+        .ap-bigtitle .serif-i { color: var(--color-acid); }
         .ap-marquees { margin-top: auto; display: grid; gap: 8px; padding-top: 22px; }
         .ap-marq { display: flex; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
         .ap-marq > div { display: flex; gap: 8px; padding-right: 8px; flex: none; animation: ap-mq 32s linear infinite; }

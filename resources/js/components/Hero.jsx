@@ -8,8 +8,8 @@ import { ease } from '../ui/Reveal';
 import { scrollTo } from '../lib/scroll';
 
 const LINES = [
-    [{ t: 'From idea' }],
-    [{ t: 'to' }, { t: 'shipped', serif: true }, { t: 'product,' }],
+    [{ t: 'From' }, { t: 'idea' }, { t: 'to' }],
+    [{ t: 'shipped', serif: true }, { t: 'product,' }],
     [{ t: 'every', muted: true }, { t: 'layer.', muted: true }],
 ];
 
@@ -146,9 +146,9 @@ export default function Hero({ profile, ready, handoff = false }) {
                     <span className="sr-only">From idea to shipped product, every layer.</span>
                     <motion.span initial="hide" animate={show} transition={{ staggerChildren: 0.07, delayChildren: 0.15 }} className="block" aria-hidden>
                         {LINES.map((line, li) => (
-                            <span key={li} className="block">
+                            <span key={li} className="flex flex-wrap gap-x-[0.24em]">
                                 {line.map((w) => (
-                                    <span key={w.t} className="mr-[0.22em] inline-block overflow-hidden pb-[0.1em] -mb-[0.1em] align-top last:mr-0">
+                                    <span key={w.t} className="inline-block overflow-hidden pb-[0.1em] -mb-[0.1em] align-top">
                                         <motion.span
                                             className={`inline-block ${w.serif ? 'serif-i pr-[0.06em] text-acid' : ''} ${w.muted ? 'text-dim' : ''}`}
                                             variants={{
